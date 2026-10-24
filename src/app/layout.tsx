@@ -7,15 +7,15 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
-  title: { default: "KBL — Perawatan & Sparepart", template: "%s · KBL" },
+  title: { default: "Karunia Beton Lestari — Perawatan & Sparepart", template: "%s · Karunia Beton Lestari" },
   description: "Manajemen perawatan, sparepart, dan emergensi kendaraan",
-  applicationName: "KBL",
-  appleWebApp: { capable: true, title: "KBL", statusBarStyle: "default" },
+  applicationName: "Karunia Beton Lestari",
+  appleWebApp: { capable: true, title: "Karunia Beton", statusBarStyle: "default" },
   formatDetection: { telephone: false },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0f766e",
+  themeColor: "#141010",
   width: "device-width",
   initialScale: 1,
 };

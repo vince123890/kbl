@@ -1,8 +1,8 @@
 # ARMADA DAN PERAWATAN — /armada
 
 > Peran StoryBrand: **pereda takut utama** ("bagaimana kalau truknya tertahan?"). Setara halaman Pemeliharaan di acuan sicoma.
-> Sumber: dokumen requirement *Asset Maintenance Apps* (Agustus 2024). Pastikan praktik ini berlaku di KBL sebelum rilis.
-> Judul SEO: *Armada KBL | Transit Mixer dan Concrete Pump yang Dirawat Terjadwal*
+> Sumber: dokumen requirement *Asset Maintenance Apps* (Agustus 2024). Pastikan praktik ini berlaku di Karunia Beton Lestari sebelum rilis.
+> Judul SEO: *Armada Karunia Beton Lestari | Transit Mixer dan Concrete Pump yang Dirawat Terjadwal*
 
 ---
 
@@ -40,7 +40,7 @@ Tidak ada janji angka (mis. "99% tepat waktu"). Yang dijanjikan adalah **proses*
 ---
 ## Keterangan: Kenapa Halaman Ini Dibuat Seperti Ini
 
-**Perawatan armada adalah pembeda yang jarang dipamerkan.** Pesaing menjual harga per kubik; KBL bisa menjelaskan bahwa truk yang datang adalah truk yang sudah dirawat dan tercatat.
+**Perawatan armada adalah pembeda yang jarang dipamerkan.** Pesaing menjual harga per kubik; Karunia Beton Lestari bisa menjelaskan bahwa truk yang datang adalah truk yang sudah dirawat dan tercatat.
 
 **Tanpa angka karangan.** Jumlah kendaraan (dokumen requirement hanya memberi contoh nomor 30 dan 40) **bukan** angka resmi dan tidak boleh ditulis sebagai fakta.
 

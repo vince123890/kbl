@@ -1,6 +1,6 @@
-# PANDUAN DESAIN — Website Company Profile KBL
+# PANDUAN DESAIN — Website Company Profile Karunia Beton Lestari
 
-> Diadaptasi dari panduan desain acuan `sicoma` (.claude/skills/sicoma-design) dan disesuaikan dengan brand KBL. **Warna dan font sengaja berbeda** dari Sicoma dan dari Karunia Beton Jember agar identitas KBL berdiri sendiri.
+> Diadaptasi dari panduan desain acuan `sicoma` (.claude/skills/sicoma-design) dan disesuaikan dengan brand Karunia Beton Lestari. **Warna dan font sengaja berbeda** dari Sicoma dan dari Karunia Beton Jember agar identitas Karunia Beton Lestari berdiri sendiri.
 
 ---
 
@@ -25,7 +25,7 @@ Aturan: teks di atas oranye memakai navy atau putih dengan kontras ≥ 4,5:1 (pe
 
 ## 3. Pola tata letak
 - Kartu **seragam tinggi** (grid `items-stretch`, kartu `h-full`). Tepi bawah bergerigi dilarang.
-- Foto berbingkai oranye offset dengan **tab keterangan** navy di kiri bawah (ciri visual KBL).
+- Foto berbingkai oranye offset dengan **tab keterangan** navy di kiri bawah (ciri visual Karunia Beton Lestari).
 - Penomoran **hanya** untuk urutan nyata (rencana 3 langkah, jam pada garis waktu), tidak untuk dekorasi.
 
 ## 4. Gerak
@@ -39,7 +39,7 @@ Prinsip sicoma dipertahankan: gerak **tegas dan presisi**, sekali saja, tidak me
 Kontras teks ≥ 4,5:1; target sentuh ≥ 44 px; fokus terlihat (`outline` 3 px) di semua elemen interaktif; semua gambar ber-`alt`; `sizes` pada `next/image`; hero memakai `priority`, sisanya lazy.
 
 ## 6. Foto
-Sementara: ilustrasi berlisensi bebas (Wikimedia Commons) dengan **kredit di halaman** dan keterangan "bukan dokumentasi KBL". Ganti dengan foto asli KBL (plant, batching, armada, lokasi cor) begitu tersedia. Dilarang mengambil foto dari akun media sosial atau situs perusahaan lain.
+Sementara: ilustrasi berlisensi bebas (Wikimedia Commons) dengan **kredit di halaman** dan keterangan "bukan dokumentasi Karunia Beton Lestari". Ganti dengan foto asli Karunia Beton Lestari (plant, batching, armada, lokasi cor) begitu tersedia. Dilarang mengambil foto dari akun media sosial atau situs perusahaan lain.
 
 ## 7. Daftar periksa sebelum merilis bagian baru
 1. Teksnya sama dengan dokumen halaman terkait di folder ini?

@@ -8,12 +8,12 @@ import { SiteHeader } from "./site-header";
 // Konten mengikuti docs/company-profile/02-Beranda.md (kerangka StoryBrand). Ubah dokumen itu dulu, lalu sinkronkan di sini.
 
 export const metadata: Metadata = {
-  title: { absolute: "PT Karunia Beton Lestari (KBL) — Batu Pecah & Beton Readymix, Deli Serdang" },
+  title: { absolute: "PT Karunia Beton Lestari — Batu Pecah & Beton Readymix, Deli Serdang" },
   description:
-    "KBL memasok batu pecah dan beton readymix dari Sunggal, Deli Serdang. Pesanan tercatat dari penawaran sampai foto bukti terkirim, armada dirawat terjadwal.",
+    "Karunia Beton Lestari memasok batu pecah dan beton readymix dari Sunggal, Deli Serdang. Pesanan tercatat dari penawaran sampai foto bukti terkirim, armada dirawat terjadwal.",
   alternates: { canonical: "/" },
   openGraph: {
-    title: "PT Karunia Beton Lestari (KBL) — Pengecoran Anda Tidak Boleh Menunggu",
+    title: "PT Karunia Beton Lestari — Pengecoran Anda Tidak Boleh Menunggu",
     description: "Batu pecah dan beton readymix dengan pesanan yang tercatat dan armada yang dirawat. Sunggal, Deli Serdang.",
     locale: "id_ID",
     type: "website",
@@ -22,12 +22,10 @@ export const metadata: Metadata = {
 
 type Photo = { src: string; w: number; h: number; alt: string };
 
-/** Foto bebas lisensi (ilustrasi), BUKAN dokumentasi KBL. Kredit lengkap ada di bagian bawah halaman. */
+/** Foto bebas lisensi (ilustrasi), BUKAN dokumentasi Karunia Beton Lestari. Kredit lengkap ada di bagian bawah halaman. */
 const PHOTOS = {
   mixer: { src: "/foto/mixer.jpg", w: 1920, h: 1440, alt: "Truk transit mixer biru sedang berada di lokasi pengecoran jalan" },
   quarry: { src: "/foto/quarry.jpg", w: 1600, h: 1200, alt: "Gunungan batu pecah di lokasi quarry dengan excavator merah di puncaknya" },
-  kontrak: { src: "/foto/kontrak.jpg", w: 1800, h: 1350, alt: "Lembar penawaran dan kontrak dengan pulpen di atasnya" },
-  bengkel: { src: "/foto/bengkel.jpg", w: 1800, h: 1200, alt: "Truk diesel merah di dalam bengkel perawatan" },
   batching: { src: "/foto/batching.jpg", w: 1920, h: 1082, alt: "Instalasi batching plant dengan silo semen dan konveyor agregat" },
   lokasi: { src: "/foto/lokasi.jpg", w: 1800, h: 1201, alt: "Transit mixer dan concrete pump di lokasi proyek yang sedang dicor" },
   pump: { src: "/foto/pump.jpg", w: 1800, h: 1219, alt: "Concrete pump dengan boom panjang mengecor struktur bertulang" },
@@ -36,14 +34,12 @@ const PHOTOS = {
 const CREDITS: { photo: string; author: string; license: string; licenseUrl?: string; source: string }[] = [
   { photo: "Transit mixer (hero)", author: "Captainmorlypogi1959", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0/", source: "https://commons.wikimedia.org/wiki/File:Mitsubishi_Fuso_Super_Great_Transit_Mixer_Truck_2021.jpg" },
   { photo: "Tumpukan batu pecah", author: "John Haynes", license: "CC BY-SA 2.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0/", source: "https://commons.wikimedia.org/wiki/File:Crushed_stone_at_Tonfanau_Quarry_-_geograph.org.uk_-_2978560.jpg" },
-  { photo: "Penawaran dan kontrak", author: "Blogtrepreneur", license: "CC BY 2.0", licenseUrl: "https://creativecommons.org/licenses/by/2.0/", source: "https://commons.wikimedia.org/wiki/File:Legal_Contract_%26_Signature_-_Warm_Tones.jpg" },
-  { photo: "Bengkel truk", author: "BEAR RV", license: "CC BY 3.0", licenseUrl: "https://creativecommons.org/licenses/by/3.0/", source: "https://commons.wikimedia.org/wiki/File:Truck_Repair_-_panoramio.jpg" },
   { photo: "Batching plant", author: "Fsmazlum", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0/", source: "https://commons.wikimedia.org/wiki/File:MOBILE_CONCRETE_BATCHING_PLANT_mekaglobal.jpg" },
   { photo: "Transit mixer di lokasi cor", author: "U.S. Air Force, Airman Sydney Franklin", license: "Domain publik", source: "https://commons.wikimedia.org/wiki/File:Concrete_pouring_for_the_new_Spangdahlem_Elementary_School_(8062804).jpg" },
   { photo: "Concrete pump", author: "Steve Pivnick, U.S. Air Force", license: "Domain publik", source: "https://commons.wikimedia.org/wiki/File:Construction_site_with_concrete_pump_truck.JPG" },
 ];
 
-const WA_TEXT = "Halo KBL, saya ingin konsultasi kebutuhan beton. Lokasi: … Volume: … Jadwal cor: …";
+const WA_TEXT = "Halo Karunia Beton Lestari, saya ingin konsultasi kebutuhan beton. Lokasi: … Volume: … Jadwal cor: …";
 const waUtama = waLink(company.mobile.wa, WA_TEXT);
 
 const MASALAH = [
@@ -68,9 +64,9 @@ const RENCANA = [
 ];
 
 const PRODUK = [
-  { nama: "Batu pecah dan agregat", isi: "Material batu untuk beton, jalan, dan pekerjaan sipil.", cta: "Tanya ketersediaan", foto: PHOTOS.quarry, pesan: "Halo KBL, saya ingin menanyakan ketersediaan batu pecah. Lokasi: … Volume: …" },
-  { nama: "Beton readymix", isi: "Beton siap pakai sesuai kebutuhan struktur, dikirim ke lokasi cor.", cta: "Minta quotation", foto: PHOTOS.batching, pesan: "Halo KBL, saya ingin meminta quotation beton readymix. Lokasi: … Volume: … Jadwal cor: …" },
-  { nama: "Concrete pump", isi: "Menjangkau lantai atas, bentang panjang, dan lokasi sempit.", cta: "Minta quotation", foto: PHOTOS.pump, pesan: "Halo KBL, saya ingin meminta quotation concrete pump. Lokasi: … Jadwal cor: …" },
+  { nama: "Batu pecah dan agregat", isi: "Material batu untuk beton, jalan, dan pekerjaan sipil.", cta: "Tanya ketersediaan", foto: PHOTOS.quarry, pesan: "Halo Karunia Beton Lestari, saya ingin menanyakan ketersediaan batu pecah. Lokasi: … Volume: …" },
+  { nama: "Beton readymix", isi: "Beton siap pakai sesuai kebutuhan struktur, dikirim ke lokasi cor.", cta: "Minta quotation", foto: PHOTOS.batching, pesan: "Halo Karunia Beton Lestari, saya ingin meminta quotation beton readymix. Lokasi: … Volume: … Jadwal cor: …" },
+  { nama: "Concrete pump", isi: "Menjangkau lantai atas, bentang panjang, dan lokasi sempit.", cta: "Minta quotation", foto: PHOTOS.pump, pesan: "Halo Karunia Beton Lestari, saya ingin meminta quotation concrete pump. Lokasi: … Jadwal cor: …" },
 ];
 
 const BUKTI = [
@@ -86,86 +82,10 @@ const SUKSES = [
   ["Truk tertahan di hari pengecoran", "Armada dirawat terjadwal, suku cadang dicatat"],
 ];
 
-type Chapter = {
-  id: string;
-  aside?: boolean;
-  day: string;
-  time: string;
-  place: string;
-  title: string;
-  body: string[];
-  log: string[];
-  photo?: { p: Photo; tab: string };
-};
-
-/** Cerita fiktif satu pesanan, sumber alur: dokumen requirement KBL (Agustus 2024). Isi lengkap: docs/company-profile/04-Alur-Pesanan.md */
-const CHAPTERS: Chapter[] = [
-  {
-    id: "bab-1", day: "Senin", time: "09:15", place: "Tim sales", title: "Penawaran yang bisa dipegang",
-    body: [
-      "Seorang kontraktor menelepon. Ia butuh readymix untuk mengecor pondasi, dan ia ingin tahu harganya hari ini.",
-      "Tim sales membuat quotation, lalu mengirimkannya lewat email atau mencetaknya. Kalau harga atau volumenya belum cocok, quotation diperbarui dan dikirim lagi, sampai kedua pihak sepakat.",
-    ],
-    log: ["Sales membuat quotation", "Dikirim ke pelanggan, lewat email atau cetak", "Belum cocok? Quotation diperbarui, dikirim ulang"],
-    photo: { p: PHOTOS.kontrak, tab: "Penawaran yang disepakati tertulis" },
-  },
-  {
-    id: "bab-2", day: "Senin", time: "14:00", place: "Manajer", title: "Satu persetujuan mengubah penawaran menjadi order",
-    body: [
-      "Pelanggan setuju. Sales menandai quotation sebagai Disetujui, dan manajer memberi persetujuannya.",
-      "Mulai saat itu angkanya bukan lagi tawaran. Ia menjadi order yang muncul di daftar admin produksi, lengkap dengan siapa yang menyetujui dan kapan.",
-    ],
-    log: ["Pelanggan menyetujui", "Manajer menyetujui quotation", "Status Disetujui, order masuk daftar produksi"],
-  },
-  {
-    id: "bab-3", aside: true, day: "Rabu", time: "16:30", place: "Bengkel dan gudang", title: "Truk yang tidak boleh tertahan",
-    body: [
-      "Sementara order menunggu hari pengecoran, di bengkel ada pekerjaan yang tak pernah masuk faktur: memastikan armada siap.",
-      "Servis oli, pergantian suku cadang, bahkan perpanjangan STNK mengingatkan diri sendiri sebelum jatuh tempo. Teknisi yang butuh suku cadang mengajukannya ke gudang. Kalau stok tidak cukup, gudang membuat permintaan pembelian, pengadaan memprosesnya, dan manajer menyetujui.",
-      "Kadang jawabannya ada di garasi sendiri. Ban kendaraan nomor 30 masih layak untuk nomor 40, dan perpindahan itu dicatat, supaya tak ada ban yang hilang tanpa jejak dan tak ada gudang yang tiba-tiba kosong.",
-    ],
-    log: ["Pengingat servis, suku cadang, dan STNK", "Teknisi mengajukan suku cadang ke gudang", "Stok kurang: permintaan pembelian, persetujuan manajer", "Perpindahan komponen antar kendaraan dicatat"],
-    photo: { p: PHOTOS.bengkel, tab: "Armada dirawat sebelum dibutuhkan" },
-  },
-  {
-    id: "bab-4", day: "Kamis", time: "04:30", place: "Admin produksi", title: "Batching plant menyala",
-    body: [
-      "Pagi-pagi sekali, admin produksi membuka daftar order yang sudah disetujui dan memulai produksi. Batu, pasir, semen, dan air bertemu sesuai rancangan campuran untuk pondasi tadi.",
-      "Selama produksi berjalan, statusnya diperbarui berkala, sehingga siapa pun yang bertanya “sudah sampai mana?” mendapat jawaban tanpa menelepon ke plant. Begitu selesai, order ditandai Siap Kirim.",
-    ],
-    log: ["Admin produksi memulai order yang disetujui", "Status produksi diperbarui berkala", "Selesai: ditandai Siap Kirim"],
-  },
-  {
-    id: "bab-5", day: "Kamis", time: "05:40", place: "Admin pengiriman", title: "Berangkat tanpa menunggu",
-    body: [
-      "Beton mulai mengeras sejak diaduk, jadi di sinilah waktu paling mahal. Admin pengiriman melihat daftar order Siap Kirim, menjadwalkan pengiriman, dan memperbarui status saat transit mixer berangkat dan selama di jalan.",
-      "Armada yang dirawat hari Rabu kini berguna: tidak ada truk yang mogok di pintu keluar plant.",
-    ],
-    log: ["Admin pengiriman melihat daftar Siap Kirim", "Pengiriman dijadwalkan", "Status diperbarui selama perjalanan"],
-  },
-  {
-    id: "bab-6", day: "Kamis", time: "07:10", place: "Lokasi pelanggan", title: "Bukti yang bisa dilihat",
-    body: [
-      "Truk tiba. Concrete pump menjangkau titik tuang, dan beton mengalir ke dalam bekisting pondasi.",
-      "Begitu tiba di lokasi, admin pengiriman mengunggah foto bukti pengiriman, lalu menandai order Terkirim. Tidak ada lagi “katanya sudah sampai”: ada foto, ada jam.",
-    ],
-    log: ["Truk tiba di lokasi pelanggan", "Foto bukti pengiriman diunggah", "Order ditandai Terkirim"],
-  },
-  {
-    id: "bab-7", day: "Kamis", time: "15:00", place: "Manajer", title: "Selesai, dan ceritanya tersimpan",
-    body: [
-      "Sore harinya status order berubah sendiri menjadi Selesai dan pindah ke histori penjualan.",
-      "Manajer membuka laporan: penjualan, quotation, order terkirim dan yang masih pending, serta kinerja sales, produksi, dan pengiriman. Keputusan berikutnya diambil dari catatan, bukan dari ingatan.",
-    ],
-    log: ["Status otomatis menjadi Selesai", "Masuk histori penjualan", "Laporan penjualan, order terkirim, order pending, dan kinerja"],
-  },
-];
-
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: company.legal,
-  alternateName: company.short,
   url: company.siteUrl,
   email: company.email,
   telephone: [company.phone.tel, company.mobile.tel],
@@ -221,15 +141,15 @@ export default function CompanyProfilePage() {
             Pengecoran Anda tidak boleh <em>menunggu.</em>
           </h1>
           <p className="kb-hero-lede">
-            Batu pecah dan beton readymix dari KBL datang dengan pesanan yang tercatat: dari quotation tertulis sampai foto bukti terkirim, dengan armada yang dirawat
+            Batu pecah dan beton readymix dari Karunia Beton Lestari datang dengan pesanan yang tercatat: dari quotation tertulis sampai foto bukti terkirim, dengan armada yang dirawat
             sebelum hari pengecoran.
           </p>
           <div className="kb-actions">
             <a className="kb-btn kb-btn-aksen" href={waUtama} target="_blank" rel="noopener noreferrer">
               Konsultasi Kebutuhan Beton
             </a>
-            <a className="kb-btn kb-btn-garis" href="#alur">
-              Lihat Satu Pesanan dari Dekat
+            <a className="kb-btn kb-btn-garis" href="#produk">
+              Lihat Produk Kami
             </a>
           </div>
         </div>
@@ -284,10 +204,10 @@ export default function CompanyProfilePage() {
               <h2 id="h-pemandu">Anda tidak menunggu sendirian</h2>
               <p>
                 Kami tahu rasanya hari pengecoran: alarm jam empat pagi, tukang dan alat sudah dipesan, dan tidak ada yang bisa diulang. Yang Anda butuhkan saat itu bukan
-                brosur, melainkan kepastian. Karena itu setiap pesanan di KBL punya catatan: siapa yang membuat penawaran, siapa yang menyetujui, kapan produksi dimulai, kapan
+                brosur, melainkan kepastian. Karena itu setiap pesanan di Karunia Beton Lestari punya catatan: siapa yang membuat penawaran, siapa yang menyetujui, kapan produksi dimulai, kapan
                 truk berangkat.
               </p>
-              <ul className="kb-peralatan" aria-label="Peralatan KBL">
+              <ul className="kb-peralatan" aria-label="Peralatan Karunia Beton Lestari">
                 {PERALATAN.map((p) => (
                   <li key={p}>{p}</li>
                 ))}
@@ -351,44 +271,6 @@ export default function CompanyProfilePage() {
           </div>
         </section>
 
-        {/* ------------------------------------------------------------ alur pesanan */}
-        <section className="kb-cerita" id="alur" aria-labelledby="h-alur">
-          <div className="kb-wrap">
-            <Head
-              label="Alur pesanan"
-              title="Satu pesanan, dari Senin sampai Kamis"
-              lead="Seorang kontraktor, satu pengecoran pondasi, dan tim di balik layar. Pesanan ini rekaan untuk menggambarkan alur kerja kami, dan setiap bab menunjukkan apa yang dicatat di tiap tahap."
-              id="h-alur"
-            />
-          </div>
-          <div className="kb-chapters">
-            {CHAPTERS.map((c) => (
-              <article key={c.id} className={`kb-ch ${c.aside ? "is-aside" : ""}`} aria-labelledby={c.id}>
-                <div className="kb-wrap kb-ch-grid">
-                  <div className="kb-when">
-                    <span className="kb-day">{c.day}</span>
-                    <time>{c.time}</time>
-                    <span className="kb-who">{c.place}</span>
-                    {c.aside && <span className="kb-aside-tag">Di balik layar</span>}
-                  </div>
-                  <Reveal className="kb-ch-body">
-                    <h3 id={c.id}>{c.title}</h3>
-                    {c.body.map((t) => (
-                      <p key={t.slice(0, 28)}>{t}</p>
-                    ))}
-                    <ol className="kb-log" aria-label="Yang dicatat pada tahap ini">
-                      {c.log.map((l) => (
-                        <li key={l}>{l}</li>
-                      ))}
-                    </ol>
-                    {c.photo && <Fig p={c.photo.p} tab={c.photo.tab} sizes="(min-width: 900px) 600px, 100vw" />}
-                  </Reveal>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-
         {/* ------------------------------------------------------------ bukti */}
         <section className="kb-bab" id="bukti" aria-labelledby="h-bukti">
           <div className="kb-wrap">
@@ -412,11 +294,11 @@ export default function CompanyProfilePage() {
             <Head label="Sukses" title="Seperti apa saat semuanya berjalan" id="h-sukses" />
             <Reveal>
               <table className="kb-compare">
-                <caption className="kb-sr">Perbandingan tanpa catatan yang rapi dan bersama KBL</caption>
+                <caption className="kb-sr">Perbandingan tanpa catatan yang rapi dan bersama Karunia Beton Lestari</caption>
                 <thead>
                   <tr>
                     <th scope="col">Tanpa catatan yang rapi</th>
-                    <th scope="col">Bersama KBL</th>
+                    <th scope="col">Bersama Karunia Beton Lestari</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -499,8 +381,8 @@ export default function CompanyProfilePage() {
           <div className="kb-wrap">
             <h2 id="h-kredit">Kredit foto</h2>
             <p>
-              Foto di halaman ini adalah ilustrasi berlisensi bebas dari Wikimedia Commons, bukan dokumentasi operasional KBL. Foto telah diubah ukurannya. Akan diganti dengan foto
-              fasilitas dan armada KBL.
+              Foto di halaman ini adalah ilustrasi berlisensi bebas dari Wikimedia Commons, bukan dokumentasi operasional Karunia Beton Lestari. Foto telah diubah ukurannya. Akan diganti dengan foto
+              fasilitas dan armada Karunia Beton Lestari.
             </p>
             <ul>
               {CREDITS.map((c) => (
@@ -528,13 +410,7 @@ export default function CompanyProfilePage() {
         <div className="kb-wrap kb-footer-row">
           <div>
             <Link href="/" className="kb-logo" aria-label="PT Karunia Beton Lestari, beranda">
-              <span className="kb-mark" aria-hidden="true">
-                KBL
-              </span>
-              <span className="kb-logo-name">
-                Karunia Beton Lestari
-                <small>Stone &amp; Readymix</small>
-              </span>
+              <span className="kb-logo-name">Karunia Beton Lestari</span>
             </Link>
             <p>
               {company.legal}
@@ -546,7 +422,6 @@ export default function CompanyProfilePage() {
           <nav aria-label="Tautan footer">
             <a href="#tentang">Tentang</a>
             <a href="#produk">Produk</a>
-            <a href="#alur">Alur pesanan</a>
             <a href="#armada">Armada</a>
             <a href="#kontak">Hubungi</a>
           </nav>

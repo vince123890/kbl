@@ -3,15 +3,15 @@ import type { MetadataRoute } from "next";
 export default function manifest(): MetadataRoute.Manifest {
   return {
     id: "/",
-    name: "KBL — Perawatan & Sparepart Kendaraan",
-    short_name: "KBL",
+    name: "Karunia Beton Lestari — Perawatan & Sparepart Kendaraan",
+    short_name: "Karunia Beton",
     description: "Manajemen perawatan, sparepart, dan emergensi kendaraan",
     start_url: "/dashboard",
     scope: "/",
     display: "standalone",
     orientation: "portrait",
     background_color: "#f6f7f9",
-    theme_color: "#0f766e",
+    theme_color: "#141010",
     lang: "id",
     icons: [
       { src: "/icons/192", sizes: "192x192", type: "image/png", purpose: "any" },

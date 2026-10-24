@@ -11,8 +11,6 @@ export async function GET(_req: Request, ctx: RouteContext<"/icons/[name]">) {
   const cfg = SIZES[name];
   if (!cfg) return new Response("Not found", { status: 404 });
 
-  // area aman maskable: konten di dalam 80% tengah
-  const font = Math.round(cfg.size * (cfg.maskable ? 0.34 : 0.42));
   return new ImageResponse(
     (
       <div
@@ -22,15 +20,11 @@ export async function GET(_req: Request, ctx: RouteContext<"/icons/[name]">) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#0f766e",
-          color: "white",
-          fontSize: font,
-          fontWeight: 800,
-          letterSpacing: -2,
+          background: "#141010",
           borderRadius: cfg.maskable ? 0 : Math.round(cfg.size * 0.22),
         }}
       >
-        KBL
+        <div style={{ display: "flex", width: "44%", height: "9%", background: "#ffb400" }} />
       </div>
     ),
     { width: cfg.size, height: cfg.size },

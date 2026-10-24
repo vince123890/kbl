@@ -1,10 +1,10 @@
 # BERANDA — karuniabeton.co.id/
 
 > Konten final siap implementasi (Fase 1). Mengikuti [00-BRANDSCRIPT.md](00-BRANDSCRIPT.md).
-> Judul SEO: *PT Karunia Beton Lestari (KBL) — Batu Pecah & Beton Readymix, Deli Serdang*
-> Meta description: *KBL memasok batu pecah dan beton readymix dari Sunggal, Deli Serdang. Pesanan tercatat dari penawaran sampai foto bukti terkirim, armada dirawat terjadwal.*
+> Judul SEO: *PT Karunia Beton Lestari — Batu Pecah & Beton Readymix, Deli Serdang*
+> Meta description: *Karunia Beton Lestari memasok batu pecah dan beton readymix dari Sunggal, Deli Serdang. Pesanan tercatat dari penawaran sampai foto bukti terkirim, armada dirawat terjadwal.*
 
-Foto: sementara ilustrasi berlisensi bebas dengan kredit di halaman. Ganti dengan foto asli KBL bila tersedia.
+Foto: sementara ilustrasi berlisensi bebas dengan kredit di halaman. Ganti dengan foto asli Karunia Beton Lestari bila tersedia.
 
 ---
 
@@ -15,9 +15,9 @@ Foto: sementara ilustrasi berlisensi bebas dengan kredit di halaman. Ganti denga
 
 # Pengecoran Anda Tidak Boleh Menunggu.
 
-Batu pecah dan beton readymix dari KBL datang dengan pesanan yang tercatat: dari quotation tertulis sampai foto bukti terkirim, dengan armada yang dirawat sebelum hari pengecoran.
+Batu pecah dan beton readymix dari Karunia Beton Lestari datang dengan pesanan yang tercatat: dari quotation tertulis sampai foto bukti terkirim, dengan armada yang dirawat sebelum hari pengecoran.
 
-**[Konsultasi Kebutuhan Beton]**  **[Lihat Satu Pesanan dari Dekat]**
+**[Konsultasi Kebutuhan Beton]**  **[Lihat Produk Kami]**
 
 ---
 
@@ -45,7 +45,7 @@ Masalahnya bukan betonnya, melainkan **ketidakpastian**. Dan ketidakpastian bisa
 ## PEMANDU — Anda Tidak Menunggu Sendirian
 *Foto: lokasi cor atau bengkel armada.*
 
-Kami tahu rasanya hari pengecoran: alarm jam empat pagi, tukang dan alat sudah dipesan, dan tidak ada yang bisa diulang. Yang Anda butuhkan saat itu bukan brosur, melainkan kepastian. Karena itu setiap pesanan di KBL punya catatan: siapa yang membuat penawaran, siapa yang menyetujui, kapan produksi dimulai, kapan truk berangkat.
+Kami tahu rasanya hari pengecoran: alarm jam empat pagi, tukang dan alat sudah dipesan, dan tidak ada yang bisa diulang. Yang Anda butuhkan saat itu bukan brosur, melainkan kepastian. Karena itu setiap pesanan di Karunia Beton Lestari punya catatan: siapa yang membuat penawaran, siapa yang menyetujui, kapan produksi dimulai, kapan truk berangkat.
 
 Chip fakta (hanya yang terverifikasi): `Batching plant` · `Transit mixer` · `Concrete pump` · `Stone crusher` · `Wheel loader` · `Jembatan timbang`
 
@@ -78,12 +78,7 @@ Beton siap pakai sesuai kebutuhan struktur, dikirim ke lokasi cor. [Minta quotat
 **Concrete pump** · *foto: pompa di lokasi cor*
 Menjangkau lantai atas, bentang panjang, dan lokasi sempit. [Minta quotation →]
 
-*(Tanpa harga dan tanpa mutu sampai KBL menyerahkan daftar resminya.)*
-
----
-
-## ALUR PESANAN — Satu Pesanan dari Dekat
-*Cerita Senin–Kamis: penawaran, persetujuan, armada, produksi, berangkat, bukti, selesai. Isi lengkap ada di [04-Alur-Pesanan.md](04-Alur-Pesanan.md).*
+*(Tanpa harga dan tanpa mutu sampai Karunia Beton Lestari menyerahkan daftar resminya.)*
 
 ---
 
@@ -94,13 +89,13 @@ Menjangkau lantai atas, bentang panjang, dan lokasi sempit. [Minta quotation →
 **Status yang diperbarui** — Produksi dan pengiriman memiliki status; Anda tidak perlu menelepon untuk bertanya.
 **Foto bukti pengiriman** — Setiap pengiriman ditutup dengan foto dan penanda Terkirim.
 
-> Catatan implementasi: testimoni dan angka (tahun, unit, kapasitas) **dilarang tampil** sampai KBL memberi data dan izin. Slot tetap disiapkan.
+> Catatan implementasi: testimoni dan angka (tahun, unit, kapasitas) **dilarang tampil** sampai Karunia Beton Lestari memberi data dan izin. Slot tetap disiapkan.
 
 ---
 
 ## SUKSES — Seperti Apa Saat Semuanya Berjalan
 
-| Tanpa catatan yang rapi | Bersama KBL |
+| Tanpa catatan yang rapi | Bersama Karunia Beton Lestari |
 |---|---|
 | Harga di telepon, mudah berubah | Quotation tertulis, disetujui manajer |
 | Menelepon untuk tahu pesanan sampai mana | Status produksi dan pengiriman diperbarui |
@@ -128,7 +123,7 @@ Alamat: Jl. Megawati No. 88, Kel. Serbajadi, Kec. Sunggal, Kab. Deli Serdang, Su
 
 **Masalah memunculkan satu penjahat: ketidakpastian.** Tiga kartu menyentuh rasa takut yang nyata pada hari pengecoran, tanpa mengarang statistik.
 
-**"Satu rantai" membedakan KBL dari penjual beton biasa.** Batu → racik → antar → rawat adalah cerita yang bisa dibuktikan dari layanan dan dokumen internal KBL.
+**"Satu rantai" membedakan Karunia Beton Lestari dari penjual beton biasa.** Batu → racik → antar → rawat adalah cerita yang bisa dibuktikan dari layanan dan dokumen internal Karunia Beton Lestari.
 
 **Rencana tiga langkah meredakan keraguan.** Angka di sini adalah urutan nyata (pelanggan memang melewati tahap itu), jadi penomoran tidak dekoratif.
 

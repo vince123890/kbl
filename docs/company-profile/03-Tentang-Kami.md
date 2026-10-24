@@ -10,7 +10,7 @@
 
 # Kami Mulai dari Batu.
 
-KBL tidak lahir sebagai pabrik beton. Kami mulai sebagai pemasok berbagai jenis material batu, lalu mengembangkan usaha ke produksi beton siap pakai (readymix).
+Karunia Beton Lestari tidak lahir sebagai pabrik beton. Kami mulai sebagai pemasok berbagai jenis material batu, lalu mengembangkan usaha ke produksi beton siap pakai (readymix).
 
 *Foto: tumpukan batu pecah atau lokasi quarry.*
 
@@ -26,7 +26,7 @@ Sekitar dua pertiga isi beton adalah agregat. Siapa yang paham batu, paham separ
 
 `Batching plant` · `Transit mixer` · `Stone crusher` · `Wheel loader / front end loader` · `Jembatan timbang` · `Concrete pump`
 
-> Jumlah unit dan kapasitas **tidak ditulis** sampai KBL memberikan angkanya.
+> Jumlah unit dan kapasitas **tidak ditulis** sampai Karunia Beton Lestari memberikan angkanya.
 
 ---
 
@@ -50,6 +50,6 @@ Jl. Megawati No. 88, Kel. Serbajadi, Kec. Sunggal, Kab. Deli Serdang, Sumatera U
 
 **Satu-satunya cerita asal-usul yang terbukti adalah batu → beton.** Tahun berdiri (2003) hanya ada di iklan lowongan dan belum terverifikasi, sehingga **tidak dipakai**. Klaim "pengalaman puluhan tahun" dari situs lama dihindari karena superlatif tanpa bukti.
 
-**Aset ditulis sebagai daftar, bukan angka.** Daftar peralatan dari situs resmi aman dipakai; jumlah dan kapasitasnya menunggu data dari KBL.
+**Aset ditulis sebagai daftar, bukan angka.** Daftar peralatan dari situs resmi aman dipakai; jumlah dan kapasitasnya menunggu data dari Karunia Beton Lestari.
 
 **Tidak ada nama pemilik, NPWP, SBU, atau kabar sengketa.** Sumbernya agregator pihak ketiga atau media lokal yang tidak terverifikasi (lihat BrandScript, bagian Larangan).

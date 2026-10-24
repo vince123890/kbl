@@ -1,7 +1,7 @@
 # HUBUNGI KAMI — /hubungi-kami
 
 > Peran StoryBrand: **CTA langsung**, hilangkan gesekan. Satu halaman, dua cara: WhatsApp atau telepon.
-> Judul SEO: *Hubungi KBL | Konsultasi Kebutuhan Beton dan Batu Pecah, Deli Serdang*
+> Judul SEO: *Hubungi Karunia Beton Lestari | Konsultasi Kebutuhan Beton dan Batu Pecah, Deli Serdang*
 
 ---
 
@@ -23,7 +23,7 @@ Lokasi pengecoran · perkiraan volume (m³) · jenis pekerjaan (pondasi, lantai,
 ---
 
 ## PESAN SIAP KIRIM (teks WhatsApp otomatis)
-> Halo KBL, saya ingin konsultasi kebutuhan beton. Lokasi: … Volume: … Jadwal cor: …
+> Halo Karunia Beton Lestari, saya ingin konsultasi kebutuhan beton. Lokasi: … Volume: … Jadwal cor: …
 
 ---
 
@@ -40,7 +40,7 @@ Telepon: (061) 80044515 · +62 822 7692 4600
 Email: info@karuniabeton.co.id
 Instagram: @karuniabetonlestari
 
-> **Verifikasi sebelum rilis:** semua kontak di atas berasal dari cuplikan situs karuniabeton.co.id dan direktori pihak ketiga. Konfirmasi dengan KBL, termasuk apakah nomor 0822 punya WhatsApp.
+> **Verifikasi sebelum rilis:** semua kontak di atas berasal dari cuplikan situs karuniabeton.co.id dan direktori pihak ketiga. Konfirmasi dengan Karunia Beton Lestari, termasuk apakah nomor 0822 punya WhatsApp.
 
 ---
 

@@ -21,7 +21,6 @@ const LINKS = [
   { href: "#tentang", label: "Tentang" },
 ];
 const LINKS_AFTER = [
-  { href: "#alur", label: "Alur pesanan" },
   { href: "#armada", label: "Armada" },
   { href: "#kontak", label: "Hubungi" },
 ];
@@ -48,13 +47,7 @@ export function SiteHeader({ contact }: { contact: HeaderContact }) {
       <header className="kb-header">
         <div className="kb-wrap kb-header-row">
           <Link href="/" className="kb-logo" aria-label="PT Karunia Beton Lestari, beranda" onClick={close}>
-            <span className="kb-mark" aria-hidden="true">
-              KBL
-            </span>
-            <span className="kb-logo-name">
-              Karunia Beton Lestari
-              <small>Stone &amp; Readymix</small>
-            </span>
+            <span className="kb-logo-name">Karunia Beton Lestari</span>
           </Link>
 
           <button

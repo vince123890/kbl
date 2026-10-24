@@ -26,9 +26,7 @@
 .kb h3,
 .kb h4,
 .kb-pull,
-.kb-step-n,
-.kb-when time,
-.kb-stat {
+.kb-step-n {
   font-family: var(--display);
   font-optical-sizing: auto;
   font-weight: 500;
@@ -53,8 +51,7 @@
 }
 .kb-pain h3,
 .kb-step h3,
-.kb-prod h3,
-.kb-ch-body h3 {
+.kb-prod h3 {
   font-weight: 600;
   letter-spacing: -0.018em;
 }
@@ -66,14 +63,12 @@
   line-height: 1.25;
   font-size: clamp(1.3rem, 2.3vw, 1.8rem);
 }
-.kb-step-n,
-.kb-when time {
+.kb-step-n {
   font-weight: 500;
 }
 /* paragraf dalam sans: lebih lapang dan mudah dibaca */
 .kb-text p,
 .kb-serif,
-.kb-ch-body p,
 .kb-pain p,
 .kb-pillar p,
 .kb-step p,
@@ -227,8 +222,7 @@
   border: 3px solid #141010;
   border-radius: 28px;
 }
-.is-navy .kb-fig::before,
-.is-aside .kb-fig::before {
+.is-navy .kb-fig::before {
   border-color: var(--aksen);
 }
 .kb-tab {
@@ -247,8 +241,7 @@
 }
 
 /* pola titik di pojok bagian terang */
-.kb-bab,
-.kb-cerita {
+.kb-bab {
   position: relative;
 }
 .kb-bab:not(.is-navy)::before {
@@ -300,13 +293,8 @@
   text-decoration-thickness: 3px;
   text-underline-offset: 4px;
 }
-.kb-ch.is-aside .kb-day,
 .kb-bab.is-navy .kb-peralatan li {
   color: var(--aksen);
-}
-.kb-aside-tag {
-  background: var(--aksen);
-  color: #141010;
 }
 .kb-btn {
   font-weight: 700;
@@ -346,4 +334,18 @@
 .kb-footer a:hover,
 .kb-util-links a:hover {
   color: var(--aksen);
+}
+
+/* nama perusahaan sebagai teks saja, tanpa logo */
+.kb-logo-name {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.3rem;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  border-bottom: 4px solid var(--aksen);
+  padding-bottom: 3px;
+}
+.kb-footer .kb-logo-name {
+  color: #fff;
 }
