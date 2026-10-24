@@ -17,7 +17,7 @@ export function SubmitButton({
 }) {
   const { pending } = useFormStatus();
   const styles = {
-    primary: "bg-brand text-white hover:bg-brand-strong",
+    primary: "bg-brand text-on-brand hover:bg-brand-strong",
     danger: "bg-danger text-white hover:opacity-90",
     ghost: "border border-border hover:bg-brand-soft",
   }[variant];
@@ -39,7 +39,7 @@ export function Alert({ result }: { result: ActionResult | null | undefined }) {
   return (
     <p
       role={ok ? "status" : "alert"}
-      className={`rounded-lg px-3 py-2 text-sm ${ok ? "bg-brand-soft text-brand-strong" : "bg-danger-soft text-danger"}`}
+      className={`rounded-lg px-3 py-2 text-sm ${ok ? "bg-brand-soft text-foreground" : "bg-danger-soft text-danger"}`}
     >
       {ok ? result.message : result.error}
     </p>

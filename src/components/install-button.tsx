@@ -53,7 +53,7 @@ export function InstallButton({ className = "" }: { className?: string }) {
     <div className={className}>
       <button
         type="button"
-        className="tap rounded-lg border border-brand px-3 text-sm font-medium text-brand hover:bg-brand-soft"
+        className="tap rounded-lg border border-foreground px-3 text-sm font-medium text-foreground hover:bg-brand-soft"
         onClick={async () => {
           if (deferred) {
             await deferred.prompt();

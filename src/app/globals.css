@@ -1,14 +1,16 @@
 @import "tailwindcss";
 
+/* Tema selaras dengan situs profil: putih, hitam hangat, dan kuning. Kuning HANYA untuk latar (teks di atasnya hitam). */
 :root {
-  --background: #f6f7f9;
-  --foreground: #14171f;
+  --background: #f4f3f1;
+  --foreground: #141010;
   --surface: #ffffff;
-  --muted: #667085;
-  --border: #e3e6ec;
-  --brand: #0f766e;
-  --brand-strong: #0b5c56;
-  --brand-soft: #e6f4f2;
+  --muted: #5b5653;
+  --border: #e2dfdb;
+  --brand: #ffb400;
+  --brand-strong: #e09e00;
+  --brand-soft: #fff2c9;
+  --on-brand: #141010;
   --danger: #b42318;
   --danger-soft: #fdecea;
   --warn-soft: #fff4e0;
@@ -23,22 +25,25 @@
   --color-brand: var(--brand);
   --color-brand-strong: var(--brand-strong);
   --color-brand-soft: var(--brand-soft);
+  --color-on-brand: var(--on-brand);
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
   --color-warn-soft: var(--warn-soft);
-  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-sans: var(--font-body), system-ui, sans-serif;
+  --font-heading: var(--font-display), "Iowan Old Style", Georgia, serif;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0e1116;
-    --foreground: #e8eaee;
-    --surface: #171b22;
-    --muted: #98a2b3;
-    --border: #2a303a;
-    --brand: #2dd4bf;
-    --brand-strong: #5eead4;
-    --brand-soft: #123532;
+    --background: #141010;
+    --foreground: #efece8;
+    --surface: #1f1a1a;
+    --muted: #a8a19b;
+    --border: #342d2d;
+    --brand: #ffb400;
+    --brand-strong: #ffc633;
+    --brand-soft: #3a2d08;
+    --on-brand: #141010;
     --danger: #f97066;
     --danger-soft: #3a1b18;
     --warn-soft: #3a2c10;
@@ -50,6 +55,17 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
   -webkit-tap-highlight-color: transparent;
+}
+
+/* judul memakai font display; tetap dapat ditimpa oleh kelas utilitas */
+@layer base {
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+    font-optical-sizing: auto;
+    letter-spacing: -0.02em;
+  }
 }
 
 dialog::backdrop {

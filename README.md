@@ -59,7 +59,7 @@ Membuat 12 user (semua role) dan data master contoh sekali jalan: 3 cabang tamba
 - `/` adalah **company profile PT Karunia Beton Lestari (KBL)** (batu pecah dan beton readymix), disusun dengan kerangka StoryBrand (masalah, solusi, rencana, produk, bukti, ajakan). Kode di `src/app/(site)/`; data usaha di `src/lib/site-config.ts` (**verifikasi sebelum rilis**).
 - **Kebutuhan dan copy website** ada di `docs/company-profile/` (BrandScript StoryBrand, sitemap, tiap halaman, panduan desain), mengikuti pola repo acuan `sicoma`. Ubah dokumennya dulu, lalu sinkronkan `page.tsx`.
 - Tombol **Masuk Aplikasi** membawa karyawan ke `/login`, lalu ke `/dashboard`. Situs profil dan aplikasi internal punya tujuan berbeda.
-- Foto di `public/foto/` adalah ilustrasi berlisensi bebas (Wikimedia Commons) dengan kredit di halaman. Ganti dengan foto asli KBL bila tersedia.
+- Foto di `public/foto/` adalah ilustrasi berlisensi **CC0 / domain publik** (tidak wajib kredit; sumber dicatat di `docs/company-profile/09-Sumber-Foto.md`). Jangan menambah foto CC BY / CC BY-SA tanpa menampilkan kredit. Ganti dengan foto asli bila tersedia.
 - Katalog "Karunia Beton" Jember (CV. Karunia Abadi) di `docs/` adalah **perusahaan lain** dan tidak dipakai di situs ini.
 - Kontak bisa ditimpa lewat `NEXT_PUBLIC_CONTACT_*` (lihat `.env.example`).
 - Halaman lain (`/master/*`, `/admin/*`, `/profile`) memerlukan login.

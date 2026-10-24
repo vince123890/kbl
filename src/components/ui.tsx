@@ -16,7 +16,7 @@ export function PageHeader({ title, subtitle, actions }: { title: string; subtit
 export function Badge({ children, tone = "neutral" }: { children: ReactNode; tone?: "neutral" | "good" | "bad" | "warn" }) {
   const tones = {
     neutral: "bg-background text-muted border border-border",
-    good: "bg-brand-soft text-brand-strong",
+    good: "bg-brand-soft text-foreground",
     bad: "bg-danger-soft text-danger",
     warn: "bg-warn-soft",
   }[tone];

@@ -22,22 +22,14 @@ export const metadata: Metadata = {
 
 type Photo = { src: string; w: number; h: number; alt: string };
 
-/** Foto bebas lisensi (ilustrasi), BUKAN dokumentasi Karunia Beton Lestari. Kredit lengkap ada di bagian bawah halaman. */
+/** Foto ilustrasi berlisensi CC0 / domain publik (tanpa kewajiban kredit), BUKAN dokumentasi Karunia Beton Lestari. Sumbernya dicatat di docs/company-profile/09-Sumber-Foto.md. */
 const PHOTOS = {
-  mixer: { src: "/foto/mixer.jpg", w: 1920, h: 1440, alt: "Truk transit mixer biru sedang berada di lokasi pengecoran jalan" },
-  quarry: { src: "/foto/quarry.jpg", w: 1600, h: 1200, alt: "Gunungan batu pecah di lokasi quarry dengan excavator merah di puncaknya" },
-  batching: { src: "/foto/batching.jpg", w: 1920, h: 1082, alt: "Instalasi batching plant dengan silo semen dan konveyor agregat" },
+  mixer: { src: "/foto/mixer.jpg", w: 1920, h: 1281, alt: "Truk transit mixer putih di dekat lokasi konstruksi" },
+  quarry: { src: "/foto/quarry.jpg", w: 1920, h: 1272, alt: "Excavator mengangkat batu pecah dari tumpukan di lokasi quarry" },
+  batching: { src: "/foto/batching.jpg", w: 1920, h: 1440, alt: "Instalasi batching plant dengan silo semen dan hopper agregat" },
   lokasi: { src: "/foto/lokasi.jpg", w: 1800, h: 1201, alt: "Transit mixer dan concrete pump di lokasi proyek yang sedang dicor" },
   pump: { src: "/foto/pump.jpg", w: 1800, h: 1219, alt: "Concrete pump dengan boom panjang mengecor struktur bertulang" },
 } satisfies Record<string, Photo>;
-
-const CREDITS: { photo: string; author: string; license: string; licenseUrl?: string; source: string }[] = [
-  { photo: "Transit mixer (hero)", author: "Captainmorlypogi1959", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0/", source: "https://commons.wikimedia.org/wiki/File:Mitsubishi_Fuso_Super_Great_Transit_Mixer_Truck_2021.jpg" },
-  { photo: "Tumpukan batu pecah", author: "John Haynes", license: "CC BY-SA 2.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0/", source: "https://commons.wikimedia.org/wiki/File:Crushed_stone_at_Tonfanau_Quarry_-_geograph.org.uk_-_2978560.jpg" },
-  { photo: "Batching plant", author: "Fsmazlum", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0/", source: "https://commons.wikimedia.org/wiki/File:MOBILE_CONCRETE_BATCHING_PLANT_mekaglobal.jpg" },
-  { photo: "Transit mixer di lokasi cor", author: "U.S. Air Force, Airman Sydney Franklin", license: "Domain publik", source: "https://commons.wikimedia.org/wiki/File:Concrete_pouring_for_the_new_Spangdahlem_Elementary_School_(8062804).jpg" },
-  { photo: "Concrete pump", author: "Steve Pivnick, U.S. Air Force", license: "Domain publik", source: "https://commons.wikimedia.org/wiki/File:Construction_site_with_concrete_pump_truck.JPG" },
-];
 
 const WA_TEXT = "Halo Karunia Beton Lestari, saya ingin konsultasi kebutuhan beton. Lokasi: … Volume: … Jadwal cor: …";
 const waUtama = waLink(company.mobile.wa, WA_TEXT);
@@ -376,34 +368,6 @@ export default function CompanyProfilePage() {
           </div>
         </section>
 
-        {/* ------------------------------------------------------------ kredit foto */}
-        <section className="kb-kredit" aria-labelledby="h-kredit">
-          <div className="kb-wrap">
-            <h2 id="h-kredit">Kredit foto</h2>
-            <p>
-              Foto di halaman ini adalah ilustrasi berlisensi bebas dari Wikimedia Commons, bukan dokumentasi operasional Karunia Beton Lestari. Foto telah diubah ukurannya. Akan diganti dengan foto
-              fasilitas dan armada Karunia Beton Lestari.
-            </p>
-            <ul>
-              {CREDITS.map((c) => (
-                <li key={c.photo}>
-                  {c.photo}: {c.author},{" "}
-                  {c.licenseUrl ? (
-                    <a href={c.licenseUrl} target="_blank" rel="noopener noreferrer license">
-                      {c.license}
-                    </a>
-                  ) : (
-                    c.license
-                  )}
-                  ,{" "}
-                  <a href={c.source} target="_blank" rel="noopener noreferrer">
-                    sumber
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
       </main>
 
       <footer className="kb-footer">

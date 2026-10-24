@@ -77,7 +77,7 @@ export default async function AuditLogPage({ searchParams }: PageProps<"/admin/a
           Sampai
           <input type="date" name="to" defaultValue={filters.to} className={`${sel} ml-1`} />
         </label>
-        <button className="tap rounded-lg bg-brand px-4 text-sm font-medium text-white">Terapkan</button>
+        <button className="tap rounded-lg bg-brand px-4 text-sm font-medium text-on-brand">Terapkan</button>
       </form>
 
       {!data?.length ? (
@@ -114,7 +114,7 @@ export default async function AuditLogPage({ searchParams }: PageProps<"/admin/a
                     </td>
                     <td className="px-3 py-2">
                       <details>
-                        <summary className="cursor-pointer text-brand">{summary(r.action, keys, r.meta as Json)}</summary>
+                        <summary className="cursor-pointer font-medium underline decoration-brand decoration-2 underline-offset-2">{summary(r.action, keys, r.meta as Json)}</summary>
                         <DiffView action={r.action} before={before} after={after} keys={keys} meta={r.meta as Json} ip={r.ip} />
                       </details>
                     </td>
@@ -153,7 +153,7 @@ function DiffView({ action, before, after, keys, meta, ip }: { action: string; b
               <tr key={k}>
                 <td className="pr-2 font-mono">{k}</td>
                 <td className="pr-2 break-all text-danger">{action === "CREATE" ? "—" : show(before?.[k])}</td>
-                <td className="break-all text-brand-strong">{action === "DELETE" ? "—" : show(after?.[k])}</td>
+                <td className="break-all text-foreground">{action === "DELETE" ? "—" : show(after?.[k])}</td>
               </tr>
             ))}
           </tbody>

@@ -17,7 +17,7 @@ export function LoginForm({ notice }: { notice?: string }) {
         Masuk
       </SubmitButton>
       <p className="text-center text-sm">
-        <Link href="/forgot-password" className="text-brand hover:underline">
+        <Link href="/forgot-password" className="font-medium text-foreground underline decoration-brand decoration-2 underline-offset-4 hover:bg-brand-soft">
           Lupa password?
         </Link>
       </p>

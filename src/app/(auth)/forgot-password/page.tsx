@@ -14,7 +14,7 @@ export default function ForgotPasswordPage() {
       <Alert result={state} />
       <SubmitButton className="w-full">Kirim link reset</SubmitButton>
       <p className="text-center text-sm">
-        <Link href="/login" className="text-brand hover:underline">
+        <Link href="/login" className="font-medium text-foreground underline decoration-brand decoration-2 underline-offset-4 hover:bg-brand-soft">
           Kembali ke login
         </Link>
       </p>

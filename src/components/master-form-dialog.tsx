@@ -14,7 +14,7 @@ export function FormDialog({
   children,
   submitLabel = "Simpan",
   onSuccess,
-  triggerClassName = "tap rounded-lg bg-brand px-4 text-sm font-medium text-white hover:bg-brand-strong",
+  triggerClassName = "tap rounded-lg bg-brand px-4 text-sm font-medium text-on-brand hover:bg-brand-strong",
 }: {
   trigger: string;
   title: string;

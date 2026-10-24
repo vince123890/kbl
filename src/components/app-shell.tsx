@@ -38,7 +38,7 @@ export function AppShell({
                     onClick={() => setOpen(false)}
                     aria-current={active ? "page" : undefined}
                     className={`tap flex items-center rounded-lg px-2 ${
-                      active ? "bg-brand-soft font-medium text-brand-strong" : "hover:bg-background"
+                      active ? "bg-brand-soft font-medium text-foreground" : "hover:bg-background"
                     }`}
                   >
                     {item.label}
@@ -57,7 +57,7 @@ export function AppShell({
       {/* sidebar desktop */}
       <aside className="hidden w-64 shrink-0 border-r border-border bg-surface md:block">
         <div className="flex h-14 items-center gap-2 border-b border-border px-4">
-          <span className="font-semibold">Karunia Beton Lestari</span>
+          <span className="font-heading text-lg font-medium">Karunia Beton Lestari</span>
         </div>
         {navigation}
       </aside>

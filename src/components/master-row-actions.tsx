@@ -32,7 +32,7 @@ export function MasterFormButton({
       triggerClassName={
         compact
           ? "tap rounded-lg border border-border px-3 text-sm hover:bg-background"
-          : "tap rounded-lg bg-brand px-4 text-sm font-medium text-white hover:bg-brand-strong"
+          : "tap rounded-lg bg-brand px-4 text-sm font-medium text-on-brand hover:bg-brand-strong"
       }
     >
       {(state) => {

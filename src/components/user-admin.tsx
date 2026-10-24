@@ -76,7 +76,7 @@ export function IssuedPassword({ issued, onClose }: { issued: { email: string; p
         <code className="rounded bg-surface px-2 py-1 text-base tracking-wide">{issued.password}</code>
         <button
           type="button"
-          className="tap rounded-lg border border-brand px-3 text-brand-strong"
+          className="tap rounded-lg border border-brand px-3 text-foreground"
           onClick={async () => {
             await navigator.clipboard.writeText(issued.password);
             setCopied(true);
@@ -206,7 +206,7 @@ export function UserRowActions({
         )}
       </div>
       {message && (
-        <p role={message.ok ? "status" : "alert"} className={`max-w-64 text-right text-xs ${message.ok ? "text-brand-strong" : "text-danger"}`}>
+        <p role={message.ok ? "status" : "alert"} className={`max-w-64 text-right text-xs ${message.ok ? "text-foreground" : "text-danger"}`}>
           {message.text}
         </p>
       )}

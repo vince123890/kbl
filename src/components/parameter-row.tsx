@@ -43,7 +43,7 @@ export function ParameterForm({ p }: { p: ParameterRow }) {
       </SubmitButton>
       {range && <span className="text-xs text-muted">{range}</span>}
       {state && (
-        <span role={state.ok ? "status" : "alert"} className={`text-xs ${state.ok ? "text-brand-strong" : "text-danger"}`}>
+        <span role={state.ok ? "status" : "alert"} className={`text-xs ${state.ok ? "text-foreground" : "text-danger"}`}>
           {state.ok ? state.message : state.error}
         </span>
       )}

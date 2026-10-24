@@ -39,7 +39,7 @@ Prinsip sicoma dipertahankan: gerak **tegas dan presisi**, sekali saja, tidak me
 Kontras teks ≥ 4,5:1; target sentuh ≥ 44 px; fokus terlihat (`outline` 3 px) di semua elemen interaktif; semua gambar ber-`alt`; `sizes` pada `next/image`; hero memakai `priority`, sisanya lazy.
 
 ## 6. Foto
-Sementara: ilustrasi berlisensi bebas (Wikimedia Commons) dengan **kredit di halaman** dan keterangan "bukan dokumentasi Karunia Beton Lestari". Ganti dengan foto asli Karunia Beton Lestari (plant, batching, armada, lokasi cor) begitu tersedia. Dilarang mengambil foto dari akun media sosial atau situs perusahaan lain.
+Sementara: ilustrasi **hanya berlisensi CC0 atau domain publik** (tanpa kewajiban kredit) dari Wikimedia Commons. Foto berlisensi CC BY atau CC BY-SA **tidak boleh dipakai di halaman tanpa kredit**, karena lisensinya mewajibkan atribusi. Sumber dan lisensi tiap foto dicatat di [09-Sumber-Foto.md](09-Sumber-Foto.md). Ganti dengan foto asli Karunia Beton Lestari (plant, batching, armada, lokasi cor) begitu tersedia. Dilarang mengambil foto dari akun media sosial atau situs perusahaan lain.
 
 ## 7. Daftar periksa sebelum merilis bagian baru
 1. Teksnya sama dengan dokumen halaman terkait di folder ini?
