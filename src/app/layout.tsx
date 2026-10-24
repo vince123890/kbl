@@ -6,6 +6,7 @@ import { PwaRegister } from "@/components/pwa-register";
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
   title: { default: "KBL — Perawatan & Sparepart", template: "%s · KBL" },
   description: "Manajemen perawatan, sparepart, dan emergensi kendaraan",
   applicationName: "KBL",

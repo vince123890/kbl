@@ -5,6 +5,7 @@ import { LOGIN_AT_COOKIE, sessionExpired } from "@/lib/lockout";
 const PUBLIC_PATHS = ["/login", "/forgot-password", "/auth", "/offline"];
 
 function isPublic(pathname: string) {
+  if (pathname === "/" || pathname.startsWith("/opengraph-image")) return true; // landing page + gambar OG
   return PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 }
 
@@ -50,7 +51,7 @@ export async function proxy(request: NextRequest) {
     }
     if (pathname === "/login") {
       const url = request.nextUrl.clone();
-      url.pathname = "/";
+      url.pathname = "/dashboard";
       url.search = "";
       return NextResponse.redirect(url);
     }

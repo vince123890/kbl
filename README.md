@@ -21,6 +21,29 @@ Aplikasi web + PWA (Next.js 16, Supabase). Dokumen kebutuhan ada di [docs/](docs
    ```
 6. Login dengan akun admin tersebut; sistem meminta ganti password pada login pertama.
 
+## Data demo (hanya development/staging)
+
+```bash
+npm run seed:demo -- --yes
+```
+
+Membuat 12 user (semua role) dan data master contoh sekali jalan: 3 cabang tambahan, 5 lokasi, 8 kendaraan, 16 sparepart, 7 vendor. Aman diulang (baris yang sudah ada dilewati). **Jangan dijalankan di produksi.** Password semua user demo: `Demo12345` (tidak diminta ganti saat login).
+
+| Email | Role | Cabang |
+|---|---|---|
+| sysadmin@example.com | SYS_ADMIN | Pusat |
+| hqadmin@example.com | HQ_ADMIN | Pusat |
+| depthead.jkt@example.com | DEPT_HEAD | Jakarta |
+| supervisor.jkt@example.com | SUPERVISOR | Jakarta |
+| warehouse.jkt@example.com | WAREHOUSE | Jakarta |
+| mechanic.jkt@example.com | MECHANIC | Jakarta |
+| driver.jkt@example.com | DRIVER | Jakarta |
+| gudang.supervisor.jkt@example.com | WAREHOUSE + SUPERVISOR | Jakarta |
+| supervisor.sby@example.com | SUPERVISOR | Surabaya |
+| mechanic.sby@example.com | MECHANIC | Surabaya |
+| driver.sby@example.com | DRIVER | Surabaya |
+| nonaktif.jkt@example.com | MECHANIC (nonaktif) | Jakarta |
+
 ## Perintah
 
 | Perintah | Fungsi |
@@ -30,6 +53,13 @@ Aplikasi web + PWA (Next.js 16, Supabase). Dokumen kebutuhan ada di [docs/](docs
 | `npm run typecheck` | Tipe TypeScript |
 | `npm test` | Seluruh tes (unit + database) |
 | `npm run test:db` | Tes skema SQL, RLS, trigger, audit (PGlite, tanpa Docker) |
+
+## Halaman publik dan rute
+
+- `/` adalah **landing page** publik (cerita sehari bersama satu truk dan enam kebutuhan aplikasi). Kode di `src/app/(site)/`; gaya di `landing.css`, contoh tampilan di `artifacts.tsx`.
+- Kontak di landing (WhatsApp, email, telepon, alamat) tampil **hanya bila** `NEXT_PUBLIC_CONTACT_*` diisi (lihat `.env.example`); jika kosong, bagian itu disembunyikan.
+- `/dashboard` adalah dashboard setelah login (sebelumnya `/`). Aplikasi PWA yang terpasang dibuka di sini.
+- Halaman lain (`/master/*`, `/admin/*`, `/profile`) memerlukan login.
 
 ## PWA
 

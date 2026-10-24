@@ -97,7 +97,7 @@ export async function loginAction(_prev: ActionResult | null, formData: FormData
     .eq("id", profile.id);
   await logSecurity(profile.id, "LOGIN_SUCCESS");
   await markLoginTime();
-  redirect("/");
+  redirect("/dashboard");
 }
 
 export async function logoutAction() {
@@ -158,7 +158,7 @@ export async function changePasswordAction(_prev: ActionResult | null, formData:
   const err = await applyNewPassword(user.id, next);
   if (err) return { ok: false, error: err };
   await logSecurity(user.id, "PASSWORD_CHANGED");
-  redirect("/");
+  redirect("/dashboard");
 }
 
 /** Menyelesaikan reset password setelah pengguna membuka link email (sesi pemulihan dibuat di /auth/callback). */
@@ -177,7 +177,7 @@ export async function resetPasswordAction(_prev: ActionResult | null, formData: 
   if (err) return { ok: false, error: err };
   await logSecurity(data.user.id, "PASSWORD_RESET_DONE");
   await markLoginTime();
-  redirect("/");
+  redirect("/dashboard");
 }
 
 export async function updateProfileAction(_prev: ActionResult | null, formData: FormData): Promise<ActionResult> {

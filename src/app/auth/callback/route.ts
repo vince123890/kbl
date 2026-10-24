@@ -7,9 +7,9 @@ import { LOGIN_AT_COOKIE } from "@/lib/lockout";
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = request.nextUrl;
   const code = searchParams.get("code");
-  const nextParam = searchParams.get("next") ?? "/";
+  const nextParam = searchParams.get("next") ?? "/dashboard";
   // cegah open redirect: hanya path internal
-  const next = nextParam.startsWith("/") && !nextParam.startsWith("//") ? nextParam : "/";
+  const next = nextParam.startsWith("/") && !nextParam.startsWith("//") ? nextParam : "/dashboard";
 
   if (code) {
     const supabase = await createClient();

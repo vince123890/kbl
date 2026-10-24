@@ -30,7 +30,7 @@ export function AppShell({
           <p className="mb-1 px-2 text-xs font-semibold uppercase tracking-wide text-muted">{group.title}</p>
           <ul className="space-y-0.5">
             {group.items.map((item) => {
-              const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+              const active = pathname.startsWith(item.href);
               return (
                 <li key={item.href}>
                   <Link

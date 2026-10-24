@@ -6,7 +6,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "KBL — Perawatan & Sparepart Kendaraan",
     short_name: "KBL",
     description: "Manajemen perawatan, sparepart, dan emergensi kendaraan",
-    start_url: "/",
+    start_url: "/dashboard",
     scope: "/",
     display: "standalone",
     orientation: "portrait",

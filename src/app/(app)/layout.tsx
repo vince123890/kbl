@@ -6,7 +6,7 @@ import { MASTERS } from "@/lib/masters";
 export default async function AppLayout({ children }: { children: ReactNode }) {
   const user = await requireUser();
 
-  const nav: NavGroup[] = [{ title: "Utama", items: [{ href: "/", label: "Dashboard" }] }];
+  const nav: NavGroup[] = [{ title: "Utama", items: [{ href: "/dashboard", label: "Dashboard" }] }];
   if (can(user, "master.read")) {
     nav.push({ title: "Master Data", items: MASTERS.map((m) => ({ href: `/master/${m.slug}`, label: m.label })) });
   }
