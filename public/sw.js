@@ -3,17 +3,22 @@
  * - Navigasi: network-first; bila offline tampilkan /offline.
  * - Halaman terautentikasi dan API TIDAK disimpan di cache (data pengguna tidak boleh bocor antar sesi).
  */
-const VERSION = "kbl-v1";
+const VERSION = "kbl-v2";
 const STATIC_CACHE = `${VERSION}-static`;
 const OFFLINE_URL = "/offline";
 
+// Menyimpan halaman offline beserta berkas JS/CSS statisnya agar layar darurat dapat tampil tanpa sinyal.
+async function precacheOffline() {
+  const cache = await caches.open(STATIC_CACHE);
+  const res = await fetch(new Request(OFFLINE_URL, { cache: "reload" }));
+  const html = await res.clone().text();
+  await cache.put(OFFLINE_URL, res);
+  const assets = [...new Set(html.match(/\/_next\/static\/[^"'\\\s)]+/g) || [])];
+  await Promise.all(assets.map((a) => cache.add(a).catch(() => undefined)));
+}
+
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches
-      .open(STATIC_CACHE)
-      .then((cache) => cache.add(new Request(OFFLINE_URL, { cache: "reload" })))
-      .then(() => self.skipWaiting()),
-  );
+  event.waitUntil(precacheOffline().then(() => self.skipWaiting()));
 });
 
 self.addEventListener("activate", (event) => {
@@ -53,4 +58,39 @@ self.addEventListener("fetch", (event) => {
       }),
     );
   }
+});
+
+// Notifikasi push (Web Push). Muatan JSON: {title, body, url}.
+self.addEventListener("push", (event) => {
+  let data = {};
+  try {
+    data = event.data ? event.data.json() : {};
+  } catch {
+    data = { title: "Karunia Beton Lestari", body: event.data ? event.data.text() : "" };
+  }
+  event.waitUntil(
+    self.registration.showNotification(data.title || "Karunia Beton Lestari", {
+      body: data.body || "",
+      icon: "/icons/192",
+      badge: "/icons/192",
+      data: { url: data.url || "/dashboard" },
+      tag: data.url || undefined,
+    }),
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const url = (event.notification.data && event.notification.data.url) || "/dashboard";
+  event.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((list) => {
+      for (const c of list) {
+        if ("focus" in c) {
+          c.navigate(url);
+          return c.focus();
+        }
+      }
+      return self.clients.openWindow(url);
+    }),
+  );
 });

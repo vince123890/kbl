@@ -64,10 +64,12 @@ export const MASTERS: MasterDef[] = [
       { name: "is_hq", label: "Kantor Pusat", type: "checkbox", help: "Hanya satu cabang yang boleh menjadi pusat" },
       { name: "address", label: "Alamat", type: "textarea" },
       { name: "phone", label: "Telepon", type: "text", maxLength: 30 },
+      { name: "region", label: "Wilayah", type: "text", maxLength: 80, help: "Dipakai mencocokkan kontak darurat bercakupan wilayah" },
     ],
     columns: [
       { key: "code", label: "Kode" },
       { key: "name", label: "Nama" },
+      { key: "region", label: "Wilayah" },
       { key: "is_hq", label: "Pusat", render: "bool" },
       { key: "phone", label: "Telepon" },
     ],

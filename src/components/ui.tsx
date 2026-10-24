@@ -53,3 +53,88 @@ export function Pagination({
 export function EmptyState({ children }: { children: ReactNode }) {
   return <div className="rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted">{children}</div>;
 }
+
+export function StatusBadge({
+  map,
+  value,
+}: {
+  map: Record<string, { label: string; tone?: "neutral" | "good" | "bad" | "warn" }>;
+  value: string | null | undefined;
+}) {
+  const def = value ? map[value] : undefined;
+  return <Badge tone={def?.tone ?? "neutral"}>{def?.label ?? value ?? "-"}</Badge>;
+}
+
+export const TABLE_WRAP = "overflow-x-auto rounded-xl border border-border bg-surface";
+export const TH = "px-3 py-2 font-medium";
+export const TD = "px-3 py-2 align-top";
+
+/** Tabel standar: kepala kolom kecil huruf besar, baris berpembatas. */
+export function DataTable({ head, children }: { head: ReactNode[]; children: ReactNode }) {
+  return (
+    <div className={TABLE_WRAP}>
+      <table className="w-full text-sm">
+        <thead className="border-b border-border text-left text-xs uppercase text-muted">
+          <tr>
+            {head.map((h, i) => (
+              <th key={i} className={TH}>
+                {h}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="[&>tr]:border-b [&>tr]:border-border [&>tr:last-child]:border-0">{children}</tbody>
+      </table>
+    </div>
+  );
+}
+
+export function Card({ title, actions, children }: { title?: string; actions?: ReactNode; children: ReactNode }) {
+  return (
+    <section className="rounded-xl border border-border bg-surface p-4">
+      {(title || actions) && (
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+          {title && <h2 className="font-semibold">{title}</h2>}
+          {actions}
+        </div>
+      )}
+      {children}
+    </section>
+  );
+}
+
+/** Pasangan label–nilai untuk ringkasan dokumen. */
+export function KeyValue({ items }: { items: [string, ReactNode][] }) {
+  return (
+    <dl className="grid gap-x-6 gap-y-3 text-sm sm:grid-cols-2 lg:grid-cols-3">
+      {items.map(([k, v]) => (
+        <div key={k}>
+          <dt className="text-xs uppercase tracking-wide text-muted">{k}</dt>
+          <dd className="mt-0.5">{v === null || v === undefined || v === "" ? <span className="text-muted">-</span> : v}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+export function Notice({ tone = "warn", children }: { tone?: "warn" | "bad" | "good"; children: ReactNode }) {
+  const t = { warn: "bg-warn-soft", bad: "bg-danger-soft text-danger", good: "bg-brand-soft" }[tone];
+  return (
+    <p role={tone === "bad" ? "alert" : "status"} className={`mb-4 rounded-lg px-3 py-2 text-sm ${t}`}>
+      {children}
+    </p>
+  );
+}
+
+export function ButtonLink({ href, children, primary }: { href: string; children: ReactNode; primary?: boolean }) {
+  return (
+    <Link
+      href={href}
+      className={`tap inline-flex items-center rounded-lg px-4 text-sm font-medium ${
+        primary ? "bg-brand text-on-brand hover:bg-brand-strong" : "border border-border hover:bg-brand-soft"
+      }`}
+    >
+      {children}
+    </Link>
+  );
+}

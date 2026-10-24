@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { LOGIN_AT_COOKIE, sessionExpired } from "@/lib/lockout";
 
-const PUBLIC_PATHS = ["/login", "/forgot-password", "/auth", "/offline"];
+const PUBLIC_PATHS = ["/login", "/forgot-password", "/auth", "/offline", "/api/jobs"];
 
 function isPublic(pathname: string) {
   if (pathname === "/" || pathname.startsWith("/opengraph-image")) return true; // landing page + gambar OG

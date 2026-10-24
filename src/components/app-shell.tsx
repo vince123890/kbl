@@ -8,16 +8,21 @@ import { InstallButton } from "@/components/install-button";
 
 export interface NavGroup {
   title: string;
-  items: { href: string; label: string }[];
+  items: { href: string; label: string; badge?: number }[];
 }
 
 export function AppShell({
   nav,
   user,
+  unread = 0,
+  alertCount = 0,
   children,
 }: {
   nav: NavGroup[];
   user: { name: string; branchName: string; roles: string[] };
+  unread?: number;
+  /** insiden yang belum dikonfirmasi pusat (hanya untuk penangan insiden) */
+  alertCount?: number;
   children: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
@@ -41,7 +46,12 @@ export function AppShell({
                       active ? "bg-brand-soft font-medium text-foreground" : "hover:bg-background"
                     }`}
                   >
-                    {item.label}
+                    <span className="flex-1">{item.label}</span>
+                    {!!item.badge && (
+                      <span className="ml-2 rounded-full bg-danger px-1.5 text-xs font-medium text-white" aria-label={`${item.badge} baru`}>
+                        {item.badge}
+                      </span>
+                    )}
                   </Link>
                 </li>
               );
@@ -55,7 +65,7 @@ export function AppShell({
   return (
     <div className="flex min-h-screen">
       {/* sidebar desktop */}
-      <aside className="hidden w-64 shrink-0 border-r border-border bg-surface md:block">
+      <aside className="hidden w-64 shrink-0 border-r border-border bg-surface md:block print:hidden">
         <div className="flex h-14 items-center gap-2 border-b border-border px-4">
           <span className="font-heading text-lg font-medium">Karunia Beton Lestari</span>
         </div>
@@ -71,7 +81,7 @@ export function AppShell({
       )}
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-surface px-4">
+        <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-surface px-4 print:hidden">
           <button
             className="tap -ml-2 flex w-11 items-center justify-center rounded-lg hover:bg-background md:hidden"
             aria-label="Buka menu"
@@ -86,6 +96,16 @@ export function AppShell({
             </p>
           </div>
           <InstallButton />
+          <Link
+            href="/notifications"
+            aria-label={unread ? `Notifikasi, ${unread} belum dibaca` : "Notifikasi"}
+            className="tap relative flex w-11 items-center justify-center rounded-lg hover:bg-background"
+          >
+            <span aria-hidden className="text-lg">🔔</span>
+            {unread > 0 && (
+              <span className="absolute right-1 top-1.5 min-w-4 rounded-full bg-danger px-1 text-center text-[10px] font-semibold leading-4 text-white">{unread > 99 ? "99+" : unread}</span>
+            )}
+          </Link>
           <Link href="/profile" className="tap hidden items-center rounded-lg px-3 text-sm hover:bg-background sm:flex">
             Profil
           </Link>
@@ -93,6 +113,11 @@ export function AppShell({
             <button className="tap rounded-lg border border-border px-3 text-sm hover:bg-background">Keluar</button>
           </form>
         </header>
+        {alertCount > 0 && (
+          <Link href="/emergency/incidents" role="alert" className="block bg-danger px-4 py-2 text-center text-sm font-semibold text-white print:hidden">
+            🚨 {alertCount} insiden belum dikonfirmasi pusat. Ketuk untuk menangani.
+          </Link>
+        )}
         <main className="mx-auto w-full max-w-6xl flex-1 p-4 md:p-6">{children}</main>
       </div>
     </div>
