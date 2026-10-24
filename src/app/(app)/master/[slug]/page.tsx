@@ -5,6 +5,8 @@ import { getMaster } from "@/lib/masters";
 import { Badge, EmptyState, PageHeader, Pagination } from "@/components/ui";
 import { FilterSelect, SearchBox } from "@/components/list-controls";
 import { DetailLink, MasterFormButton, OdometerButton, ToggleActiveButton } from "@/components/master-row-actions";
+import { CsvImport } from "@/components/csv-import";
+import { importMasterAction } from "../actions";
 
 const PAGE_SIZE = 50;
 
@@ -80,6 +82,15 @@ export default async function MasterListPage({ params, searchParams }: PageProps
         subtitle={`${count ?? 0} data`}
         actions={canWrite ? <MasterFormButton def={def} branches={branches} /> : undefined}
       />
+
+      {canWrite && (slug === "vehicles" || slug === "spareparts") && (
+        <CsvImport
+          title={`Impor ${def.label.toLowerCase()} dari CSV`}
+          templateHref={`/master/${slug}/template`}
+          action={importMasterAction.bind(null, slug)}
+          columns={slug === "vehicles" ? "nopol; tipe; model; tahun; cabang (kode); odometer; status; catatan" : "kode; nama; kategori; satuan; stok_min; deskripsi"}
+        />
+      )}
 
       <div className="mb-4 flex flex-wrap items-center gap-2">
         <SearchBox placeholder={`Cari ${def.label.toLowerCase()}…`} />

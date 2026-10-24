@@ -15,11 +15,11 @@ Kondisi awal: slice 1 `foundation-auth-master` (login, user, role, master data, 
 
 | Slice | Isi | Halaman | Status |
 |---|---|---|---|
-| S2 | Mesin approval, Alur Approval, Kotak Masuk, Semua Antrean, Riwayat, notifikasi dalam aplikasi | `/approvals/*`, `/admin/approval-flows`, `/admin/notifications`, `/notifications` | Dikerjakan |
-| S3 | Mutasi Sparepart (draft, ajukan, posting, batal, pembalik), Saldo Stok, Kartu Stok, Stock Opname (+ unggah CSV) | `/inventory/*` | Dikerjakan |
-| S4 | Rencana Perawatan, Work Order, Kalender Jadwal, Perubahan Jadwal, job preventif dan overdue | `/maintenance/*` | Dikerjakan |
-| S5 | Lapor Darurat (offline, idempoten), Insiden, Kontak Darurat, Langkah Cepat | `/emergency/*` | Dikerjakan |
-| S6 | Dashboard W1–W12, 13 laporan + ekspor CSV, lampiran, job terjadwal, impor CSV master, data demo transaksi | `/dashboard`, `/reports/*` | Dikerjakan |
+| S2 | Mesin approval, Alur Approval, Kotak Masuk, Semua Antrean, Riwayat, notifikasi dalam aplikasi | `/approvals/*`, `/admin/approval-flows`, `/admin/notifications`, `/notifications` | Selesai |
+| S3 | Mutasi Sparepart (draft, ajukan, posting, batal, pembalik), Saldo Stok, Kartu Stok, Stock Opname (+ unggah CSV) | `/inventory/*` | Selesai |
+| S4 | Rencana Perawatan, Work Order, Kalender Jadwal, Perubahan Jadwal, job preventif dan overdue | `/maintenance/*` | Selesai |
+| S5 | Lapor Darurat (offline, idempoten), Insiden, Kontak Darurat, Langkah Cepat | `/emergency/*` | Selesai |
+| S6 | Dashboard W1–W12, 13 laporan + ekspor CSV, lampiran, job terjadwal, impor CSV master, data demo transaksi | `/dashboard`, `/reports/*` | Selesai |
 
 ## Keputusan yang diambil sendiri (asumsi, bisa diubah)
 
@@ -34,3 +34,28 @@ Kondisi awal: slice 1 `foundation-auth-master` (login, user, role, master data, 
 5. Departemen pada langkah approval tidak dipakai (tidak ada atribut departemen pada user); langkah memakai role.
 6. Opname memakai mode pembekuan dari parameter `count.freeze_mode` (`freeze` atau `recount`).
 7. Pertanyaan terbuka #2 (kartu fisik/QR) tidak dikerjakan: Kartu Stok berupa tampilan digital.
+
+## Cakupan terhadap spesifikasi menu (42 halaman)
+
+Semua halaman pada [MENU-SUBMENU-SPESIFIKASI.md](../MENU-SUBMENU-SPESIFIKASI.md) sudah ada, kecuali yang sengaja berbeda berikut.
+
+| Spesifikasi | Yang dibangun | Alasan |
+|---|---|---|
+| Upload Excel (kendaraan, sparepart, plan, user, opname) | Impor **CSV** dengan template | Tanpa dependensi baru; CSV dibuka di Excel |
+| Ekspor Excel/PDF | Ekspor **CSV** + tombol Cetak (simpan sebagai PDF dari peramban) | Sama |
+| Ekspor > 50.000 baris sebagai tugas latar | Ditolak dengan pesan "persempit filter" | Belum ada antrean tugas latar |
+| Zona waktu per cabang (WIB/WITA/WIT) | Seluruhnya WIB | Cabang belum punya atribut zona waktu |
+| Field "kendaraan ditugaskan" pada user | Diatur dari master Kendaraan (pengemudi utama) | Satu sumber kebenaran |
+| Uji Panggilan pada kontak darurat | Nomor dapat diketuk untuk menelepon | Tidak ada penyedia panggilan |
+| Kartu stok fisik QR/barcode | Tidak dikerjakan | Pertanyaan terbuka #2 |
+| Notifikasi WhatsApp/SMS | Antrean + webhook; **belum ada penyedia** | Pertanyaan terbuka #11 |
+
+## Yang belum terbukti di lingkungan nyata
+
+Seluruh aturan bisnis diuji di PGlite (116 tes) tetapi belum dijalankan pada instance Supabase sungguhan. Perlu dicek pertama kali:
+
+1. Migrasi `20261025…` berjalan mulus di Supabase dan bucket `attachments` terbentuk.
+2. Query halaman (embed relasi PostgREST) berhasil. Nama relasi yang dipakai sudah dicek ada di skema oleh tes.
+3. Unggah lampiran ke Storage, tautan unduh bertanda tangan, dan push (butuh kunci VAPID).
+4. Tampilan halaman terautentikasi pada ponsel dan desktop (hanya halaman publik dan layar offline yang sudah dilihat langsung).
+5. Pemicu job: `pg_cron` atau panggilan `/api/jobs/run` dengan `CRON_SECRET`.

@@ -112,6 +112,8 @@ create table public.wo_parts (
 
 alter table public.stock_documents
   add constraint stock_documents_wo_fk foreign key (work_order_id) references public.work_orders (id);
+alter table public.stock_movements
+  add constraint stock_movements_wo_fk foreign key (work_order_id) references public.work_orders (id);
 
 create trigger work_orders_touch before insert or update on public.work_orders
   for each row execute function public.touch_row();

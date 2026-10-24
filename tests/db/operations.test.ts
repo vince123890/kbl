@@ -623,6 +623,8 @@ describe("kontrak query aplikasi", () => {
       "stock_document_lines_to_location_id_fkey",
       "work_orders_assignee_id_fkey",
       "stock_documents_wo_fk",
+      "stock_movements_wo_fk",
+      "stock_movements_vehicle_id_fkey",
       "work_orders_incident_fk",
     ];
     const have = new Set((await admin<{ conname: string }>(`select conname from pg_constraint where contype='f'`)).map((r) => r.conname));

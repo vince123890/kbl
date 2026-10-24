@@ -4,6 +4,7 @@
 import { config } from "dotenv";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { DEMO_BRANCHES, DEMO_LOCATIONS, DEMO_PASSWORD, DEMO_SPAREPARTS, DEMO_USERS, DEMO_VEHICLES, DEMO_VENDORS } from "./demo-data";
+import { seedOperations } from "./seed-operations";
 
 config({ path: ".env.local" });
 
@@ -146,6 +147,15 @@ async function main() {
     (r) => String(r.plate_no).replace(/\s/g, "").toUpperCase(),
   );
   console.log(`Kendaraan    : +${vehicles}`);
+
+  // ---- transaksi demo lewat jalur resmi (butuh kunci anon untuk login sebagai user demo)
+  const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!anon) {
+    console.log("\nNEXT_PUBLIC_SUPABASE_ANON_KEY kosong: transaksi demo (stok, WO, opname, insiden) dilewati.");
+  } else {
+    console.log("");
+    await seedOperations({ url, anonKey: anon, service: db });
+  }
 
   console.log(`\nSelesai. Password semua user demo: ${DEMO_PASSWORD}\n`);
   console.table(DEMO_USERS.map((u) => ({ email: u.email, role: u.roles.join("+"), cabang: u.branch, catatan: u.note })));

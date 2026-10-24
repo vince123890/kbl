@@ -27,6 +27,7 @@ export const DEMO_USERS: DemoUser[] = [
   { email: "warehouse.jkt@example.com", name: "Wawan Gudang", phone: "081200000005", branch: "JKT", roles: ["WAREHOUSE"], note: "Mutasi, opname" },
   { email: "mechanic.jkt@example.com", name: "Maman Mekanik", phone: "081200000006", branch: "JKT", roles: ["MECHANIC"], note: "Menjalankan WO" },
   { email: "driver.jkt@example.com", name: "Dedi Driver", phone: "081200000007", branch: "JKT", roles: ["DRIVER"], note: "Pengemudi, kendaraan B 9001 KBL" },
+  { email: "warehouse.sby@example.com", name: "Wulan Gudang SBY", phone: "081200000013", branch: "SBY", roles: ["WAREHOUSE"], note: "Mutasi dan opname cabang Surabaya" },
   { email: "supervisor.sby@example.com", name: "Sinta Supervisor SBY", phone: "081200000008", branch: "SBY", roles: ["SUPERVISOR"], note: "Uji isolasi cabang (Surabaya)" },
   { email: "mechanic.sby@example.com", name: "Mulyadi Mekanik SBY", phone: "081200000009", branch: "SBY", roles: ["MECHANIC"], note: "Uji isolasi cabang (Surabaya)" },
   { email: "driver.sby@example.com", name: "Doni Driver SBY", phone: "081200000010", branch: "SBY", roles: ["DRIVER"], note: "Uji isolasi cabang (Surabaya)" },
@@ -80,4 +81,57 @@ export const DEMO_VENDORS = [
   { name: "Asuransi Armada Nusantara", type: "ASURANSI", phone: "1500-123", region: "Nasional", pic: "Claim Center", address: null },
   { name: "PT Suku Cadang Sentosa", type: "SUPPLIER", phone: "021-5551003", region: "Jakarta", pic: "Bu Rina", address: "Jl. Pulogadung, Jakarta" },
   { name: "CV Ban Sejahtera", type: "SUPPLIER", phone: "031-5551004", region: "Surabaya", pic: "Pak Tono", address: "Jl. Ahmad Yani, Surabaya" },
+];
+
+// ---------------------------------------------------------------- transaksi demo (dibuat lewat jalur resmi oleh seed-demo)
+export interface DemoStockLine {
+  location: string; // kode lokasi
+  items: { code: string; qty: number }[];
+}
+
+/** Stok awal per lokasi. Sebagian sengaja di bawah stok minimum agar widget Stok Kritis terisi. */
+export const DEMO_STOCK: { branch: string; warehouseUser: string; lines: DemoStockLine[] }[] = [
+  {
+    branch: "JKT",
+    warehouseUser: "warehouse.jkt@example.com",
+    lines: [
+      {
+        location: "GU-JKT",
+        items: [
+          { code: "OLI-MSN-15W40", qty: 14 },
+          { code: "OLI-GRD-90", qty: 60 },
+          { code: "FLT-OLI-01", qty: 18 },
+          { code: "FLT-UDR-01", qty: 3 },
+          { code: "FLT-SLR-01", qty: 12 },
+          { code: "KMP-RM-DP", qty: 2 },
+          { code: "KMP-RM-BK", qty: 6 },
+          { code: "MNY-RM-DOT4", qty: 20 },
+          { code: "AKI-12V-100", qty: 5 },
+          { code: "BAN-295-22", qty: 10 },
+        ],
+      },
+      { location: "WS-JKT", items: [{ code: "OLI-MSN-15W40", qty: 4 }, { code: "FLT-OLI-01", qty: 4 }, { code: "LMP-H4-24V", qty: 14 }] },
+    ],
+  },
+  {
+    branch: "SBY",
+    warehouseUser: "warehouse.sby@example.com",
+    lines: [{ location: "GU-SBY", items: [{ code: "OLI-MSN-15W40", qty: 8 }, { code: "FLT-OLI-01", qty: 12 }, { code: "BAN-185-14", qty: 9 }, { code: "KPL-SET-01", qty: 1 }] }],
+  },
+];
+
+/** Rencana perawatan demo. lastDaysAgo/lastKm menentukan seberapa dekat jatuh tempo. */
+export const DEMO_PLANS = [
+  { supervisor: "supervisor.jkt@example.com", plate: "B 9001 KBL", task: "Ganti oli mesin dan filter oli", days: 90, km: 10000, lastDaysAgo: 85, lastKm: 78000, parts: [{ code: "OLI-MSN-15W40", qty: 2 }, { code: "FLT-OLI-01", qty: 1 }] },
+  { supervisor: "supervisor.jkt@example.com", plate: "B 9001 KBL", task: "Servis rem depan dan belakang", days: 180, km: 20000, lastDaysAgo: 60, lastKm: 66000, parts: [{ code: "KMP-RM-DP", qty: 1 }] },
+  { supervisor: "supervisor.jkt@example.com", plate: "B 9002 KBL", task: "Servis berkala 120.000 km", days: 365, km: 40000, lastDaysAgo: 200, lastKm: 82000, parts: [{ code: "FLT-SLR-01", qty: 1 }, { code: "FLT-UDR-01", qty: 1 }] },
+  { supervisor: "supervisor.jkt@example.com", plate: "B 5201 KBL", task: "Ganti oli mesin", days: 90, km: 5000, lastDaysAgo: 30, lastKm: 36000, parts: [{ code: "OLI-MSN-15W40", qty: 1 }] },
+  { supervisor: "supervisor.sby@example.com", plate: "L 8001 KBL", task: "Ganti oli mesin dan filter oli", days: 90, km: 10000, lastDaysAgo: 40, lastKm: 90000, parts: [{ code: "OLI-MSN-15W40", qty: 2 }, { code: "FLT-OLI-01", qty: 1 }] },
+];
+
+/** Kontak darurat tambahan (kontak Global pusat sudah ada dari migrasi). Nomor contoh. */
+export const DEMO_CONTACTS = [
+  { scope: "BRANCH", branch: "JKT", role_label: "Derek Jakarta", name: "Derek Cepat Jabodetabek", phone: "081300000001", priority: 2, service_hours: "24 jam" },
+  { scope: "BRANCH", branch: "JKT", role_label: "Atasan langsung", name: "Surya Supervisor", phone: "081200000004", priority: 3 },
+  { scope: "BRANCH", branch: "SBY", role_label: "Derek Surabaya", name: "Derek Sigap Jawa Timur", phone: "081300000002", priority: 2, service_hours: "24 jam" },
 ];

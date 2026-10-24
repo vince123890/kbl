@@ -70,7 +70,7 @@ create table public.stock_movements (
   branch_id uuid not null references public.branches (id),
   qty_delta numeric(14, 3) not null check (qty_delta <> 0),
   balance_after numeric(14, 3) not null,
-  vehicle_id uuid,
+  vehicle_id uuid references public.vehicles (id),
   work_order_id uuid,
   posted_at timestamptz not null default now(),
   posted_by uuid

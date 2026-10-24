@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import { Badge, EmptyState, PageHeader, Pagination } from "@/components/ui";
 import { FilterSelect, SearchBox } from "@/components/list-controls";
 import { UserAdminToolbar, UserRowActions, type UserRow } from "@/components/user-admin";
+import { CsvImport } from "@/components/csv-import";
+import { importUsersAction } from "./actions";
 
 export const metadata = { title: "User" };
 const PAGE_SIZE = 50;
@@ -61,6 +63,7 @@ export default async function UsersPage({ searchParams }: PageProps<"/admin/user
     <>
       <PageHeader title="User" subtitle={`${count ?? 0} pengguna`} />
       <UserAdminToolbar branches={branches ?? []} roles={roles ?? []} />
+      <CsvImport title="Impor user dari CSV (onboarding)" templateHref="/admin/users/template" action={importUsersAction} columns="nama; email; telepon; cabang (kode); role (pisahkan dengan |)" />
       <div className="mb-4 flex flex-wrap items-center gap-2">
         <SearchBox placeholder="Cari nama, email, telepon…" />
         <FilterSelect name="branch" label="Cabang" options={(branches ?? []).map((b) => ({ value: b.id, label: b.name }))} />

@@ -1,11 +1,23 @@
 # KBL — Perawatan & Sparepart Kendaraan
 
-Aplikasi web + PWA (Next.js 16, Supabase). Dokumen kebutuhan ada di [docs/](docs/). Slice yang sudah dibangun: **`foundation-auth-master`** (login, user & role, data master, parameter, audit log). Spesifikasinya di [docs/sdd/changes/foundation-auth-master/](docs/sdd/changes/foundation-auth-master/).
+Aplikasi web + PWA (Next.js 16, Supabase). Dokumen kebutuhan ada di [docs/](docs/); peta pengerjaan di [docs/sdd/ROADMAP-KEKURANGAN.md](docs/sdd/ROADMAP-KEKURANGAN.md).
+
+**Modul yang sudah dibangun** (mengikuti [MENU-SUBMENU-SPESIFIKASI.md](docs/MENU-SUBMENU-SPESIFIKASI.md)):
+
+| Modul | Isi |
+|---|---|
+| Fondasi | Login, user & role, data master, parameter sistem, audit log |
+| Approval | Mesin approval berjenjang (alur dapat diatur), Kotak Masuk, Semua Antrean, Riwayat, override/eskalasi/pengingat, SLA |
+| Inventori | Mutasi sparepart (draft → approval → posting), saldo, kartu stok, stock opname (+CSV), pembalik |
+| Perawatan | Rencana perawatan, Work Order, reservasi part, kalender (seret untuk ajukan perubahan), perubahan jadwal/anomali, job preventif dan overdue |
+| Emergensi | Lapor Darurat (≤ 2 langkah, offline + idempoten), insiden pusat, kontak darurat, langkah cepat |
+| Laporan | 13 laporan tetap (RPT-01…13) dengan filter dan ekspor CSV |
+| Lainnya | Dashboard W1–W12 per role, notifikasi (dalam aplikasi, push, WhatsApp/SMS lewat webhook), lampiran foto/PDF, impor CSV |
 
 ## Menjalankan
 
 1. Buat project di [Supabase](https://supabase.com) (atau pakai instance yang sudah ada).
-2. Jalankan migrasi di `supabase/migrations/` berurutan (SQL Editor, atau `npx supabase link` lalu `npx supabase db push`).
+2. Jalankan migrasi di `supabase/migrations/` berurutan (SQL Editor, atau `npx supabase link` lalu `npx supabase db push`). Ada 7 berkas; yang `20261025…` adalah modul transaksi dan **wajib setelah** dua berkas awal. Migrasi membuat bucket Storage privat `attachments` untuk lampiran dan, bila ekstensi `pg_cron` tersedia, menjadwalkan job tiap menit.
 3. Di Supabase Dashboard › **Authentication**:
    - Providers › Email: **matikan "Allow new users to sign up"** (user hanya dibuat admin).
    - URL Configuration › Site URL = URL aplikasi; tambahkan `<URL>/auth/callback` ke Redirect URLs.
@@ -21,13 +33,20 @@ Aplikasi web + PWA (Next.js 16, Supabase). Dokumen kebutuhan ada di [docs/](docs
    ```
 6. Login dengan akun admin tersebut; sistem meminta ganti password pada login pertama.
 
+## Job terjadwal dan notifikasi
+
+- **Job** (WO preventif otomatis, penanda overdue, eskalasi insiden tanpa ACK, SLA approval, pengingat validasi, ringkasan stok minimum) ada di fungsi `_run_jobs()`. Dua pemicunya:
+  1. `pg_cron` di Supabase (tiap menit; aktif otomatis bila ekstensinya tersedia), dan/atau
+  2. `GET /api/jobs/run` dengan header `Authorization: Bearer $CRON_SECRET`. `vercel.json` memanggilnya **harian** (batas paket Hobby Vercel). Untuk interval pendek, pakai `pg_cron` atau penjadwal lain yang memanggil URL itu.
+- **Notifikasi**: dalam aplikasi (lonceng) selalu aktif. **Push** perlu kunci VAPID (`npx web-push generate-vapid-keys`). **WhatsApp/SMS/Email** dikirim lewat webhook `NOTIFY_WEBHOOK_URL` (JSON `{channel,to,title,body,link,id}`); penyedia belum ditentukan, jadi sampai diisi kanal itu ditandai **Gagal** di Admin › Log Notifikasi (tidak mengganggu pencatatan insiden). Kanal per jenis notifikasi diatur di Parameter Sistem.
+
 ## Data demo (hanya development/staging)
 
 ```bash
 npm run seed:demo -- --yes
 ```
 
-Membuat 12 user (semua role) dan data master contoh sekali jalan: 3 cabang tambahan, 5 lokasi, 8 kendaraan, 16 sparepart, 7 vendor. Aman diulang (baris yang sudah ada dilewati). **Jangan dijalankan di produksi.** Password semua user demo: `Demo12345` (tidak diminta ganti saat login).
+Membuat 13 user (semua role) dan data master contoh: 3 cabang tambahan, 5 lokasi, 8 kendaraan, 16 sparepart, 7 vendor. Bila `NEXT_PUBLIC_SUPABASE_ANON_KEY` terisi, ikut dibuat **transaksi** lewat jalur resmi (login sebagai user demo): stok awal (sebagian di bawah minimum), 5 rencana perawatan + WO preventif, WO terjadwal dan berjalan, satu perubahan jadwal dan satu opname yang menunggu approval, serta dua insiden (satu belum dikonfirmasi). Aman diulang (bagian yang sudah ada dilewati). **Jangan dijalankan di produksi.** Password semua user demo: `Demo12345` (tidak diminta ganti saat login).
 
 | Email | Role | Cabang |
 |---|---|---|
@@ -36,6 +55,7 @@ Membuat 12 user (semua role) dan data master contoh sekali jalan: 3 cabang tamba
 | depthead.jkt@example.com | DEPT_HEAD | Jakarta |
 | supervisor.jkt@example.com | SUPERVISOR | Jakarta |
 | warehouse.jkt@example.com | WAREHOUSE | Jakarta |
+| warehouse.sby@example.com | WAREHOUSE | Surabaya |
 | mechanic.jkt@example.com | MECHANIC | Jakarta |
 | driver.jkt@example.com | DRIVER | Jakarta |
 | gudang.supervisor.jkt@example.com | WAREHOUSE + SUPERVISOR | Jakarta |
@@ -52,7 +72,7 @@ Membuat 12 user (semua role) dan data master contoh sekali jalan: 3 cabang tamba
 | `npm run lint` | ESLint |
 | `npm run typecheck` | Tipe TypeScript |
 | `npm test` | Seluruh tes (unit + database) |
-| `npm run test:db` | Tes skema SQL, RLS, trigger, audit (PGlite, tanpa Docker) |
+| `npm run test:db` | Tes skema SQL, RLS, trigger, audit, approval, stok, WO, insiden, laporan (PGlite, tanpa Docker) |
 
 ## Halaman publik dan rute
 
@@ -70,6 +90,7 @@ Membuat 12 user (semua role) dan data master contoh sekali jalan: 3 cabang tamba
 - Service worker hanya aktif pada build produksi (`npm run build && npm run start`) dan harus lewat **HTTPS** (localhost dikecualikan).
 - Pasang: Chrome/Edge Android & desktop → tombol **Pasang Aplikasi** (atau menu browser › Install). iPhone/iPad → Safari › Bagikan › **Tambah ke Layar Utama**.
 - Hanya aset statis dan halaman `/offline` yang disimpan; halaman dan data pengguna tidak pernah di-cache.
+- **Lapor Darurat offline**: setiap kali halaman `/emergency/report` dibuka online, langkah cepat dan kontak disimpan di perangkat. Tanpa sinyal, halaman `/offline` menampilkannya, menerima laporan ke antrean lokal (IndexedDB), dan mengirim ulang otomatis dengan kunci idempoten yang sama (tidak ada insiden ganda). Antrean hanya dikirim oleh user pemiliknya.
 
 ## Keamanan singkat
 

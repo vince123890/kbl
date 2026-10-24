@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { friendlyDbError } from "@/lib/pg-errors";
 import { generateTempPassword } from "@/lib/password";
+import { parseCsvObjects } from "@/lib/csv";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const BAN_FOREVER = "876000h";
@@ -158,4 +159,83 @@ export async function unlockUserAction(userId: string): Promise<ActionResult> {
   if (error) return { ok: false, error: friendlyDbError(error) };
   revalidatePath("/admin/users");
   return { ok: true, message: "Kunci dibuka" };
+}
+
+interface ImportedCredential {
+  email: string;
+  name: string;
+  password: string;
+}
+
+/**
+ * Impor user dari CSV: nama; email; telepon; cabang (kode); role (pisahkan dengan |).
+ * Semua baris divalidasi lebih dulu; akun dibuat satu per satu. Password sementara ditampilkan sekali dan wajib diganti saat login pertama.
+ */
+export async function importUsersAction(_prev: ActionResult | null, fd: FormData): Promise<ActionResult<{ created: ImportedCredential[] }>> {
+  const auth = await authorize("admin.user");
+  if (auth.error) return auth.error;
+  const file = fd.get("file");
+  if (!(file instanceof File) || !file.size) return { ok: false, error: "Pilih berkas CSV terlebih dahulu" };
+  const rows = parseCsvObjects(await file.text());
+  if (!rows.length) return { ok: false, error: "Berkas kosong atau header tidak dikenali (nama; email; telepon; cabang; role)" };
+  if (rows.length > 200) return { ok: false, error: "Maksimal 200 user per unggah" };
+
+  const supabase = await createClient();
+  const [{ data: branches }, { data: roles }] = await Promise.all([supabase.from("branches").select("id,code"), supabase.from("roles").select("id,name")]);
+  const branchBy = new Map((branches ?? []).map((b) => [String(b.code).toLowerCase(), b.id as string]));
+  const roleBy = new Map((roles ?? []).map((r) => [String(r.name).toLowerCase(), r.id as string]));
+  const emails = rows.map((r) => (r.email ?? "").trim().toLowerCase()).filter(Boolean);
+  const { data: existing } = emails.length ? await supabase.from("profiles").select("email").in("email", emails) : { data: [] };
+  const taken = new Set((existing ?? []).map((e) => String(e.email).toLowerCase()));
+
+  const errors: string[] = [];
+  const seen = new Set<string>();
+  const parsed = rows.map((r, i) => {
+    const line = i + 2;
+    const email = (r.email ?? "").trim().toLowerCase();
+    const roleIds = (r.role ?? "")
+      .split(/[|,]/)
+      .map((x) => x.trim().toLowerCase())
+      .filter(Boolean)
+      .map((n) => roleBy.get(n));
+    if (!r.nama) errors.push(`Baris ${line}: nama wajib diisi`);
+    if (!EMAIL_RE.test(email)) errors.push(`Baris ${line}: email tidak valid`);
+    else if (taken.has(email)) errors.push(`Baris ${line}: email ${email} sudah terdaftar`);
+    else if (seen.has(email)) errors.push(`Baris ${line}: email ${email} dobel dalam berkas`);
+    seen.add(email);
+    if (!r.telepon) errors.push(`Baris ${line}: telepon wajib diisi`);
+    const branchId = branchBy.get((r.cabang ?? "").trim().toLowerCase());
+    if (!branchId) errors.push(`Baris ${line}: kode cabang "${r.cabang}" tidak dikenal`);
+    if (!roleIds.length || roleIds.some((x) => !x)) errors.push(`Baris ${line}: role kosong atau tidak dikenal ("${r.role}")`);
+    return { name: r.nama, email, phone: r.telepon, branchId: branchId ?? "", roleIds: roleIds.filter((x): x is string => !!x) };
+  });
+  if (errors.length) {
+    return { ok: false, error: `${errors.slice(0, 6).join("; ")}${errors.length > 6 ? ` (+${errors.length - 6} galat lain)` : ""}. Tidak ada user yang dibuat.` };
+  }
+
+  const admin = createAdminClient();
+  const created: ImportedCredential[] = [];
+  const partial = (msg: string) => `${msg}. ${created.length} user sebelumnya sudah dibuat.`;
+  for (const u of parsed) {
+    const password = generateTempPassword();
+    const res = await admin.auth.admin.createUser({ email: u.email, password, email_confirm: true });
+    if (res.error || !res.data.user) return { ok: false, error: partial(`${u.email}: ${res.error?.message ?? "gagal membuat akun"}`) };
+    const id = res.data.user.id;
+    const { error: pErr } = await supabase
+      .from("profiles")
+      .insert({ id, name: u.name, email: u.email, phone: u.phone, branch_id: u.branchId, must_change_password: true });
+    if (pErr) {
+      await admin.auth.admin.deleteUser(id);
+      return { ok: false, error: partial(`${u.email}: ${friendlyDbError(pErr)}`) };
+    }
+    const { error: rErr } = await supabase.from("user_roles").insert(u.roleIds.map((role_id) => ({ user_id: id, role_id })));
+    if (rErr) {
+      await admin.from("profiles").delete().eq("id", id);
+      await admin.auth.admin.deleteUser(id);
+      return { ok: false, error: partial(`${u.email}: ${friendlyDbError(rErr)}`) };
+    }
+    created.push({ email: u.email, name: u.name, password });
+  }
+  revalidatePath("/admin/users");
+  return { ok: true, message: `${created.length} user dibuat`, data: { created } };
 }
