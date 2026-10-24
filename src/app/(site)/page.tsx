@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { company, mapsUrl, waLink } from "@/lib/site-config";
+import { company, mapsEmbedUrl, mapsUrl, waLink } from "@/lib/site-config";
 import { Reveal } from "./reveal";
 import { SiteHeader } from "./site-header";
 
@@ -366,8 +366,23 @@ export default function CompanyProfilePage() {
               </dl>
             </Reveal>
           </div>
+          <div className="kb-wrap kb-map-wrap">
+            <Reveal>
+              <div className="kb-map">
+                <iframe
+                  title="Peta lokasi PT Karunia Beton Lestari di Sunggal, Deli Serdang"
+                  src={mapsEmbedUrl}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  allowFullScreen
+                />
+                <a className="kb-map-link" href={mapsUrl} target="_blank" rel="noopener noreferrer">
+                  Buka di Google Maps
+                </a>
+              </div>
+            </Reveal>
+          </div>
         </section>
-
       </main>
 
       <footer className="kb-footer">

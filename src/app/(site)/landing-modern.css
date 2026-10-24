@@ -349,3 +349,36 @@
 .kb-footer .kb-logo-name {
   color: #fff;
 }
+
+/* peta Google Maps yang di-embed */
+.kb-map-wrap {
+  margin-top: clamp(32px, 4vw, 56px);
+}
+.kb-map {
+  position: relative;
+  border: 3px solid #141010;
+  background: var(--abu);
+}
+.kb-map iframe {
+  display: block;
+  width: 100%;
+  height: clamp(300px, 42vw, 440px);
+  border: 0;
+}
+.kb-map-link {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: 10px 18px;
+  background: #141010;
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.kb-map-link:hover {
+  background: var(--aksen);
+  color: #141010;
+}

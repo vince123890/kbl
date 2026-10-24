@@ -26,6 +26,10 @@ export const company = {
 export const mapsUrl =
   "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent("PT Karunia Beton Lestari Jl. Megawati 88 Sunggal Deli Serdang");
 
+/** Peta yang di-embed (tanpa API key). Pastikan titiknya tepat dengan membuka mapsUrl; bila perlu, ganti query dengan koordinat atau Place ID. */
+export const mapsEmbedUrl =
+  "https://www.google.com/maps?output=embed&hl=id&q=" + encodeURIComponent("PT Karunia Beton Lestari, Jl. Megawati No. 88, Sunggal, Deli Serdang, Sumatera Utara");
+
 export function waLink(number: string, text = "Halo Karunia Beton Lestari, saya ingin bertanya tentang batu pecah dan readymix untuk proyek kami.") {
   return `https://wa.me/${number}?text=${encodeURIComponent(text)}`;
 }
