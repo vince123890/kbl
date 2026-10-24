@@ -56,9 +56,11 @@ Membuat 12 user (semua role) dan data master contoh sekali jalan: 3 cabang tamba
 
 ## Halaman publik dan rute
 
-- `/` adalah **landing page** publik (cerita sehari bersama satu truk dan enam kebutuhan aplikasi). Kode di `src/app/(site)/`; gaya di `landing.css`, contoh tampilan di `artifacts.tsx`.
-- Kontak di landing (WhatsApp, email, telepon, alamat) tampil **hanya bila** `NEXT_PUBLIC_CONTACT_*` diisi (lihat `.env.example`); jika kosong, bagian itu disembunyikan.
-- `/dashboard` adalah dashboard setelah login (sebelumnya `/`). Aplikasi PWA yang terpasang dibuka di sini.
+- `/` adalah **company profile PT Karunia Beton Lestari (KBL)** (batu pecah dan beton readymix), ditulis sebagai cerita. Kode di `src/app/(site)/`; data usaha di `src/lib/site-config.ts` (**verifikasi sebelum rilis**).
+- Tombol **Masuk Aplikasi** membawa karyawan ke `/login`, lalu ke `/dashboard`. Situs profil dan aplikasi internal punya tujuan berbeda.
+- Foto di `public/foto/` adalah ilustrasi berlisensi bebas (Wikimedia Commons) dengan kredit di halaman. Ganti dengan foto asli KBL bila tersedia.
+- Katalog "Karunia Beton" Jember (CV. Karunia Abadi) di `docs/` adalah **perusahaan lain** dan tidak dipakai di situs ini.
+- Kontak bisa ditimpa lewat `NEXT_PUBLIC_CONTACT_*` (lihat `.env.example`).
 - Halaman lain (`/master/*`, `/admin/*`, `/profile`) memerlukan login.
 
 ## PWA

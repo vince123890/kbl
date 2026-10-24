@@ -1,16 +1,32 @@
-// Kontak ditampilkan di landing page HANYA bila diisi lewat variabel lingkungan (tidak ada data karangan).
-// Semua bernilai publik, jadi memakai awalan NEXT_PUBLIC_.
+// Data publik PT Karunia Beton Lestari (KBL). Sumber: situs resmi karuniabeton.co.id dan survei di docs/.
+// SEMUA nilai di sini harus diverifikasi KBL sebelum rilis; dapat ditimpa lewat env.
 
-const clean = (v: string | undefined) => (v && v.trim() ? v.trim() : undefined);
+const env = (v: string | undefined) => (v && v.trim() ? v.trim() : undefined);
 
-export const siteConfig = {
-  name: "KBL",
-  tagline: "Armada terawat, perjalanan terjaga",
-  /** Nomor WhatsApp format internasional tanpa +, mis. 6281234567890 */
-  whatsapp: clean(process.env.NEXT_PUBLIC_CONTACT_WHATSAPP)?.replace(/\D/g, ""),
-  email: clean(process.env.NEXT_PUBLIC_CONTACT_EMAIL),
-  phone: clean(process.env.NEXT_PUBLIC_CONTACT_PHONE),
-  address: clean(process.env.NEXT_PUBLIC_CONTACT_ADDRESS),
+export const company = {
+  brand: "Karunia Beton Lestari",
+  short: "KBL",
+  legal: "PT Karunia Beton Lestari",
+  tagline: "Quality Stone and Readymix Concrete",
+  siteUrl: env(process.env.NEXT_PUBLIC_SITE_URL) ?? "http://localhost:3000",
+  phone: { label: "(061) 80044515", tel: "+626180044515" },
+  mobile: {
+    label: env(process.env.NEXT_PUBLIC_CONTACT_PHONE) ?? "+62 822 7692 4600",
+    tel: "+6282276924600",
+    wa: env(process.env.NEXT_PUBLIC_CONTACT_WHATSAPP)?.replace(/\D/g, "") ?? "6282276924600",
+  },
+  email: env(process.env.NEXT_PUBLIC_CONTACT_EMAIL) ?? "info@karuniabeton.co.id",
+  instagram: { handle: "@karuniabetonlestari", url: "https://www.instagram.com/karuniabetonlestari/" },
+  address: {
+    street: "Jl. Megawati No. 88",
+    area: "Kel. Serbajadi, Kec. Sunggal",
+    city: "Kab. Deli Serdang, Sumatera Utara 20351",
+  },
 };
 
-export const hasContact = Boolean(siteConfig.whatsapp || siteConfig.email || siteConfig.phone || siteConfig.address);
+export const mapsUrl =
+  "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent("PT Karunia Beton Lestari Jl. Megawati 88 Sunggal Deli Serdang");
+
+export function waLink(number: string, text = "Halo KBL, saya ingin bertanya tentang batu pecah dan readymix untuk proyek kami.") {
+  return `https://wa.me/${number}?text=${encodeURIComponent(text)}`;
+}

@@ -1,707 +1,345 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import { InstallButton } from "@/components/install-button";
-import { hasContact, siteConfig } from "@/lib/site-config";
-import {
-  ApprovalArtifact,
-  EmergencyArtifact,
-  OpnameArtifact,
-  RescheduleArtifact,
-  ScheduleArtifact,
-  StockCardArtifact,
-} from "./artifacts";
-import { HeroSlider } from "./hero-slider";
-import { IllApproval, IllEmergency, IllOpname, IllReschedule, IllSchedule, IllStock } from "./illustrations";
+import { company, mapsUrl, waLink } from "@/lib/site-config";
 import { SiteHeader } from "./site-header";
 
 export const metadata: Metadata = {
-  title: { absolute: "KBL — Armada terawat, perjalanan terjaga" },
+  title: { absolute: "PT Karunia Beton Lestari (KBL) — Batu Pecah & Readymix, Deli Serdang" },
   description:
-    "Sparepart tercatat, perawatan terjadwal, perubahan punya alasan, keputusan dikontrol pusat, dan bantuan cepat saat darurat di jalan. Sistem manajemen perawatan dan sparepart armada.",
+    "PT Karunia Beton Lestari (KBL), Sunggal, Deli Serdang, Sumatera Utara: pemasok batu pecah dan beton readymix. Dari batu, batching plant, transit mixer, sampai concrete pump di lokasi cor.",
+  alternates: { canonical: "/" },
   openGraph: {
-    title: "KBL — Armada terawat, perjalanan terjaga",
-    description: "Sistem manajemen perawatan dan sparepart armada, dari gudang sampai tepi jalan tol.",
+    title: "PT Karunia Beton Lestari (KBL) — Quality Stone and Readymix Concrete",
+    description: "Dari batu sampai beton siap cor. Profil, layanan, dan kontak KBL, Sunggal, Deli Serdang.",
     locale: "id_ID",
     type: "website",
   },
 };
 
-const ODOMETER = "084250".split("");
+type Photo = { src: string; w: number; h: number; alt: string };
 
-const MODULES = [
+/** Foto bebas lisensi (ilustrasi), BUKAN dokumentasi KBL. Kredit lengkap ditampilkan di bagian bawah halaman. */
+const PHOTOS: Record<"mixer" | "quarry" | "batching" | "pump", Photo> = {
+  mixer: { src: "/foto/mixer.jpg", w: 1920, h: 1440, alt: "Truk transit mixer biru sedang berada di lokasi pengecoran jalan" },
+  quarry: { src: "/foto/quarry.jpg", w: 1600, h: 1200, alt: "Gunungan batu pecah di lokasi quarry dengan excavator merah di puncaknya" },
+  batching: { src: "/foto/batching.jpg", w: 1920, h: 1082, alt: "Instalasi batching plant dengan silo semen dan konveyor agregat" },
+  pump: { src: "/foto/pump.jpg", w: 1800, h: 1219, alt: "Concrete pump dengan boom panjang mengecor struktur bertulang di lokasi proyek" },
+};
+
+const CREDITS: { photo: string; author: string; license: string; licenseUrl?: string; source: string }[] = [
   {
-    id: "modul-stok",
-    tag: "Gudang",
-    title: "Mutasi sparepart & kartu stok",
-    text: "Masuk, keluar, retur, dan pindah gudang tercatat dalam dokumen digital lengkap dengan kartu stok per sparepart.",
-    chapter: "#bab-1",
-    status: "Berikutnya",
-    Art: IllStock,
+    photo: "Truk transit mixer (hero)",
+    author: "Captainmorlypogi1959",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0/",
+    source: "https://commons.wikimedia.org/wiki/File:Mitsubishi_Fuso_Super_Great_Transit_Mixer_Truck_2021.jpg",
   },
   {
-    id: "modul-opname",
-    tag: "Gudang",
-    title: "Stock opname",
-    text: "Hitung fisik lewat ponsel, bandingkan dengan sistem, dan beri alasan pada setiap selisih sebelum stok disesuaikan.",
-    chapter: "#bab-5",
-    status: "Berikutnya",
-    Art: IllOpname,
+    photo: "Tumpukan batu pecah",
+    author: "John Haynes",
+    license: "CC BY-SA 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0/",
+    source: "https://commons.wikimedia.org/wiki/File:Crushed_stone_at_Tonfanau_Quarry_-_geograph.org.uk_-_2978560.jpg",
   },
   {
-    id: "modul-jadwal",
-    tag: "Perawatan",
-    title: "Jadwal perawatan & perbaikan",
-    text: "Servis berkala muncul menurut waktu atau kilometer. Perbaikan darurat boleh menyela antrean.",
-    chapter: "#bab-2",
-    status: "Menyusul",
-    Art: IllSchedule,
+    photo: "Batching plant",
+    author: "Fsmazlum",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0/",
+    source: "https://commons.wikimedia.org/wiki/File:MOBILE_CONCRETE_BATCHING_PLANT_mekaglobal.jpg",
   },
   {
-    id: "modul-anomali",
-    tag: "Perawatan",
-    title: "Perubahan jadwal & alasannya",
-    text: "Percepatan dan penundaan wajib beralasan, lalu menjadi laporan pola keterlambatan per kendaraan dan cabang.",
-    chapter: "#bab-3",
-    status: "Menyusul",
-    Art: IllReschedule,
-  },
-  {
-    id: "modul-approval",
-    tag: "Kontrol pusat",
-    title: "Approval berjenjang",
-    text: "Dokumen penting disetujui atasan dan departemen terkait. Pembuat tidak menyetujui dokumennya sendiri.",
-    chapter: "#bab-4",
-    status: "Berikutnya",
-    Art: IllApproval,
-  },
-  {
-    id: "modul-darurat",
-    tag: "Keselamatan",
-    title: "Darurat di jalan",
-    text: "Lapor dengan satu ketukan, lihat langkah cepat dan kontak pusat, sementara pusat menindaklanjuti.",
-    chapter: "#bab-6",
-    status: "Menyusul",
-    Art: IllEmergency,
+    photo: "Concrete pump",
+    author: "Steve Pivnick, U.S. Air Force",
+    license: "Domain publik",
+    source: "https://commons.wikimedia.org/wiki/File:Construction_site_with_concrete_pump_truck.JPG",
   },
 ];
 
-const NEEDS: { quote: string; answer: string; where: string }[] = [
-  {
-    quote: "Form digital atau kartu keluar-masuk sparepart kendaraan",
-    answer: "Setiap sparepart yang masuk, keluar, diretur, atau dipindah punya dokumen digital dan kartu stok. Siapa, kapan, untuk kendaraan mana, dan sisa berapa, tertulis dan tidak bisa diubah diam-diam.",
-    where: "Mutasi sparepart · Kartu stok",
-  },
-  {
-    quote: "Form digital atau kartu stock opname",
-    answer: "Hitung fisik di rak lewat ponsel, bandingkan dengan angka sistem, isi alasan untuk setiap selisih. Stok baru disesuaikan setelah disetujui.",
-    where: "Stock opname",
-  },
-  {
-    quote: "Jadwal perawatan dan perbaikan, bahkan saat emergensi",
-    answer: "Servis berkala muncul sendiri menurut waktu atau kilometer. Perbaikan darurat boleh menyela antrean, dan pusat langsung tahu.",
-    where: "Rencana perawatan · Work order · Kalender",
-  },
-  {
-    quote: "Anomali jadwal saat dipercepat atau ditunda, beserta alasannya",
-    answer: "Setiap jadwal yang maju atau mundur wajib punya alasan. Hasilnya menjadi laporan: kendaraan mana yang sering tertunda, dan karena apa.",
-    where: "Perubahan jadwal · Laporan anomali",
-  },
-  {
-    quote: "Validasi dan approval dari departemen lain atau atasan, supaya kontrol tetap di pusat",
-    answer: "Dokumen penting melewati persetujuan berjenjang. Pembuat tidak menyetujui dokumennya sendiri, dan pusat melihat seluruh antrean lintas cabang.",
-    where: "Approval berjenjang",
-  },
-  {
-    quote: "Saat emergensi di jalan, ada kontak dan langkah cepat dari pusat",
-    answer: "Satu ketukan melapor. Pengemudi langsung melihat langkah keselamatan dan tombol telepon, sementara pusat menerima peringatan dan menindaklanjuti.",
-    where: "Lapor darurat · Insiden · Kontak",
-  },
+const LAYANAN: { nama: string; isi: string }[] = [
+  { nama: "Batu pecah dan agregat", isi: "Material batu untuk beton, jalan, dan pekerjaan sipil. Ukuran dan ketersediaan kami sesuaikan dengan kebutuhan proyek Anda." },
+  { nama: "Beton readymix", isi: "Beton siap pakai yang diproduksi di batching plant dan dikirim langsung ke lokasi cor. Mutu mengikuti kebutuhan struktur Anda." },
+  { nama: "Transit mixer", isi: "Truk pengaduk yang menjaga beton tetap bergerak selama perjalanan dari plant ke proyek." },
+  { nama: "Concrete pump", isi: "Pompa beton untuk menjangkau area yang sulit: lantai atas, bentang panjang, atau lokasi sempit." },
+  { nama: "Stone crusher dan loader", isi: "Mesin pemecah batu serta wheel loader (front end loader) untuk mengolah dan memuat material." },
+  { nama: "Jembatan timbang", isi: "Penimbangan muatan kendaraan, supaya jumlah material yang keluar dari plant tercatat." },
 ];
 
-const ROLES: { name: string; text: string }[] = [
-  { name: "Pengemudi", text: "Melapor darurat dalam sekali ketuk dan langsung tahu apa yang harus dilakukan." },
-  { name: "Mekanik", text: "Menjalankan work order dan mencatat sparepart yang dipakai langsung dari bengkel." },
-  { name: "Staf gudang", text: "Mencatat barang masuk dan keluar, menghitung stok di rak." },
-  { name: "Supervisor", text: "Menyusun jadwal, menyetujui di level pertama, menangani insiden cabang." },
-  { name: "Kepala departemen", text: "Menyetujui perubahan yang butuh keputusan lebih tinggi." },
-  { name: "Admin pusat", text: "Melihat semua cabang, menyetujui akhir, memegang kendali saat darurat." },
-  { name: "Admin sistem", text: "Mengatur pengguna, hak akses, data master, dan aturan." },
-];
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: company.legal,
+  alternateName: company.short,
+  url: company.siteUrl,
+  email: company.email,
+  telephone: [company.phone.tel, company.mobile.tel],
+  slogan: company.tagline,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: `${company.address.street}, ${company.address.area}`,
+    addressLocality: "Deli Serdang",
+    addressRegion: "Sumatera Utara",
+    postalCode: "20351",
+    addressCountry: "ID",
+  },
+  sameAs: [company.instagram.url],
+};
 
-const CONTROLS: { title: string; text: string; live: boolean }[] = [
-  { title: "Akses per peran dan cabang", text: "Setiap orang hanya melihat dan mengubah bagiannya. Data cabang lain tidak terlihat, kecuali oleh pusat. Ditegakkan di database, bukan sekadar menyembunyikan tombol.", live: true },
-  { title: "Jejak audit permanen", text: "Perubahan data penting tercatat: siapa, kapan, nilai sebelum dan sesudah. Catatannya tidak bisa diubah atau dihapus.", live: true },
-  { title: "Akun dan sesi terjaga", text: "Akun dikunci 15 menit setelah 5 kali salah password. Sesi berakhir otomatis setelah 8 jam. Akun dibuat admin, tanpa pendaftaran terbuka.", live: true },
-  { title: "Persetujuan berjenjang", text: "Dokumen penting melewati atasan dan departemen terkait. Pembuat tidak dapat menyetujui dokumennya sendiri.", live: false },
-];
-
-const STATS = [
-  { n: "6", label: "Modul inti dari kebutuhan awal" },
-  { n: "7", label: "Peran pengguna dengan layar sendiri" },
-  { n: "13", label: "Laporan standar dirancang" },
-  { n: "4", label: "Titik persetujuan berjenjang" },
-];
-
-const FAQ: { q: string; a: string }[] = [
-  {
-    q: "Apakah harus memasang aplikasi dari toko aplikasi?",
-    a: "Tidak. KBL berjalan di browser dan dapat dipasang ke layar utama ponsel. Di Chrome atau Edge pilih Pasang Aplikasi; di iPhone buka lewat Safari, ketuk Bagikan, lalu Tambah ke Layar Utama.",
-  },
-  {
-    q: "Siapa yang membuat akun pengguna?",
-    a: "Admin sistem di perusahaan Anda. Tidak ada pendaftaran terbuka, jadi hanya orang yang memang berhak yang bisa masuk. Lupa password? Pakai tautan reset yang dikirim ke email.",
-  },
-  {
-    q: "Apakah data tiap cabang terpisah?",
-    a: "Ya. Pengguna cabang hanya melihat data cabangnya. Admin pusat dan admin sistem dapat melihat lintas cabang.",
-  },
-  {
-    q: "Bagaimana kalau sinyal hilang di jalan?",
-    a: "Layar langkah cepat dan kontak dirancang tetap tampil, dan laporan darurat menunggu di ponsel sampai tersambung. Bagian ini masuk tahap penanganan darurat dan belum tersedia.",
-  },
-  {
-    q: "Apa saja yang sudah bisa dipakai hari ini?",
-    a: "Fondasinya: login, pengguna dan hak akses, data master (cabang, kendaraan, sparepart, gudang, vendor, kategori alasan), parameter, dan audit log. Modul stok, jadwal, approval, dan darurat menyusul sesuai peta jalan.",
-  },
-  {
-    q: "Bisa untuk beberapa cabang dengan kontrol dari pusat?",
-    a: "Itu inti rancangannya. Setiap cabang bekerja di datanya sendiri, sementara pusat melihat antrean persetujuan dan insiden dari semua cabang.",
-  },
-];
-
-const CHAPTERS = [
-  {
-    id: "bab-1",
-    tone: "is-dawn",
-    time: "05:45",
-    place: "Gudang Jakarta",
-    title: "Satu filter oli, satu catatan",
-    body: [
-      "Wawan sudah di gudang sebelum matahari naik. Mekanik meminta dua filter oli untuk B 9001 KBL. Dulu, permintaan seperti ini berakhir sebagai coretan di kartu kertas yang entah kapan dipindahkan ke buku besar.",
-      "Pagi ini Wawan mengisi satu form. Sistem menolak kalau stok tak cukup, mencatat kendaraan yang memakainya, lalu meminta persetujuan supervisor. Begitu disetujui, kartu stok filter oli berkurang dua, dengan nama dan jamnya.",
-    ],
-    need: "form digital dan kartu keluar-masuk sparepart kendaraan.",
-    Art: StockCardArtifact,
-  },
-  {
-    id: "bab-2",
-    tone: "is-morning",
-    time: "08:20",
-    place: "Workshop",
-    title: "Servis yang datang sebelum diminta",
-    body: [
-      "Odometer B 9001 KBL menunjuk 84.250. Servis besar jatuh di 85.000. Supervisor tidak perlu mengingat-ingat: jadwalnya sudah muncul, lengkap dengan sparepart yang akan dibutuhkan, sehingga gudang bisa menyisihkannya lebih dulu.",
-      "Bengkel pun tak lagi bergantung pada ingatan siapa pun. Dan kalau ada kerusakan mendadak, perbaikan darurat tetap punya tempat di jadwal: ia menyela antrean, dan pusat langsung diberi tahu.",
-    ],
-    need: "jadwal perawatan dan perbaikan, termasuk saat emergensi.",
-    Art: ScheduleArtifact,
-  },
-  {
-    id: "bab-3",
-    tone: "is-noon",
-    time: "11:00",
-    place: "Kantor cabang",
-    title: "Jadwal boleh bergeser. Alasannya tidak boleh hilang.",
-    body: [
-      "Kampas rem untuk B 9002 KBL belum datang. Sinta, supervisor, menunda servisnya tiga hari. Di kertas, perubahan seperti ini sering lenyap tanpa penjelasan, lalu setahun kemudian tak ada yang tahu kenapa kendaraan itu terlambat servis terus.",
-      "Kini sistem tidak mau menyimpan perubahan sebelum alasannya dipilih. Percepatan dan penundaan sama-sama tercatat: berapa lama, karena apa, siapa yang meminta. Dari situ pusat bisa melihat pola, bukan sekadar kejadian.",
-    ],
-    need: "jadwal dan anomali saat dipercepat atau ditunda, beserta alasannya.",
-    Art: RescheduleArtifact,
-  },
-  {
-    id: "bab-4",
-    tone: "is-morning",
-    time: "13:30",
-    place: "Kantor pusat",
-    title: "Pusat tak perlu berdiri di bengkel untuk tahu",
-    body: [
-      "Hendra di pusat memegang lima cabang. Ia tidak menelepon satu per satu untuk bertanya, “Jadi ini sudah disetujui siapa?” Antreannya ada di satu layar: apa yang menunggu, di level mana, sudah berapa lama.",
-      "Setiap keputusan meninggalkan jejak: siapa, kapan, dengan catatan apa. Yang membuat dokumen tak bisa menyetujuinya sendiri. Kalau ada yang macet, pusat bisa mengingatkan, atau mengambil alih dengan alasan yang tercatat.",
-    ],
-    need: "validasi dan approval dari departemen lain atau atasan, supaya kontrol tetap di pusat.",
-    Art: ApprovalArtifact,
-  },
-  {
-    id: "bab-5",
-    tone: "is-afternoon",
-    time: "16:00",
-    place: "Gudang Jakarta",
-    title: "Angka di rak dan angka di layar harus bertemu",
-    body: [
-      "Sore hari Wawan menghitung. Ia berjalan di antara rak dengan ponsel di tangan, mengisi jumlah yang benar-benar ada. Hampir semua cocok. Kampas rem depan kurang dua, dan ia menuliskan sebabnya: rusak saat dipasang.",
-      "Selisih itu tidak langsung mengubah stok. Ia menunggu persetujuan, supaya angka yang dipakai semua orang besok pagi adalah angka yang sudah disepakati.",
-    ],
-    need: "form digital dan kartu stock opname.",
-    Art: OpnameArtifact,
-  },
-  {
-    id: "bab-6",
-    tone: "is-night",
-    time: "22:47",
-    place: "Jalan tol, km 58",
-    title: "Dua menit pertama menentukan segalanya",
-    body: [
-      "Mesin B 9001 KBL mati di jalur lambat. Gelap, truk penuh muatan, dan Dedi sendirian. Ia tidak mencari-cari nomor di ponsel, tidak mengetik laporan panjang. Ia menekan satu tombol: Mogok.",
-      "Layarnya langsung berisi apa yang perlu dilakukan: nyalakan hazard, pasang segitiga pengaman, menjauh dari jalur. Di bawahnya ada nomor pusat dan derek terdekat, cukup satu ketukan. Di meja pusat, peringatan sudah menyala. Kalau sinyal putus, laporan menunggu di ponsel dan terkirim begitu tersambung.",
-      "Tengah malam nanti truk itu akan ditarik ke bengkel. Besok pagi, perbaikan daruratnya sudah punya tempat di jadwal.",
-    ],
-    need: "saat emergensi di jalan, ada kontak dan langkah cepat dari pusat.",
-    Art: EmergencyArtifact,
-  },
-];
-
-function SectionHead({ label, title, lead, light }: { label: string; title: string; lead?: string; light?: boolean }) {
+function Fig({ p, tab, sizes, priority }: { p: Photo; tab?: string; sizes: string; priority?: boolean }) {
   return (
-    <div className={`kb-head ${light ? "is-light" : ""}`}>
-      <p className="kb-label">{label}</p>
-      <h2 className="kb-h2">{title}</h2>
-      {lead && <p className="kb-lead">{lead}</p>}
-    </div>
+    <figure className="kb-fig">
+      <Image src={p.src} width={p.w} height={p.h} alt={p.alt} sizes={sizes} priority={priority} />
+      {tab && <figcaption className="kb-tab">{tab}</figcaption>}
+    </figure>
   );
 }
 
-export default function LandingPage() {
-  const waHref = siteConfig.whatsapp ? `https://wa.me/${siteConfig.whatsapp}` : undefined;
-
+export default function CompanyProfilePage() {
   return (
     <>
-      <a className="kb-skip" href="#modul">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <a className="kb-skip" href="#cerita">
         Lompat ke konten
       </a>
+      <SiteHeader />
 
-      <SiteHeader contact={{ whatsapp: siteConfig.whatsapp, email: siteConfig.email, phone: siteConfig.phone }} />
-      <HeroSlider />
+      {/* ------------------------------------------------------------ hero */}
+      <section className="kb-hero" aria-labelledby="h-hero">
+        <Image
+          src={PHOTOS.mixer.src}
+          width={PHOTOS.mixer.w}
+          height={PHOTOS.mixer.h}
+          alt={PHOTOS.mixer.alt}
+          sizes="100vw"
+          priority
+          className="kb-hero-img"
+        />
+        <div className="kb-hero-shade" />
+        <div className="kb-wrap kb-hero-copy">
+          <p className="kb-eyebrow">{company.tagline}</p>
+          <h1 id="h-hero">
+            Dari batu sampai beton <em>siap cor.</em>
+          </h1>
+          <p className="kb-hero-lede">
+            {company.legal} memasok batu pecah dan beton readymix dari Sunggal, Deli Serdang, Sumatera Utara. Kami mulai dari batu, dan kami tahu betul apa yang membuat beton kuat.
+          </p>
+          <div className="kb-actions">
+            <a className="kb-btn kb-btn-aksen" href="#cerita">
+              Baca ceritanya
+            </a>
+            <a className="kb-btn kb-btn-garis" href={waLink(company.mobile.wa)} target="_blank" rel="noopener noreferrer">
+              Hubungi kami
+            </a>
+          </div>
+        </div>
+        <p className="kb-hero-tab">{company.legal}</p>
+      </section>
 
       <main>
-        {/* ------------------------------------------------------------ pengantar */}
-        <section className="kb-section is-white kb-intro" aria-labelledby="h-intro">
-          <div className="kb-wrap kb-intro-grid">
-            <div>
-              <p className="kb-label">Sistem manajemen armada</p>
-              <h2 className="kb-h2" id="h-intro">
-                KBL
-              </h2>
-            </div>
-            <div>
-              <p className="kb-lead" style={{ marginTop: 0 }}>
-                Satu tempat untuk mencatat sparepart, menjadwalkan perawatan, menyetujui keputusan, dan menolong pengemudi yang berhenti di jalan. Dirancang untuk perusahaan
-                dengan banyak kendaraan dan banyak cabang, dengan kontrol tetap di pusat.
+        {/* ------------------------------------------------------------ bab I */}
+        <section className="kb-bab" id="cerita" aria-labelledby="h-bab1">
+          <div className="kb-wrap kb-split">
+            <div className="kb-text">
+              <p className="kb-bab-label">Bab satu</p>
+              <h2 id="h-bab1">Kami mulai dari batu</h2>
+              <p>
+                KBL tidak lahir sebagai pabrik beton. Kami mulai sebagai pemasok berbagai jenis material batu, lalu mengembangkan usaha ke produksi beton siap pakai.
               </p>
-              <a className="kb-btn kb-btn-solid" href="#cerita">
-                Baca selengkapnya
-              </a>
-            </div>
-          </div>
-        </section>
-
-        {/* ------------------------------------------------------------ tiga kartu */}
-        <section className="kb-section is-fog kb-tight" aria-label="Tentang KBL">
-          <div className="kb-wrap kb-cards3">
-            <article className="kb-info">
-              <span className="kb-info-ico" aria-hidden="true">
-                01
-              </span>
-              <h3>Tentang KBL</h3>
-              <p>KBL lahir dari enam kebutuhan sederhana tentang sparepart, jadwal, persetujuan, dan keselamatan. Semuanya dirangkai menjadi satu aplikasi.</p>
-              <a href="#kebutuhan">Lihat kebutuhannya →</a>
-            </article>
-            <article className="kb-info">
-              <span className="kb-info-ico" aria-hidden="true">
-                02
-              </span>
-              <h3>Siapa yang memakai</h3>
-              <p>Dari pengemudi di jalan sampai admin di pusat. Tujuh peran, masing-masing dengan layar dan wewenangnya sendiri.</p>
-              <a href="#peran">Kenali perannya →</a>
-            </article>
-            <article className="kb-info">
-              <span className="kb-info-ico" aria-hidden="true">
-                03
-              </span>
-              <h3>Prinsip kami</h3>
-              <p>Tercatat, terkontrol, tanggap. Tidak ada perubahan tanpa jejak, tidak ada keputusan tanpa penanggung jawab.</p>
-              <a href="#keamanan">Lihat kontrolnya →</a>
-            </article>
-          </div>
-        </section>
-
-        {/* ------------------------------------------------------------ fokus kami */}
-        <section className="kb-section is-asphalt kb-focus" aria-labelledby="h-fokus">
-          <div className="kb-wrap kb-focus-grid">
-            <div>
-              <p className="kb-label is-light">Fokus kami</p>
-              <h2 className="kb-focus-h" id="h-fokus">
-                Keputusan kecil di gudang menentukan keselamatan di jalan.
-              </h2>
-            </div>
-            <div>
-              <p className="kb-lead is-light" style={{ marginTop: 0 }}>
-                Sebuah kampas rem yang tak tercatat, servis yang tertunda tanpa alasan, atau laporan darurat yang tidak sampai ke pusat. Biasanya bukan satu hal besar yang
-                membuat armada bermasalah, melainkan banyak hal kecil yang lolos dari catatan. KBL ada untuk menutup celah itu.
+              <p>
+                Urutan itu penting. Sekitar dua pertiga isi beton adalah agregat, jadi siapa yang paham batu, paham separuh rahasia beton. Dari pengalaman itulah kami memandang
+                setiap kubik yang keluar dari plant: bukan sekadar campuran, melainkan bahan yang akan menahan bangunan bertahun-tahun.
               </p>
-              <a className="kb-btn kb-btn-marka" href="#modul">
-                Kenali modulnya
-              </a>
             </div>
+            <Fig p={PHOTOS.quarry} tab="Batu pecah: bahan pertama dan utama" sizes="(min-width: 900px) 520px, 100vw" />
           </div>
         </section>
 
-        {/* ------------------------------------------------------------ tantangan & jawaban */}
-        <section className="kb-section is-white" aria-labelledby="h-tantangan">
+        {/* ------------------------------------------------------------ bab II */}
+        <section className="kb-bab is-krem" aria-labelledby="h-bab2">
+          <div className="kb-wrap kb-split is-balik">
+            <div className="kb-text">
+              <p className="kb-bab-label">Bab dua</p>
+              <h2 id="h-bab2">Meracik di batching plant</h2>
+              <p>
+                Di batching plant, batu, pasir, semen, dan air bertemu. Komposisinya mengikuti rancangan campuran yang dibutuhkan proyek, karena beton untuk pondasi, lantai kerja,
+                dan struktur bertingkat tidak boleh diperlakukan sama.
+              </p>
+              <p>Ceritakan kebutuhan struktur Anda. Dari situ kami bantu menentukan mutu dan jumlah yang tepat.</p>
+            </div>
+            <Fig p={PHOTOS.batching} tab="Batching plant dengan silo dan konveyor agregat" sizes="(min-width: 900px) 560px, 100vw" />
+          </div>
+        </section>
+
+        {/* ------------------------------------------------------------ bab III: pita */}
+        <section className="kb-band" aria-labelledby="h-bab3">
           <div className="kb-wrap">
-            <SectionHead label="Yang kami jawab" title="Dari catatan tercecer menjadi satu sumber kebenaran" />
-            <div className="kb-twocol">
-              <div className="kb-panel">
-                <h3>Masalah yang lazim di armada</h3>
-                <ul className="kb-checks is-bad">
-                  <li>Sparepart keluar dicatat di kartu kertas atau ingatan.</li>
-                  <li>Angka di rak berbeda dengan angka di buku, dan tak ada yang tahu sebabnya.</li>
-                  <li>Jadwal servis bergeser tanpa penjelasan.</li>
-                  <li>Pusat baru tahu setelah masalah membesar.</li>
-                  <li>Saat darurat, pengemudi mencari nomor telepon sendiri.</li>
-                </ul>
-              </div>
-              <div className="kb-panel is-dark">
-                <h3>Yang dilakukan KBL</h3>
-                <ul className="kb-checks is-good">
-                  <li>Setiap mutasi punya dokumen, pelaku, dan jam.</li>
-                  <li>Selisih opname wajib beralasan dan disetujui.</li>
-                  <li>Percepatan dan penundaan wajib beralasan.</li>
-                  <li>Antrean persetujuan dan insiden terlihat dari pusat.</li>
-                  <li>Langkah cepat dan kontak muncul otomatis di layar pengemudi.</li>
-                </ul>
-                <Link className="kb-btn kb-btn-marka" href="/login" style={{ marginTop: 20 }}>
-                  Masuk ke aplikasi
-                </Link>
-              </div>
-            </div>
+            <p className="kb-bab-label" style={{ color: "var(--aksen)" }}>
+              Bab tiga
+            </p>
+            <blockquote id="h-bab3">
+              Beton mulai mengeras sejak diaduk. <em>Setiap menit di jalan dihitung.</em>
+            </blockquote>
+            <p>
+              Karena itu readymix bergerak di dalam transit mixer: drum berputar menjaga campuran tetap homogen selama perjalanan menuju proyek. Waktu tempuh, kondisi kendaraan, dan
+              kesiapan lokasi cor sama pentingnya dengan resep campurannya.
+            </p>
           </div>
         </section>
 
-        {/* ------------------------------------------------------------ keamanan & kontrol */}
-        <section className="kb-section is-fog" id="keamanan" aria-labelledby="h-keamanan">
+        {/* ------------------------------------------------------------ bab IV */}
+        <section className="kb-bab" aria-labelledby="h-bab4">
+          <div className="kb-wrap kb-split">
+            <div className="kb-text">
+              <p className="kb-bab-label">Bab empat</p>
+              <h2 id="h-bab4">Sampai di lokasi cor</h2>
+              <p>
+                Perjalanan satu kubik beton berakhir di cetakan: di lantai, kolom, atau jalan. Untuk lokasi yang sulit dijangkau, concrete pump membawa beton sampai ke titik
+                tuang yang tepat, tanpa harus dipikul atau diangkut dua kali.
+              </p>
+              <p>Di situlah pekerjaan kami selesai, dan pekerjaan bangunan Anda baru dimulai.</p>
+            </div>
+            <Fig p={PHOTOS.pump} tab="Concrete pump di lokasi pengecoran" sizes="(min-width: 900px) 540px, 100vw" />
+          </div>
+        </section>
+
+        {/* ------------------------------------------------------------ layanan */}
+        <section className="kb-bab is-krem" id="layanan" aria-labelledby="h-layanan">
           <div className="kb-wrap">
-            <SectionHead label="Keamanan & kontrol" title="Dapat dipercaya sejak fondasi" lead="Empat jaminan yang menjadi dasar semua modul. Tiga di antaranya sudah berjalan." />
-            <div className="kb-cards4">
-              {CONTROLS.map((c) => (
-                <article key={c.title} className="kb-cred">
-                  <span className={`kb-chip ${c.live ? "" : "is-quiet"}`}>{c.live ? "Tersedia" : "Berikutnya"}</span>
-                  <h3>{c.title}</h3>
-                  <p>{c.text}</p>
-                </article>
-              ))}
+            <div className="kb-bab-head">
+              <p className="kb-bab-label">Layanan dan peralatan</p>
+              <h2 id="h-layanan">Yang kami kerjakan, dan dengan apa</h2>
+              <p className="kb-serif">
+                Dari material batu sampai beton yang sudah dituang. Daftar mutu, ukuran agregat, dan harga kami susun per proyek, jadi hubungi tim kami untuk penawaran.
+              </p>
             </div>
-          </div>
-        </section>
-
-        {/* ------------------------------------------------------------ modul */}
-        <section className="kb-section is-white" id="modul" aria-labelledby="h-modul">
-          <div className="kb-wrap">
-            <SectionHead label="Modul" title="Enam kebutuhan, enam modul" lead="Setiap modul menjawab satu kebutuhan awal. Status menunjukkan posisinya di peta jalan." />
-            <div className="kb-tiles">
-              {MODULES.map((m) => (
-                <article key={m.id} id={m.id} className="kb-tile">
-                  <div className="kb-tile-art" aria-hidden="true">
-                    <m.Art />
-                  </div>
-                  <div className="kb-tile-body">
-                    <div className="kb-tile-meta">
-                      <span className="kb-tag">{m.tag}</span>
-                      <span className="kb-chip is-quiet">{m.status}</span>
-                    </div>
-                    <h3>{m.title}</h3>
-                    <p>{m.text}</p>
-                    <a href={m.chapter}>Lihat ceritanya →</a>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ------------------------------------------------------------ angka */}
-        <section className="kb-stats" aria-label="Cakupan rancangan">
-          <div className="kb-wrap">
-            <ul className="kb-stats-row">
-              {STATS.map((s) => (
-                <li key={s.label}>
-                  <b>{s.n}</b>
-                  <span>{s.label}</span>
-                </li>
-              ))}
-            </ul>
-            <p className="kb-stats-note">Angka menggambarkan cakupan rancangan KBL, bukan jumlah pelanggan atau proyek.</p>
-          </div>
-        </section>
-
-        {/* ------------------------------------------------------------ cerita */}
-        <section id="cerita" aria-labelledby="h-cerita">
-          <div className="kb-section is-white kb-story-intro">
-            <div className="kb-wrap kb-story-head">
-              <div className="kb-head">
-                <p className="kb-label">Cerita</p>
-                <h2 className="kb-h2" id="h-cerita">
-                  Sehari bersama B 9001 KBL
-                </h2>
-                <p className="kb-lead">Satu truk, satu hari, enam kebutuhan. Ceritanya fiktif, kebutuhan di baliknya nyata.</p>
-              </div>
-              <aside className="kb-dash" aria-label="Contoh data kendaraan dalam cerita">
-                <div className="kb-plate" role="img" aria-label="Pelat nomor B 9001 KBL">
-                  <b>B 9001 KBL</b>
-                  <small>08 · 27</small>
-                </div>
-                <div className="kb-odo" aria-label="Odometer 84.250 kilometer">
-                  {ODOMETER.map((d, i) => (
-                    <span key={i}>{d}</span>
-                  ))}
-                </div>
-                <span className="kb-dash-label">kilometer, pagi ini</span>
-              </aside>
-            </div>
-          </div>
-
-          <div className="kb-story-wrap">
-            <div className="kb-rail" aria-hidden="true">
-              <svg className="kb-rail-truck" viewBox="0 0 26 64" fill="none">
-                <rect x="3" y="1" width="20" height="40" rx="3" fill="#f7f8f5" />
-                <rect x="3" y="1" width="20" height="6" rx="2" fill="#dfe6e9" />
-                <rect x="4" y="43" width="18" height="19" rx="4" fill="#f5b800" />
-                <rect x="7" y="46" width="12" height="6" rx="1.5" fill="#14202b" opacity="0.75" />
-                <rect x="0" y="8" width="3" height="9" rx="1" fill="#0b141b" />
-                <rect x="23" y="8" width="3" height="9" rx="1" fill="#0b141b" />
-                <rect x="0" y="22" width="3" height="9" rx="1" fill="#0b141b" />
-                <rect x="23" y="22" width="3" height="9" rx="1" fill="#0b141b" />
-                <rect x="0" y="48" width="3" height="9" rx="1" fill="#0b141b" />
-                <rect x="23" y="48" width="3" height="9" rx="1" fill="#0b141b" />
-              </svg>
-            </div>
-            <div className="kb-story-chapters">
-              {CHAPTERS.map((c) => (
-                <section key={c.id} className={`kb-chapter ${c.tone}`} aria-labelledby={c.id}>
-                  <div className="kb-wrap kb-chapter-grid">
-                    <div className="kb-clock">
-                      <time dateTime={c.time}>{c.time}</time>
-                      <span className="kb-place">{c.place}</span>
-                    </div>
-                    <div className="kb-story">
-                      <h3 id={c.id}>{c.title}</h3>
-                      {c.body.map((p) => (
-                        <p key={p.slice(0, 24)}>{p}</p>
-                      ))}
-                      <p className="kb-need">
-                        <strong>Kebutuhan:</strong> {c.need}
-                      </p>
-                      <c.Art />
-                    </div>
-                  </div>
-                </section>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ------------------------------------------------------------ kebutuhan */}
-        <section className="kb-section is-white" id="kebutuhan" aria-labelledby="h-kebutuhan">
-          <div className="kb-wrap">
-            <SectionHead label="Di luar cerita" title="Enam kebutuhan, apa adanya" lead="Di kiri, bunyinya seperti disampaikan sejak awal. Di kanan, jawaban KBL." />
-            <ul className="kb-needs">
-              {NEEDS.map((n) => (
-                <li key={n.quote}>
-                  <q>{n.quote}</q>
-                  <div>
-                    <p>{n.answer}</p>
-                    <span className="kb-meta">{n.where}</span>
-                  </div>
+            <ul className="kb-layanan">
+              {LAYANAN.map((l) => (
+                <li key={l.nama}>
+                  <h3>{l.nama}</h3>
+                  <p>{l.isi}</p>
                 </li>
               ))}
             </ul>
           </div>
         </section>
 
-        {/* ------------------------------------------------------------ peran */}
-        <section className="kb-section is-fog" id="peran" aria-labelledby="h-peran">
-          <div className="kb-wrap">
-            <SectionHead label="Tim pengguna" title="Tujuh peran, satu cerita yang sama" lead="Semua orang dalam cerita tadi punya layar sendiri. Mereka hanya melihat dan melakukan apa yang menjadi bagiannya, dan hanya untuk cabangnya, kecuali pusat." />
-            <ul className="kb-roles">
-              {ROLES.map((r) => (
-                <li key={r.name}>
-                  <h3>{r.name}</h3>
-                  <p>{r.text}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-
-        {/* ------------------------------------------------------------ peta jalan */}
-        <section className="kb-section is-asphalt" id="peta-jalan" aria-labelledby="h-peta">
-          <div className="kb-wrap">
-            <SectionHead light label="Peta jalan" title="Baru sampai di km pertama" lead="Cerita di atas adalah tujuan, bukan status hari ini. Urutannya bisa berubah; bila keselamatan jadi prioritas, penanganan darurat dapat dimajukan." />
-            <ol className="kb-route">
-              <li className="is-done">
-                <span className="kb-pin" aria-hidden="true" />
-                <div>
-                  <h3>
-                    Fondasi <span className="kb-chip">Tersedia</span>
-                  </h3>
-                  <p>
-                    Login dengan penguncian akun, pengguna dan hak akses per peran dan cabang, data master (cabang, kendaraan, sparepart, gudang, vendor, kategori alasan),
-                    parameter sistem, audit log yang tak bisa diubah. Dapat dipasang di ponsel seperti aplikasi biasa.
-                  </p>
-                </div>
-              </li>
-              <li>
-                <span className="kb-pin" aria-hidden="true" />
-                <div>
-                  <h3>
-                    Stok dan persetujuan <span className="kb-chip is-quiet">Berikutnya</span>
-                  </h3>
-                  <p>Mutasi sparepart, kartu stok, stock opname, dan mesin approval berjenjang. Inilah bab 05:45, 13:30, dan 16:00.</p>
-                </div>
-              </li>
-              <li>
-                <span className="kb-pin" aria-hidden="true" />
-                <div>
-                  <h3>
-                    Jadwal dan anomali <span className="kb-chip is-quiet">Menyusul</span>
-                  </h3>
-                  <p>Rencana perawatan, work order, kalender, perubahan jadwal beserta alasannya, dan dashboard pusat. Bab 08:20 dan 11:00.</p>
-                </div>
-              </li>
-              <li>
-                <span className="kb-pin" aria-hidden="true" />
-                <div>
-                  <h3>
-                    Darurat di jalan <span className="kb-chip is-quiet">Menyusul</span>
-                  </h3>
-                  <p>Lapor satu ketukan, langkah cepat, kontak darurat, penanganan insiden oleh pusat, dan antrean offline. Bab 22:47.</p>
-                </div>
-              </li>
-            </ol>
-          </div>
-        </section>
-
-        {/* ------------------------------------------------------------ ajakan */}
-        <section className="kb-cta" aria-labelledby="h-cta">
-          <div className="kb-wrap kb-cta-grid">
+        {/* ------------------------------------------------------------ kontak */}
+        <section className="kb-kontak" id="kontak" aria-labelledby="h-kontak">
+          <div className="kb-wrap kb-kontak-grid">
             <div>
-              <p className="kb-label">Komitmen, ketelitian & ketanggapan</p>
-              <h2 className="kb-h2" id="h-cta">
-                Percayakan catatan armada Anda pada sistem yang tidak lupa
-              </h2>
-              <div className="kb-slide-actions">
-                <Link className="kb-btn kb-btn-solid" href="/login">
-                  Masuk ke KBL
-                </Link>
-                <InstallButton />
-                {waHref && (
-                  <a className="kb-btn kb-btn-ghost" href={waHref} target="_blank" rel="noopener noreferrer">
-                    Hubungi lewat WhatsApp
+              <p className="kb-bab-label is-gelap">Bab terakhir</p>
+              <h2 id="h-kontak">Ada proyek yang butuh batu atau beton?</h2>
+              <p className="kb-serif">
+                Sampaikan lokasi, volume, dan mutu yang Anda butuhkan. Tim kami akan menghubungi Anda untuk penawaran dan jadwal pengiriman.
+              </p>
+              <div className="kb-actions">
+                <a className="kb-btn kb-btn-navy" href={waLink(company.mobile.wa)} target="_blank" rel="noopener noreferrer">
+                  WhatsApp {company.mobile.label}
+                </a>
+                <a className="kb-btn kb-btn-garis" href={`tel:${company.phone.tel}`}>
+                  Telepon {company.phone.label}
+                </a>
+              </div>
+            </div>
+            <dl className="kb-card">
+              <div>
+                <dt>Alamat</dt>
+                <dd>
+                  {company.address.street}
+                  <br />
+                  {company.address.area}
+                  <br />
+                  {company.address.city}
+                  <br />
+                  <a href={mapsUrl} target="_blank" rel="noopener noreferrer">
+                    Buka di Google Maps
                   </a>
-                )}
+                </dd>
               </div>
-            </div>
-            <div className="kb-cta-art" aria-hidden="true">
-              <IllEmergency />
-            </div>
+              <div>
+                <dt>Telepon</dt>
+                <dd>
+                  <a href={`tel:${company.phone.tel}`}>{company.phone.label}</a>
+                  <br />
+                  <a href={`tel:${company.mobile.tel}`}>{company.mobile.label}</a>
+                </dd>
+              </div>
+              <div>
+                <dt>Email</dt>
+                <dd>
+                  <a href={`mailto:${company.email}`}>{company.email}</a>
+                </dd>
+              </div>
+              <div>
+                <dt>Instagram</dt>
+                <dd>
+                  <a href={company.instagram.url} target="_blank" rel="noopener noreferrer">
+                    {company.instagram.handle}
+                  </a>
+                </dd>
+              </div>
+            </dl>
           </div>
         </section>
 
-        {/* ------------------------------------------------------------ FAQ */}
-        <section className="kb-section is-white" id="faq" aria-labelledby="h-faq">
-          <div className="kb-wrap kb-faq-grid">
-            <div className="kb-head">
-              <p className="kb-label">Pertanyaan umum</p>
-              <h2 className="kb-h2" id="h-faq">
-                Yang sering ditanyakan
-              </h2>
-            </div>
-            <div className="kb-faq">
-              {FAQ.map((f) => (
-                <details key={f.q}>
-                  <summary>{f.q}</summary>
-                  <p>{f.a}</p>
-                </details>
+        {/* ------------------------------------------------------------ kredit foto */}
+        <section className="kb-kredit" aria-labelledby="h-kredit">
+          <div className="kb-wrap">
+            <h2 id="h-kredit">Kredit foto</h2>
+            <p>
+              Foto di halaman ini adalah ilustrasi berlisensi bebas dari Wikimedia Commons, bukan dokumentasi operasional KBL. Foto telah diubah ukurannya. Akan diganti dengan foto
+              fasilitas dan armada KBL.
+            </p>
+            <ul>
+              {CREDITS.map((c) => (
+                <li key={c.photo}>
+                  {c.photo}: {c.author},{" "}
+                  {c.licenseUrl ? (
+                    <a href={c.licenseUrl} target="_blank" rel="noopener noreferrer license">
+                      {c.license}
+                    </a>
+                  ) : (
+                    c.license
+                  )}
+                  ,{" "}
+                  <a href={c.source} target="_blank" rel="noopener noreferrer">
+                    sumber
+                  </a>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </section>
       </main>
 
-      {/* ------------------------------------------------------------ footer */}
-      <footer className="kb-footer" id="kontak">
-        <div className="kb-wrap kb-footer-grid">
+      <footer className="kb-footer">
+        <div className="kb-wrap kb-footer-row">
           <div>
-            <p className="kb-brand is-footer">
-              <span className="kb-brand-mark">
-                <span>KBL</span>
-                <i />
+            <Link href="/" className="kb-logo" aria-label="PT Karunia Beton Lestari, beranda">
+              <span className="kb-mark" aria-hidden="true">
+                KBL
               </span>
+              <span className="kb-logo-name">
+                Karunia Beton Lestari
+                <small>Stone &amp; Readymix</small>
+              </span>
+            </Link>
+            <p>
+              {company.legal}
+              <br />
+              {company.address.street}, {company.address.area}, {company.address.city}
             </p>
-            <p>Sistem manajemen perawatan dan sparepart armada. {siteConfig.tagline}.</p>
           </div>
-          <div>
-            <h3>Tautan</h3>
-            <ul>
-              <li>
-                <a href="#modul">Modul</a>
-              </li>
-              <li>
-                <a href="#cerita">Cerita</a>
-              </li>
-              <li>
-                <a href="#peran">Peran</a>
-              </li>
-              <li>
-                <a href="#peta-jalan">Peta jalan</a>
-              </li>
-              <li>
-                <a href="#faq">FAQ</a>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3>Aplikasi</h3>
-            <ul>
-              <li>
-                <Link href="/login">Masuk</Link>
-              </li>
-              <li>
-                <Link href="/forgot-password">Lupa password</Link>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3>Kontak</h3>
-            {hasContact ? (
-              <ul>
-                {siteConfig.address && <li>{siteConfig.address}</li>}
-                {siteConfig.phone && (
-                  <li>
-                    <a href={`tel:${siteConfig.phone.replace(/\s/g, "")}`}>{siteConfig.phone}</a>
-                  </li>
-                )}
-                {siteConfig.email && (
-                  <li>
-                    <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
-                  </li>
-                )}
-                {waHref && (
-                  <li>
-                    <a href={waHref} target="_blank" rel="noopener noreferrer">
-                      WhatsApp
-                    </a>
-                  </li>
-                )}
-              </ul>
-            ) : (
-              <p>Akun pengguna dibuat oleh admin sistem di perusahaan Anda. Hubungi admin untuk akses.</p>
-            )}
-          </div>
+          <nav aria-label="Tautan footer">
+            <a href="#cerita">Cerita</a>
+            <a href="#layanan">Layanan</a>
+            <a href="#kontak">Kontak</a>
+          </nav>
         </div>
         <div className="kb-wrap kb-footer-bottom">
-          <span>© 2026 KBL. Tokoh dan kejadian dalam cerita adalah fiksi untuk menggambarkan kebutuhan.</span>
-          <a href="#beranda">Kembali ke atas ↑</a>
+          <span>© 2026 {company.legal}</span>
+          <Link href="/login">Masuk Aplikasi (karyawan)</Link>
         </div>
       </footer>
     </>
