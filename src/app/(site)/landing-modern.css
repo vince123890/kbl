@@ -362,7 +362,7 @@
 .kb-map iframe {
   display: block;
   width: 100%;
-  height: clamp(300px, 42vw, 440px);
+  height: clamp(200px, 22vw, 260px);
   border: 0;
 }
 /* tombol WhatsApp melayang */
