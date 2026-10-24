@@ -1,0 +1,400 @@
+/* Tambahan untuk Beranda StoryBrand (docs/company-profile/02-Beranda.md): utility bar, navigasi, kartu seragam tinggi, gerak muncul-saat-scroll. */
+
+/* ------------------------------------------------------------ utility bar + navigasi */
+.kb-util {
+  background: var(--navy);
+  color: #c8d4df;
+  font-size: 0.82rem;
+}
+.kb-util-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 40px;
+}
+.kb-util-links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.kb-util-links a {
+  text-decoration: none;
+}
+.kb-util-links a:hover {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.kb-util-links a.kb-util-wa {
+  background: #1fa855;
+  color: #fff;
+  padding: 3px 12px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+.kb-util-links a.kb-util-wa:hover {
+  background: #178a45;
+  text-decoration: none;
+}
+@media (max-width: 760px) {
+  .kb-util-place {
+    display: none;
+  }
+  .kb-util-row {
+    justify-content: flex-end;
+  }
+  .kb-util-links > a:first-child {
+    display: none;
+  }
+}
+.kb-nav > a.kb-cta-nav {
+  background: var(--aksen);
+  color: var(--navy);
+  border: 0;
+  border-radius: 999px;
+  padding: 11px 22px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.kb-nav > a.kb-cta-nav:hover {
+  background: var(--aksen-2);
+}
+.kb-dd {
+  position: relative;
+}
+.kb-dd > a {
+  text-decoration: none;
+  padding-block: 6px;
+  border-bottom: 3px solid transparent;
+}
+.kb-dd > a:hover {
+  border-bottom-color: var(--aksen);
+}
+.kb-dd-menu {
+  list-style: none;
+  margin: 0;
+  padding: 8px 0;
+  position: absolute;
+  top: 100%;
+  left: -16px;
+  min-width: 240px;
+  background: #fff;
+  border: 1px solid var(--garis);
+  border-top: 4px solid var(--aksen);
+  box-shadow: 0 18px 30px -18px rgb(18 38 58 / 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+}
+.kb-dd:hover .kb-dd-menu,
+.kb-dd:focus-within .kb-dd-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+.kb-dd-menu a {
+  display: block;
+  padding: 11px 20px;
+  text-decoration: none;
+  font-size: 0.92rem;
+}
+.kb-dd-menu a:hover {
+  background: var(--krem);
+}
+@media (max-width: 1000px) {
+  .kb-burger {
+    display: block;
+  }
+  .kb-nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    background: #fff;
+    padding: 6px clamp(20px, 4vw, 40px) 22px;
+    border-bottom: 6px solid var(--aksen);
+    box-shadow: 0 24px 30px -22px rgb(0 0 0 / 0.5);
+    max-height: calc(100vh - 116px);
+    overflow-y: auto;
+  }
+  .kb-nav.is-open {
+    display: flex;
+  }
+  .kb-nav > a,
+  .kb-dd > a {
+    display: block;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--garis);
+  }
+  .kb-dd-menu {
+    position: static;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    box-shadow: none;
+    border: 0;
+    min-width: 0;
+    padding: 0 0 0 14px;
+  }
+  .kb-nav > a.kb-cta-nav {
+    margin-top: 16px;
+    text-align: center;
+    padding: 15px 22px;
+  }
+}
+
+/* ------------------------------------------------------------ kartu seragam tinggi */
+.kb-grid3,
+.kb-grid4,
+.kb-steps3 {
+  display: grid;
+  gap: 24px;
+  align-items: stretch;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 760px) {
+  .kb-grid3,
+  .kb-steps3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .kb-grid4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1100px) {
+  .kb-grid4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+/* rantai tinggi penuh: grid (items-stretch) → pembungkus Reveal (.kb-cell) → kartu */
+.kb-cell {
+  height: 100%;
+}
+.kb-cell > article,
+.kb-cell > .kb-step {
+  height: 100%;
+}
+.kb-pain,
+.kb-pillar,
+.kb-step,
+.kb-prod {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid var(--garis);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.kb-pain:hover,
+.kb-pillar:hover,
+.kb-step:hover,
+.kb-prod:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 22px 36px -22px rgb(18 38 58 / 0.4);
+}
+.kb-pain {
+  padding: 30px 26px;
+  border-top: 5px solid var(--aksen);
+}
+.kb-pain.is-bukti {
+  border-top-color: var(--navy);
+}
+.kb-pain h3,
+.kb-pillar h3,
+.kb-step h3 {
+  margin: 0 0 10px;
+  font-weight: 800;
+  font-size: 1.45rem;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+}
+.kb-pain p,
+.kb-pillar p,
+.kb-step p {
+  margin: 0;
+  flex: 1;
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  line-height: 1.6;
+  color: var(--lembut);
+}
+.kb-pull {
+  margin: 44px 0 0;
+  max-width: 34ch;
+  font-weight: 700;
+  font-size: clamp(1.4rem, 2.6vw, 2rem);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+.kb-pull strong {
+  color: var(--navy);
+  box-shadow: inset 0 -0.35em 0 var(--aksen-lembut);
+}
+.kb-pillar {
+  padding: 28px 24px;
+}
+.kb-pillar h3 {
+  font-size: clamp(2.2rem, 3.4vw, 3rem);
+  color: var(--navy);
+  border-bottom: 5px solid var(--aksen);
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+}
+.kb-step {
+  padding: 30px 26px;
+}
+.kb-step-n {
+  display: block;
+  font-weight: 800;
+  font-size: 4.2rem;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: var(--aksen);
+  margin-bottom: 14px;
+}
+.kb-prod {
+  overflow: hidden;
+}
+.kb-prod-img {
+  overflow: hidden;
+  background: var(--abu);
+}
+.kb-prod-img img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.kb-prod:hover .kb-prod-img img {
+  transform: scale(1.06);
+}
+.kb-prod-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  padding: 22px 24px 26px;
+  border-top: 5px solid var(--aksen);
+}
+.kb-prod h3 {
+  margin: 0;
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: -0.015em;
+}
+.kb-prod p {
+  margin: 0;
+  flex: 1;
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  color: var(--lembut);
+}
+.kb-prod a {
+  font-weight: 700;
+  color: var(--navy);
+  text-decoration: none;
+}
+.kb-prod a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* ------------------------------------------------------------ perbandingan + tombol WhatsApp */
+.kb-compare {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  border: 1px solid var(--garis);
+}
+.kb-compare th,
+.kb-compare td {
+  padding: 18px 22px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--garis);
+}
+.kb-compare th {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  background: var(--krem);
+}
+.kb-compare th:last-child {
+  background: var(--navy);
+  color: #fff;
+}
+.kb-compare td:first-child {
+  color: var(--lembut);
+}
+.kb-compare td:last-child {
+  font-weight: 700;
+  background: var(--aksen-lembut);
+}
+.kb-compare tr:last-child td {
+  border-bottom: 0;
+}
+.kb-btn-wa {
+  background: #1fa855;
+  color: #fff;
+}
+.kb-btn-wa:hover {
+  background: #178a45;
+}
+.kb-bab.is-navy .kb-text p,
+.kb-bab.is-navy .kb-peralatan li {
+  color: #e6edf3;
+}
+.kb-bab.is-navy .kb-peralatan li {
+  border-color: rgb(255 255 255 / 0.5);
+}
+.kb-footer-line {
+  margin-top: 12px;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------ muncul saat di-scroll: tegas, sekali jalan */
+/* reveal.tsx memasang atribut data-reveal setelah hidrasi dan hanya pada elemen di bawah lipatan pertama */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(32px) scale(0.98);
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-reveal][data-visible="true"] {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal],
+  .kb-pain,
+  .kb-pillar,
+  .kb-step,
+  .kb-prod,
+  .kb-prod-img img {
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* label bagian tetap sans meski berada di dalam kolom teks serif */
+.kb-text p.kb-bab-label {
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  line-height: 1.4;
+  margin: 0 0 14px;
+}
+.kb-bab.is-navy .kb-text p.kb-bab-label {
+  color: var(--aksen);
+}

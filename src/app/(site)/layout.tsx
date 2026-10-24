@@ -1,10 +1,13 @@
 import type { ReactNode } from "react";
-import { Archivo, Source_Serif_4 } from "next/font/google";
+import { Fraunces, Manrope } from "next/font/google";
 import "./landing.css";
+import "./landing-beranda.css";
+import "./landing-modern.css";
 
-const sans = Archivo({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800"], variable: "--font-sans" });
-const serif = Source_Serif_4({ subsets: ["latin"], weight: ["400", "600"], style: ["normal", "italic"], variable: "--font-serif" });
+// Judul: Fraunces (serif modern, elegan). Isi dan UI: Manrope.
+const display = Fraunces({ subsets: ["latin"], axes: ["opsz"], style: ["normal", "italic"], variable: "--font-display" });
+const body = Manrope({ subsets: ["latin"], variable: "--font-body" });
 
 export default function SiteLayout({ children }: { children: ReactNode }) {
-  return <div className={`kb ${sans.variable} ${serif.variable}`}>{children}</div>;
+  return <div className={`kb ${display.variable} ${body.variable}`}>{children}</div>;
 }

@@ -1,0 +1,349 @@
+/* Tema "Modern Construction": putih, hitam, kuning. Terinspirasi gaya template presentasi di docs/
+   (judul hitam tebal kapital, label kuning bentuk pil, siku bersudut membulat di pojok foto, pola titik, bilah keterangan kuning).
+   Hanya meniru GAYA. Foto dan tata letak template (Canva) tidak dipakai. Lepas impor file ini di layout.tsx untuk kembali ke tema navy-oranye. */
+
+.kb {
+  --aksen: #ffb400;
+  --aksen-2: #ffc633;
+  --aksen-lembut: #ffe9a8;
+  --navy: #141010;
+  --tab: #141010;
+  --tinta: #141010;
+  --lembut: #4f4a47;
+  --krem: #f4f3f1;
+  --abu: #e8e6e3;
+  --garis: rgb(20 16 16 / 0.15);
+}
+
+/* ------------------------------------------------------------ tipografi: modern, elegan */
+.kb {
+  --display: var(--font-display), "Iowan Old Style", Georgia, serif;
+  --sans: var(--font-body), system-ui, sans-serif;
+  --serif: var(--font-body), system-ui, sans-serif;
+}
+.kb h1,
+.kb h2,
+.kb h3,
+.kb h4,
+.kb-pull,
+.kb-step-n,
+.kb-when time,
+.kb-stat {
+  font-family: var(--display);
+  font-optical-sizing: auto;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: -0.022em;
+  font-stretch: 100%;
+}
+.kb-bab h2,
+.kb-kontak h2 {
+  font-weight: 500;
+  font-size: clamp(2.1rem, 4.6vw, 3.6rem);
+  line-height: 1.06;
+}
+.kb-hero h1 {
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+.kb-hero h1 em,
+.kb-pull strong {
+  font-style: italic;
+}
+.kb-pain h3,
+.kb-step h3,
+.kb-prod h3,
+.kb-ch-body h3 {
+  font-weight: 600;
+  letter-spacing: -0.018em;
+}
+.kb-pillar h3 {
+  font-weight: 500;
+}
+.kb-pull {
+  font-weight: 500;
+  line-height: 1.25;
+  font-size: clamp(1.3rem, 2.3vw, 1.8rem);
+}
+.kb-step-n,
+.kb-when time {
+  font-weight: 500;
+}
+/* paragraf dalam sans: lebih lapang dan mudah dibaca */
+.kb-text p,
+.kb-serif,
+.kb-ch-body p,
+.kb-pain p,
+.kb-pillar p,
+.kb-step p,
+.kb-prod p,
+.kb-hero-lede {
+  font-family: var(--sans);
+  line-height: 1.7;
+}
+
+/* label bagian: pil kuning */
+.kb-bab-label,
+.kb-text p.kb-bab-label {
+  display: inline-block;
+  padding: 7px 18px;
+  background: var(--aksen);
+  color: #141010;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.kb-bab-label::before {
+  display: none;
+}
+.kb-bab.is-navy .kb-bab-label,
+.kb-bab.is-navy .kb-text p.kb-bab-label,
+.kb-kontak .kb-bab-label.is-gelap {
+  color: #141010;
+  background: var(--aksen);
+}
+.kb-kontak {
+  background: var(--aksen);
+}
+.kb-kontak .kb-bab-label.is-gelap {
+  background: #141010;
+  color: #fff;
+}
+.kb-kontak .kb-serif {
+  color: #141010;
+}
+
+/* ------------------------------------------------------------ hero: putih, teks kiri, foto kanan */
+.kb-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  align-items: stretch;
+  min-height: 0;
+  background: #fff;
+  color: #141010;
+  overflow: visible;
+}
+.kb-hero-shade,
+.kb-hero-tab {
+  display: none;
+}
+.kb-hero-img {
+  position: relative;
+  inset: auto;
+  grid-column: 2;
+  grid-row: 1;
+  width: 100%;
+  height: 100%;
+  min-height: 560px;
+  object-fit: cover;
+  object-position: 55% 50%;
+}
+.kb-hero-copy {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: center;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding-block: clamp(56px, 8vw, 110px);
+  padding-left: max(clamp(20px, 4vw, 40px), calc((100vw - 1180px) / 2 + clamp(20px, 4vw, 40px)));
+  padding-right: clamp(20px, 4vw, 56px);
+}
+.kb-eyebrow {
+  display: inline-block;
+  padding: 7px 18px;
+  background: var(--aksen);
+  color: #141010;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+.kb-hero h1 {
+  max-width: 13ch;
+  font-size: clamp(2.5rem, 5.2vw, 4.6rem);
+}
+.kb-hero h1 em {
+  color: #141010;
+  background: var(--aksen);
+  padding: 0 0.14em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.kb-hero-lede {
+  color: #3a3535;
+}
+.kb-hero .kb-btn-garis {
+  border-color: #141010;
+  color: #141010;
+}
+.kb-hero .kb-btn-garis:hover {
+  background: #141010;
+  color: #fff;
+}
+/* siku bersudut membulat di pojok foto hero */
+.kb-hero::after {
+  content: "";
+  position: absolute;
+  right: clamp(20px, 3vw, 36px);
+  bottom: -26px;
+  width: 92px;
+  height: 92px;
+  border: 3px solid #141010;
+  border-radius: 26px;
+  pointer-events: none;
+}
+.kb-hero {
+  position: relative;
+}
+@media (max-width: 899px) {
+  .kb-hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .kb-hero-img {
+    grid-column: 1;
+    grid-row: 2;
+    min-height: 0;
+    height: 280px;
+  }
+  .kb-hero-copy {
+    grid-row: 1;
+    padding-inline: clamp(20px, 4vw, 40px);
+  }
+  .kb-hero::after {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------ foto: siku membulat + bilah kuning */
+.kb-fig::before {
+  inset: -18px -18px auto auto;
+  width: 96px;
+  height: 96px;
+  background: transparent;
+  border: 3px solid #141010;
+  border-radius: 28px;
+}
+.is-navy .kb-fig::before,
+.is-aside .kb-fig::before {
+  border-color: var(--aksen);
+}
+.kb-tab {
+  left: 0;
+  right: 0;
+  max-width: none;
+  background: var(--aksen);
+  color: #141010;
+  border-radius: 0;
+  padding: 10px 16px;
+  text-align: center;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* pola titik di pojok bagian terang */
+.kb-bab,
+.kb-cerita {
+  position: relative;
+}
+.kb-bab:not(.is-navy)::before {
+  content: "";
+  position: absolute;
+  top: 36px;
+  right: clamp(16px, 5vw, 80px);
+  width: 96px;
+  height: 64px;
+  background: radial-gradient(#141010 1.3px, transparent 1.6px) 0 0 / 12px 12px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------ kartu dan elemen lain */
+.kb-pain,
+.kb-pillar,
+.kb-step,
+.kb-prod {
+  border-radius: 0;
+}
+.kb-pain h3,
+.kb-step h3,
+.kb-prod h3 {
+  font-size: 1.2rem;
+}
+.kb-pillar h3 {
+  font-size: clamp(1.9rem, 3vw, 2.6rem);
+}
+.kb-step-n {
+  display: inline-block;
+  color: #141010;
+  box-shadow: inset 0 -0.3em 0 var(--aksen);
+}
+.kb-pull strong {
+  color: #141010;
+  box-shadow: inset 0 -0.4em 0 var(--aksen);
+}
+.kb-prod-body {
+  border-top-color: var(--aksen);
+}
+.kb-prod a,
+.kb-card a {
+  color: #141010;
+}
+.kb-prod a {
+  text-decoration: underline;
+  text-decoration-color: var(--aksen);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 4px;
+}
+.kb-ch.is-aside .kb-day,
+.kb-bab.is-navy .kb-peralatan li {
+  color: var(--aksen);
+}
+.kb-aside-tag {
+  background: var(--aksen);
+  color: #141010;
+}
+.kb-btn {
+  font-weight: 700;
+}
+.kb-btn-aksen {
+  background: var(--aksen);
+  color: #141010;
+}
+.kb-btn-aksen:hover {
+  background: var(--aksen-2);
+}
+.kb-nav > a.kb-cta-nav {
+  background: var(--aksen);
+  color: #141010;
+}
+.kb-util {
+  background: #141010;
+}
+.kb-compare td:last-child {
+  background: var(--aksen-lembut);
+}
+.kb-kontak .kb-btn-navy {
+  background: #141010;
+  color: #fff;
+}
+.kb-kontak .kb-btn-garis {
+  border-color: #141010;
+  color: #141010;
+}
+.kb-kontak .kb-btn-garis:hover {
+  background: #141010;
+  color: #fff;
+}
+.kb-footer {
+  background: #141010;
+}
+.kb-footer a:hover,
+.kb-util-links a:hover {
+  color: var(--aksen);
+}
