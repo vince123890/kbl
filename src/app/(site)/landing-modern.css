@@ -365,20 +365,27 @@
   height: clamp(300px, 42vw, 440px);
   border: 0;
 }
-.kb-map-link {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  padding: 10px 18px;
-  background: #141010;
+/* tombol WhatsApp melayang */
+.kb-wa-float {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #1fa855;
   color: #fff;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  text-decoration: none;
+  box-shadow: 0 6px 18px rgba(20, 16, 16, 0.3);
+  transition: transform 0.2s ease, background 0.2s ease;
 }
-.kb-map-link:hover {
-  background: var(--aksen);
-  color: #141010;
+.kb-wa-float:hover {
+  background: #178a45;
+  transform: scale(1.06);
+}
+.kb-wa-float:focus-visible {
+  outline: 3px solid var(--aksen);
+  outline-offset: 3px;
 }
