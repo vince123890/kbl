@@ -351,18 +351,20 @@
 }
 
 /* peta Google Maps yang di-embed */
-.kb-map-wrap {
-  margin-top: clamp(32px, 4vw, 56px);
+.kb-side {
+  display: grid;
+  gap: 16px;
 }
 .kb-map {
-  position: relative;
-  border: 3px solid #141010;
-  background: var(--abu);
+  overflow: hidden;
+  border-top-right-radius: 28px;
+  background: #fff;
+  box-shadow: 0 30px 50px -34px rgb(0 0 0 / 0.55);
 }
 .kb-map iframe {
   display: block;
   width: 100%;
-  height: clamp(200px, 22vw, 260px);
+  height: 220px;
   border: 0;
 }
 /* tombol WhatsApp melayang */

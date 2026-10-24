@@ -320,12 +320,10 @@ export default function CompanyProfilePage() {
                 <a className="kb-btn kb-btn-navy" href={waUtama} target="_blank" rel="noopener noreferrer">
                   Konsultasi Kebutuhan Beton
                 </a>
-                <a className="kb-btn kb-btn-wa" href={waLink(company.mobile.wa)} target="_blank" rel="noopener noreferrer">
-                  Chat WhatsApp
-                </a>
               </div>
             </Reveal>
             <Reveal delay={100}>
+              <div className="kb-side">
               <dl className="kb-card">
                 <div>
                   <dt>Alamat</dt>
@@ -360,10 +358,6 @@ export default function CompanyProfilePage() {
                   </dd>
                 </div>
               </dl>
-            </Reveal>
-          </div>
-          <div className="kb-wrap kb-map-wrap">
-            <Reveal>
               <div className="kb-map">
                 <iframe
                   title="Peta lokasi PT Karunia Beton Lestari di Sunggal, Deli Serdang"
@@ -372,6 +366,7 @@ export default function CompanyProfilePage() {
                   referrerPolicy="no-referrer-when-downgrade"
                   allowFullScreen
                 />
+              </div>
               </div>
             </Reveal>
           </div>
