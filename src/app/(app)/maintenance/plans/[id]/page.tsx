@@ -53,9 +53,9 @@ export default async function PlanDetailPage({ params }: PageProps<"/maintenance
         <Card title="Sparepart standar">
           {parts.length ? (
             <ul className="text-sm">
-              {parts.map((x) => (
-                <li key={x.spareparts.code}>
-                  {x.spareparts.name} · {fmtQty(x.qty)} {x.spareparts.uom}
+              {parts.map((x, i) => (
+                <li key={`${x.spareparts?.code ?? "p"}-${i}`}>
+                  {x.spareparts?.name ?? "Sparepart"} · {fmtQty(x.qty)} {x.spareparts?.uom ?? ""}
                 </li>
               ))}
             </ul>

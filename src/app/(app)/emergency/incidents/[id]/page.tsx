@@ -64,7 +64,7 @@ export default async function IncidentDetailPage({ params }: PageProps<"/emergen
       {i.status !== "CLOSED" && <LiveRefresh seconds={canHandle ? 15 : 30} />}
       <PageHeader
         title={i.incident_no}
-        subtitle={`${INCIDENT_TYPE[i.type]?.label} · ${i.vehicles.plate_no} · ${i.branches.name}`}
+        subtitle={`${INCIDENT_TYPE[i.type]?.label} · ${i.vehicles?.plate_no ?? "-"} · ${i.branches?.name ?? "-"}`}
         actions={
           canHandle || can(user, "incident.close") ? (
             <IncidentActions

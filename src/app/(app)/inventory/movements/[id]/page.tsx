@@ -135,8 +135,8 @@ export default async function MovementDetailPage({ params, searchParams }: PageP
             <DataTable head={["Sparepart", "Lokasi", "Masuk (+)", "Keluar (−)", "Saldo sesudah"]}>
               {(movements.data as unknown as { id: number; qty_delta: string; balance_after: string; spareparts: { code: string; name: string }; locations: { name: string } }[]).map((m) => (
                 <tr key={m.id}>
-                  <td className={TD}>{m.spareparts.name}</td>
-                  <td className={TD}>{m.locations.name}</td>
+                  <td className={TD}>{m.spareparts?.name ?? "-"}</td>
+                  <td className={TD}>{m.locations?.name ?? "-"}</td>
                   <td className={`${TD} tabular-nums`}>{Number(m.qty_delta) > 0 ? fmtQty(m.qty_delta) : ""}</td>
                   <td className={`${TD} tabular-nums`}>{Number(m.qty_delta) < 0 ? fmtQty(Math.abs(Number(m.qty_delta))) : ""}</td>
                   <td className={`${TD} tabular-nums`}>{fmtQty(m.balance_after)}</td>

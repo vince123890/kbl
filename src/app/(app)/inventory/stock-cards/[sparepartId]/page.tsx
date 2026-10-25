@@ -72,7 +72,7 @@ export default async function StockCardPage({ params, searchParams }: PageProps<
       />
       <div className="mb-4 grid gap-3 sm:grid-cols-3">
         {balances.map((b) => (
-          <Card key={b.location_id} title={b.locations.name}>
+          <Card key={b.location_id} title={b.locations?.name ?? "Lokasi"}>
             <p className="text-2xl font-semibold tabular-nums">{fmtQty(b.qty_on_hand)}</p>
             <p className="text-xs text-muted">Reservasi {fmtQty(b.qty_reserved)} · tersedia {fmtQty(Number(b.qty_on_hand) - Number(b.qty_reserved))}</p>
           </Card>

@@ -19,7 +19,8 @@ export const metadata = { title: "Detail Work Order" };
 interface Part {
   qty_planned: string;
   qty_used: string;
-  spareparts: { code: string; name: string; uom: string };
+  /** kosong bila role tidak boleh membaca master sparepart (mis. pengemudi) */
+  spareparts: { code: string; name: string; uom: string } | null;
   locations: { name: string } | null;
 }
 
@@ -135,12 +136,12 @@ export default async function WoDetailPage({ params, searchParams }: PageProps<"
               {parts.map((p, i) => (
                 <tr key={i}>
                   <td className={TD}>
-                    {p.spareparts.name}
-                    <span className="block text-xs text-muted">{p.spareparts.code}</span>
+                    {p.spareparts?.name ?? "Sparepart"}
+                    <span className="block text-xs text-muted">{p.spareparts?.code ?? "detail tidak tersedia untuk role Anda"}</span>
                   </td>
                   <td className={`${TD} tabular-nums`}>{fmtQty(p.qty_planned)}</td>
                   <td className={`${TD} tabular-nums`}>{fmtQty(p.qty_used)}</td>
-                  <td className={TD}>{p.spareparts.uom}</td>
+                  <td className={TD}>{p.spareparts?.uom ?? "-"}</td>
                   <td className={TD}>{p.locations?.name ?? <span className="text-muted">-</span>}</td>
                 </tr>
               ))}
