@@ -55,7 +55,7 @@ export default async function BalancesPage({ searchParams }: PageProps<"/invento
         subtitle={`${count ?? 0} baris. Saldo hanya berubah lewat mutasi yang diposting; tidak dapat diedit langsung.`}
         actions={<ButtonLink href={`/reports/RPT-03/export?${exportQs}`}>Ekspor CSV</ButtonLink>}
       />
-      <div className="mb-4 flex flex-wrap items-center gap-2">
+      <div className="filter-bar">
         <SearchBox placeholder="Cari kode atau nama sparepart…" />
         <FilterSelect name="branch" label="Cabang" options={(branches ?? []).map((b) => ({ value: b.id, label: b.name }))} />
         <FilterSelect name="location" label="Lokasi" options={(locations ?? []).map((l) => ({ value: l.id, label: l.name }))} />

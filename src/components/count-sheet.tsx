@@ -122,8 +122,8 @@ export function CountSheet({
           Progres: <b>{done}</b>/{lines.length} terhitung
         </span>
       </div>
-      <div className="overflow-x-auto rounded-xl border border-border bg-surface">
-        <table className="w-full text-sm">
+      <div className="table-cards-wrap overflow-x-auto rounded-xl border border-border bg-surface">
+        <table className="table-cards w-full text-sm">
           <thead className="border-b border-border text-left text-xs uppercase text-muted">
             <tr>
               <th className="px-3 py-2 font-medium">Sparepart</th>

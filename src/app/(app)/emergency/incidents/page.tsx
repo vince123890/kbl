@@ -68,7 +68,7 @@ export default async function IncidentsPage({ searchParams }: PageProps<"/emerge
           </>
         }
       />
-      <div className="mb-4 flex flex-wrap items-center gap-2">
+      <div className="filter-bar">
         <SearchBox placeholder="Cari no. insiden…" />
         <FilterSelect
           name="status"

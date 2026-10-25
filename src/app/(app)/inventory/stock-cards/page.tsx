@@ -33,7 +33,7 @@ export default async function StockCardsPage({ searchParams }: PageProps<"/inven
   return (
     <>
       <PageHeader title="Kartu Stok" subtitle="Pilih sparepart untuk melihat riwayat keluar-masuk dan saldo berjalan." />
-      <div className="mb-4 flex flex-wrap items-center gap-2">
+      <div className="filter-bar">
         <SearchBox placeholder="Cari kode atau nama sparepart…" />
         <FilterSelect name="category" label="Kategori" options={categories.map((c) => ({ value: c, label: c }))} />
       </div>

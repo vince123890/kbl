@@ -30,6 +30,12 @@ export default async function VehicleDetailPage({ params }: PageProps<"/master/v
   const { data: people } = ids.length ? await supabase.from("profiles").select("id,name").in("id", ids) : { data: [] };
   const who = new Map((people ?? []).map((p) => [p.id, p.name]));
 
+  // riwayat perawatan dan insiden kendaraan ini (RLS membatasi sesuai hak akses)
+  const [{ data: wos }, { data: incs }] = await Promise.all([
+    supabase.from("work_orders").select("id,wo_no,type,status,scheduled_start,description").eq("vehicle_id", id).order("created_at", { ascending: false }).limit(10),
+    supabase.from("incidents").select("id,incident_no,type,status,reported_at").eq("vehicle_id", id).order("reported_at", { ascending: false }).limit(10),
+  ]);
+
   return (
     <>
       <PageHeader
@@ -56,8 +62,8 @@ export default async function VehicleDetailPage({ params }: PageProps<"/master/v
       {!logs?.length ? (
         <EmptyState>Belum ada perubahan odometer.</EmptyState>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-border bg-surface">
-          <table className="w-full text-sm">
+        <div className="table-cards-wrap overflow-x-auto rounded-xl border border-border bg-surface">
+          <table className="table-cards w-full text-sm">
             <thead className="border-b border-border text-left text-xs uppercase text-muted">
               <tr>
                 <th className="px-3 py-2 font-medium">Waktu</th>
@@ -79,7 +85,44 @@ export default async function VehicleDetailPage({ params }: PageProps<"/master/v
           </table>
         </div>
       )}
-      <p className="mt-4 text-xs text-muted">Rencana perawatan, work order, pemakaian sparepart, dan insiden akan muncul di sini pada rilis berikutnya.</p>
+
+      <h2 className="mb-2 mt-6 font-semibold">Work Order terbaru</h2>
+      {!wos?.length ? (
+        <EmptyState>Belum ada Work Order untuk kendaraan ini.</EmptyState>
+      ) : (
+        <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-surface text-sm">
+          {wos.map((w) => (
+            <li key={w.id}>
+              <Link href={`/maintenance/work-orders/${w.id}`} className="flex items-center justify-between gap-3 px-3 py-2.5 hover:bg-background">
+                <span className="min-w-0">
+                  <b>{w.wo_no}</b>
+                  <span className="block truncate text-xs text-muted">{w.description ?? w.type}</span>
+                </span>
+                <Badge>{w.status}</Badge>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <h2 className="mb-2 mt-6 font-semibold">Insiden terbaru</h2>
+      {!incs?.length ? (
+        <EmptyState>Belum ada insiden untuk kendaraan ini.</EmptyState>
+      ) : (
+        <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-surface text-sm">
+          {incs.map((i) => (
+            <li key={i.id}>
+              <Link href={`/emergency/incidents/${i.id}`} className="flex items-center justify-between gap-3 px-3 py-2.5 hover:bg-background">
+                <span>
+                  <b>{i.incident_no}</b>
+                  <span className="block text-xs text-muted">{fmtDate(i.reported_at)}</span>
+                </span>
+                <Badge tone={i.status === "REPORTED" ? "bad" : "neutral"}>{i.status}</Badge>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </>
   );
 }

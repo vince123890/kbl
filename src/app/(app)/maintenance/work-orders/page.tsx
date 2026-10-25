@@ -45,7 +45,7 @@ export default async function WorkOrdersPage({ searchParams }: PageProps<"/maint
           </>
         }
       />
-      <div className="mb-4 flex flex-wrap items-center gap-2">
+      <div className="filter-bar">
         <SearchBox placeholder="Cari no. WO atau no. polisi…" />
         <FilterSelect name="type" label="Jenis" options={Object.entries(WO_TYPE).map(([value, d]) => ({ value, label: d.label }))} />
         <FilterSelect name="status" label="Status" options={Object.entries(WO_STATUS).map(([value, d]) => ({ value, label: d.label }))} />
@@ -54,7 +54,7 @@ export default async function WorkOrdersPage({ searchParams }: PageProps<"/maint
         <FilterSelect name="vendor" label="Bengkel" options={(vendors ?? []).map((v) => ({ value: v.id, label: v.name }))} />
         {(techs ?? []).length > 0 && <FilterSelect name="assignee" label="Teknisi" options={(techs ?? []).map((t: { id: string; name: string }) => ({ value: t.id, label: t.name }))} />}
         <FilterSelect name="overdue" label="Overdue" allLabel="Semua" options={[{ value: "1", label: "Overdue saja" }]} />
-        <form method="get" className="flex items-center gap-2 text-sm">
+        <form method="get" className="flex flex-wrap items-center gap-2 text-sm">
           {Object.entries(sp).map(([k, v]) => typeof v === "string" && v && k !== "from" && k !== "to" && k !== "page" ? <input key={k} type="hidden" name={k} value={v} /> : null)}
           <label className="flex items-center gap-1">
             Dari <input type="date" name="from" defaultValue={one(sp, "from")} className="tap rounded-lg border border-border bg-surface px-2" />

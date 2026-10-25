@@ -87,7 +87,7 @@ export default async function AllApprovalsPage({ searchParams }: PageProps<"/app
           <p className="text-3xl font-semibold">{lateCount}</p>
         </Card>
       </div>
-      <div className="mb-4 flex flex-wrap items-center gap-2">
+      <div className="filter-bar">
         <SearchBox placeholder="Cari no. dokumen atau ringkasan…" />
         <FilterSelect name="type" label="Jenis" options={Object.entries(DOC_TYPE).map(([value, d]) => ({ value, label: d.label }))} />
         <FilterSelect name="branch" label="Cabang" options={(branchList ?? []).map((b) => ({ value: b.id, label: b.name }))} />

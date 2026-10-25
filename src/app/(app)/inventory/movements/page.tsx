@@ -42,7 +42,7 @@ export default async function MovementsPage({ searchParams }: PageProps<"/invent
           </>
         }
       />
-      <div className="mb-4 flex flex-wrap items-center gap-2">
+      <div className="filter-bar">
         <SearchBox placeholder="Cari no. dokumen, sparepart, no. polisi…" />
         <FilterSelect name="type" label="Tipe" options={Object.entries(STOCK_TYPE).map(([value, d]) => ({ value, label: d.label }))} />
         <FilterSelect name="status" label="Status" options={Object.entries(STOCK_STATUS).map(([value, d]) => ({ value, label: d.label }))} />
@@ -50,7 +50,7 @@ export default async function MovementsPage({ searchParams }: PageProps<"/invent
           <FilterSelect name="branch" label="Cabang" options={(branches ?? []).map((b) => ({ value: b.id, label: b.name }))} />
         ) : null}
         <FilterSelect name="vehicle" label="Kendaraan" options={(vehicles ?? []).map((v) => ({ value: v.id, label: v.plate_no }))} />
-        <form method="get" className="flex items-center gap-2 text-sm">
+        <form method="get" className="flex flex-wrap items-center gap-2 text-sm">
           {Object.entries(sp).map(([k, v]) => typeof v === "string" && v && k !== "from" && k !== "to" && k !== "page" ? <input key={k} type="hidden" name={k} value={v} /> : null)}
           <label className="flex items-center gap-1">
             Dari <input type="date" name="from" defaultValue={one(sp, "from")} className="tap rounded-lg border border-border bg-surface px-2" />

@@ -129,7 +129,7 @@ export default async function CalendarPage({ searchParams }: PageProps<"/mainten
         </Link>
         <h2 className="ml-1 font-heading text-lg">{title}</h2>
       </div>
-      <div className="mb-3 flex flex-wrap items-center gap-2 print:hidden">
+      <div className="filter-bar print:hidden">
         <FilterSelect name="branch" label="Cabang" options={(branches ?? []).map((b) => ({ value: b.id, label: b.name }))} />
         <FilterSelect name="vehicle" label="Kendaraan" options={(vehicles ?? []).map((v) => ({ value: v.id, label: v.plate_no }))} />
         <FilterSelect name="vendor" label="Bengkel" options={(vendors ?? []).map((v) => ({ value: v.id, label: v.name }))} />
@@ -151,7 +151,33 @@ export default async function CalendarPage({ searchParams }: PageProps<"/mainten
       </div>
 
       {(view === "month" || view === "week") && (
-        <CalendarBoard days={days} events={events} inMonth={view === "month" ? date.slice(0, 7) : undefined} today={today} tall={view === "week"} reasons={reasonOpts} />
+        <>
+          {/* layar lebar: grid kalender (bisa diseret). Ponsel: daftar per tanggal yang mudah dibaca dan diketuk */}
+          <div className="hidden md:block">
+            <CalendarBoard days={days} events={events} inMonth={view === "month" ? date.slice(0, 7) : undefined} today={today} tall={view === "week"} reasons={reasonOpts} />
+          </div>
+          <div className="space-y-3 md:hidden">
+            {events.length === 0 && <p className="rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted">Tidak ada WO pada rentang ini.</p>}
+            {days
+              .filter((d) => events.some((e) => e.date === d))
+              .map((d) => (
+                <section key={d}>
+                  <h3 className={`mb-1 text-sm font-semibold ${d === today ? "text-foreground" : "text-muted"}`}>
+                    {dayLabel(d)}
+                    {d === today && " · hari ini"}
+                  </h3>
+                  <div className="space-y-2">
+                    {events
+                      .filter((e) => e.date === d)
+                      .sort((a, b) => a.startLocal.localeCompare(b.startLocal))
+                      .map((e) => (
+                        <EventRow key={e.id} e={e} />
+                      ))}
+                  </div>
+                </section>
+              ))}
+          </div>
+        </>
       )}
 
       {view === "day" && (

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import { AppShell, type NavGroup } from "@/components/app-shell";
+import { AppShell, type NavGroup, type QuickItem } from "@/components/app-shell";
+import { TableLabels } from "@/components/table-labels";
 import { can, requireUser } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
 import { MASTERS } from "@/lib/masters";
@@ -59,8 +60,21 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
     ]),
   ].filter((g): g is NavGroup => !!g);
 
+  // pintasan bar bawah ponsel: Beranda + maksimal 3 yang paling relevan untuk role ini
+  const field = user.roles.some((r) => r === "DRIVER" || r === "MECHANIC");
+  const candidates: (QuickItem | false)[] = [
+    can(user, "incident.report") && field && { href: "/emergency/report", label: "Darurat", urgent: true },
+    can(user, "approval.act") && { href: "/approvals/inbox", label: "Approval" },
+    can(user, "wo.read") && { href: "/maintenance/work-orders", label: "WO" },
+    can(user, "stock.read") && { href: "/inventory/movements", label: "Stok" },
+    can(user, "incident.report") && !field && { href: "/emergency/report", label: "Darurat", urgent: true },
+    can(user, "report.view") && { href: "/reports", label: "Laporan" },
+  ];
+  const quick: QuickItem[] = [{ href: "/dashboard", label: "Beranda" }, ...candidates.filter((x): x is QuickItem => !!x).slice(0, 3)];
+
   return (
-    <AppShell nav={nav} user={{ name: user.name, branchName: user.branchName, roles: user.roles }} unread={unread.count ?? 0} alertCount={unacked?.count ?? 0}>
+    <AppShell nav={nav} quick={quick} user={{ name: user.name, branchName: user.branchName, roles: user.roles }} unread={unread.count ?? 0} alertCount={unacked?.count ?? 0}>
+      <TableLabels />
       {children}
     </AppShell>
   );

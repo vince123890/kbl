@@ -55,7 +55,7 @@ export default async function CountsPage({ searchParams }: PageProps<"/inventory
         subtitle={`${count ?? 0} sesi`}
         actions={can(user, "count.create") ? <OpenCountButton locations={locs ?? []} categories={categories} /> : undefined}
       />
-      <div className="mb-4 flex flex-wrap items-center gap-2">
+      <div className="filter-bar">
         <SearchBox placeholder="Cari no. opname…" />
         <FilterSelect name="status" label="Status" options={Object.entries(COUNT_STATUS).map(([value, d]) => ({ value, label: d.label }))} />
         <FilterSelect name="type" label="Tipe" options={Object.entries(COUNT_TYPE).map(([value, d]) => ({ value, label: d.label }))} />

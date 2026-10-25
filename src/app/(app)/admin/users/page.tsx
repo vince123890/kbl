@@ -64,7 +64,7 @@ export default async function UsersPage({ searchParams }: PageProps<"/admin/user
       <PageHeader title="User" subtitle={`${count ?? 0} pengguna`} />
       <UserAdminToolbar branches={branches ?? []} roles={roles ?? []} />
       <CsvImport title="Impor user dari CSV (onboarding)" templateHref="/admin/users/template" action={importUsersAction} columns="nama; email; telepon; cabang (kode); role (pisahkan dengan |)" />
-      <div className="mb-4 flex flex-wrap items-center gap-2">
+      <div className="filter-bar">
         <SearchBox placeholder="Cari nama, email, telepon…" />
         <FilterSelect name="branch" label="Cabang" options={(branches ?? []).map((b) => ({ value: b.id, label: b.name }))} />
         <FilterSelect name="role" label="Role" options={(roles ?? []).map((r) => ({ value: r.id, label: r.name }))} />
@@ -82,8 +82,8 @@ export default async function UsersPage({ searchParams }: PageProps<"/admin/user
       {!rows.length ? (
         <EmptyState>Tidak ada pengguna yang cocok.</EmptyState>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-border bg-surface">
-          <table className="w-full text-sm">
+        <div className="table-cards-wrap overflow-x-auto rounded-xl border border-border bg-surface">
+          <table className="table-cards w-full text-sm">
             <thead className="border-b border-border text-left text-xs uppercase text-muted">
               <tr>
                 <th className="px-3 py-2 font-medium">Nama</th>

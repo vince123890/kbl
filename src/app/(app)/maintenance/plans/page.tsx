@@ -71,7 +71,7 @@ export default async function PlansPage({ searchParams }: PageProps<"/maintenanc
         actions={canWrite ? <PlanFormDialog vehicles={vehicleOpts} spareparts={partOpts} vendors={vendorOpts} /> : undefined}
       />
       {canWrite && <PlanImport />}
-      <div className="mb-4 flex flex-wrap items-center gap-2">
+      <div className="filter-bar">
         <SearchBox placeholder="Cari nama tugas…" />
         <FilterSelect name="branch" label="Cabang" options={(branches ?? []).map((b) => ({ value: b.id, label: b.name }))} />
         <FilterSelect name="vehicle" label="Kendaraan" options={vehicleOpts.map((v) => ({ value: v.id, label: v.label }))} />

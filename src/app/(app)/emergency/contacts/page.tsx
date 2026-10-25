@@ -30,7 +30,7 @@ export default async function ContactsPage({ searchParams }: PageProps<"/emergen
         subtitle="Kontak Global selalu tampil di setiap layar langkah cepat pengemudi."
         actions={manage ? <ContactDialog branches={branches ?? []} /> : undefined}
       />
-      <div className="mb-4 flex flex-wrap items-center gap-2">
+      <div className="filter-bar">
         <FilterSelect
           name="scope"
           label="Cakupan"

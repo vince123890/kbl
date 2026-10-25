@@ -92,7 +92,7 @@ export default async function MasterListPage({ params, searchParams }: PageProps
         />
       )}
 
-      <div className="mb-4 flex flex-wrap items-center gap-2">
+      <div className="filter-bar">
         <SearchBox placeholder={`Cari ${def.label.toLowerCase()}…`} />
         <FilterSelect
           name="status"
@@ -120,8 +120,8 @@ export default async function MasterListPage({ params, searchParams }: PageProps
       {!rows.length ? (
         <EmptyState>{q || status !== "active" ? "Tidak ada data yang cocok dengan filter." : `Belum ada data ${def.label.toLowerCase()}.`}</EmptyState>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-border bg-surface">
-          <table className="w-full text-sm">
+        <div className="table-cards-wrap overflow-x-auto rounded-xl border border-border bg-surface">
+          <table className="table-cards w-full text-sm">
             <thead className="border-b border-border text-left text-xs uppercase text-muted">
               <tr>
                 {def.columns.map((c) => (

@@ -40,8 +40,8 @@ export function InboxList({ rows }: { rows: InboxRow[] }) {
           <span className="text-xs text-muted">Maksimal 20. Tolak dan revisi tetap satu per satu.</span>
         </div>
       )}
-      <div className="overflow-x-auto rounded-xl border border-border bg-surface">
-        <table className="w-full text-sm">
+      <div className="table-cards-wrap overflow-x-auto rounded-xl border border-border bg-surface">
+        <table className="table-cards w-full text-sm">
           <thead className="border-b border-border text-left text-xs uppercase text-muted">
             <tr>
               {anyBatch && <th className="w-10 px-3 py-2" />}

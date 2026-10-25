@@ -45,7 +45,7 @@ export default async function NotificationLogPage({ searchParams }: PageProps<"/
           mengaktifkan push. Kegagalan ini tidak menghalangi pencatatan insiden maupun approval.
         </Notice>
       )}
-      <div className="mb-4 flex flex-wrap items-center gap-2">
+      <div className="filter-bar">
         <SearchBox placeholder="Cari judul atau isi…" />
         <FilterSelect name="channel" label="Kanal" options={CHANNELS.map((c) => ({ value: c, label: c }))} />
         <FilterSelect name="status" label="Status" options={Object.entries(NOTIF_STATUS).map(([value, d]) => ({ value, label: d.label }))} />

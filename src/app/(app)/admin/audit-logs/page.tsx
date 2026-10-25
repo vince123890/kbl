@@ -83,8 +83,8 @@ export default async function AuditLogPage({ searchParams }: PageProps<"/admin/a
       {!data?.length ? (
         <EmptyState>Tidak ada catatan audit yang cocok.</EmptyState>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-border bg-surface">
-          <table className="w-full text-sm">
+        <div className="table-cards-wrap overflow-x-auto rounded-xl border border-border bg-surface">
+          <table className="table-cards w-full text-sm">
             <thead className="border-b border-border text-left text-xs uppercase text-muted">
               <tr>
                 <th className="px-3 py-2 font-medium">Waktu</th>

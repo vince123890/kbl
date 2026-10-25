@@ -75,7 +75,7 @@ export default async function InboxPage({ searchParams }: PageProps<"/approvals/
     <>
       <LiveRefresh seconds={60} />
       <PageHeader title="Kotak Masuk Approval" subtitle={`${rows.length} dokumen menunggu keputusan Anda`} />
-      <div className="mb-4 flex flex-wrap items-center gap-2">
+      <div className="filter-bar">
         <SearchBox placeholder="Cari no. dokumen, ringkasan, pengaju…" />
         <FilterSelect name="type" label="Jenis" options={Object.entries(DOC_TYPE).map(([value, d]) => ({ value, label: d.label }))} />
         <FilterSelect name="late" label="SLA" allLabel="Semua" options={[{ value: "1", label: "Terlambat saja" }]} />

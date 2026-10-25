@@ -93,7 +93,7 @@ export default async function ScheduleChangesPage({ searchParams }: PageProps<"/
           )}
         </Card>
       </div>
-      <div className="mb-4 flex flex-wrap items-center gap-2">
+      <div className="filter-bar">
         <SearchBox placeholder="Cari no. perubahan…" />
         <FilterSelect name="type" label="Tipe" options={Object.entries(CHANGE_TYPE).map(([value, d]) => ({ value, label: d.label }))} />
         <FilterSelect name="status" label="Status" options={Object.entries(SCHEDULE_STATUS).map(([value, d]) => ({ value, label: d.label }))} />

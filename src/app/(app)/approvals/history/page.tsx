@@ -45,7 +45,7 @@ export default async function HistoryPage({ searchParams }: PageProps<"/approval
   return (
     <>
       <PageHeader title="Riwayat Approval" subtitle={`${count ?? 0} keputusan tercatat. Log bersifat permanen.`} />
-      <div className="mb-4 flex flex-wrap items-center gap-2">
+      <div className="filter-bar">
         <SearchBox placeholder="Cari approver atau catatan…" />
         <FilterSelect name="type" label="Jenis" options={Object.entries(DOC_TYPE).map(([value, d]) => ({ value, label: d.label }))} />
         <FilterSelect name="action" label="Keputusan" options={DECISIONS.map((value) => ({ value, label: label(APPROVAL_ACTION, value) }))} />

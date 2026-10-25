@@ -76,3 +76,150 @@ dialog::backdrop {
 .tap {
   min-height: 44px;
 }
+
+/* ------------------------------------------------------------------ tampilan ponsel */
+
+/* bilah filter: dua kolom di ponsel (pencarian selebar penuh), baris biasa di layar lebar */
+.filter-bar {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.filter-bar > input[type="search"],
+.filter-bar > form,
+.filter-bar > nav {
+  grid-column: 1 / -1;
+}
+.filter-bar select {
+  width: 100%;
+  min-width: 0;
+}
+@media (min-width: 640px) {
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .filter-bar > input[type="search"],
+  .filter-bar > form,
+  .filter-bar > nav {
+    grid-column: auto;
+  }
+  .filter-bar select {
+    width: auto;
+  }
+}
+
+/* tombol aksi di judul halaman: berbagi lebar baris di ponsel */
+@media (max-width: 639px) {
+  .page-actions {
+    width: 100%;
+  }
+  .page-actions > * {
+    flex: 1 1 calc(50% - 0.5rem);
+    min-width: 0;
+  }
+  .page-actions > * > button,
+  .page-actions > * > a,
+  .page-actions > a,
+  .page-actions > button {
+    width: 100%;
+    justify-content: center;
+  }
+  .page-actions .inline-flex {
+    width: 100%;
+  }
+}
+
+/* masukan 16px di ponsel agar iOS tidak memperbesar layar saat fokus */
+@media (max-width: 767px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+  select,
+  textarea {
+    font-size: 16px;
+  }
+
+  /* tabel menjadi kartu: tiap baris satu kartu, tiap kolom satu baris "nama: nilai" */
+  table.table-cards,
+  .table-cards thead,
+  .table-cards tbody,
+  .table-cards tr,
+  .table-cards td {
+    display: block;
+    width: 100%;
+  }
+  .table-cards thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+  .table-cards-wrap {
+    overflow: visible;
+    border: 0;
+    background: transparent;
+  }
+  .table-cards tbody {
+    display: grid;
+    gap: 0.625rem;
+  }
+  .table-cards tr {
+    border: 1px solid var(--border) !important;
+    border-radius: 0.75rem;
+    background: var(--surface);
+    padding: 0.625rem 0.75rem;
+  }
+  .table-cards td {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.2rem 0 !important;
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+  .table-cards td::before {
+    content: attr(data-label);
+    flex: 0 0 34%;
+    max-width: 34%;
+    text-align: left;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-top: 0.15rem;
+  }
+  .table-cards td[data-label=""]::before,
+  .table-cards td:empty {
+    display: none;
+  }
+  /* kolom pertama = judul kartu */
+  .table-cards td:first-child {
+    justify-content: flex-start;
+    text-align: left;
+    font-weight: 600;
+    font-size: 1rem;
+    padding-bottom: 0.4rem !important;
+    margin-bottom: 0.2rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .table-cards td:first-child::before {
+    display: none;
+  }
+  /* sel tanpa nama kolom (tombol aksi) memakai seluruh lebar kartu */
+  .table-cards td[data-label=""] {
+    justify-content: flex-start;
+    text-align: left;
+    padding-top: 0.5rem !important;
+  }
+  .table-cards td[data-label=""] > * {
+    max-width: 100%;
+  }
+  /* baris rangkuman (colspan) tetap satu blok */
+  .table-cards td[colspan] {
+    justify-content: space-between;
+  }
+}

@@ -1,14 +1,15 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { Children, cloneElement, isValidElement, type ReactElement, type ReactNode } from "react";
 
+/** Judul halaman. Di ponsel, tombol aksi turun ke baris sendiri dan berbagi lebar agar semuanya terlihat. */
 export function PageHeader({ title, subtitle, actions }: { title: string; subtitle?: string; actions?: ReactNode }) {
   return (
-    <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
-      <div>
+    <div className="mb-4 flex flex-col gap-3 sm:mb-5 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between">
+      <div className="min-w-0">
         <h1 className="text-xl font-semibold">{title}</h1>
         {subtitle && <p className="text-sm text-muted">{subtitle}</p>}
       </div>
-      {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
+      {actions && <div className="page-actions flex flex-wrap items-start gap-2">{actions}</div>}
     </div>
   );
 }
@@ -69,11 +70,31 @@ export const TABLE_WRAP = "overflow-x-auto rounded-xl border border-border bg-su
 export const TH = "px-3 py-2 font-medium";
 export const TD = "px-3 py-2 align-top";
 
-/** Tabel standar: kepala kolom kecil huruf besar, baris berpembatas. */
+/** Memberi tiap sel `data-label` = nama kolomnya, dipakai tampilan kartu di ponsel. */
+function withLabels(children: ReactNode, head: ReactNode[]): ReactNode {
+  return Children.toArray(children).map((row) => {
+    if (!isValidElement(row) || row.type !== "tr") return row;
+    const tr = row as ReactElement<{ children?: ReactNode }>;
+    let i = 0;
+    const cells = Children.toArray(tr.props.children).map((c) => {
+      if (!isValidElement(c) || c.type !== "td") return c;
+      const span = (c.props as { colSpan?: number }).colSpan ?? 1;
+      const h = head[i];
+      i += span;
+      return cloneElement(c as ReactElement<Record<string, unknown>>, { "data-label": typeof h === "string" ? h : "" });
+    });
+    return cloneElement(tr, undefined, cells);
+  });
+}
+
+/**
+ * Tabel standar. Di layar lebar berupa tabel; di ponsel (< 768px) tiap baris menjadi kartu yang menampilkan
+ * semua kolom bertumpuk beserta tombol aksinya, tanpa perlu geser ke samping.
+ */
 export function DataTable({ head, children }: { head: ReactNode[]; children: ReactNode }) {
   return (
-    <div className={TABLE_WRAP}>
-      <table className="w-full text-sm">
+    <div className={`${TABLE_WRAP} table-cards-wrap`}>
+      <table className="table-cards w-full text-sm">
         <thead className="border-b border-border text-left text-xs uppercase text-muted">
           <tr>
             {head.map((h, i) => (
@@ -83,7 +104,7 @@ export function DataTable({ head, children }: { head: ReactNode[]; children: Rea
             ))}
           </tr>
         </thead>
-        <tbody className="[&>tr]:border-b [&>tr]:border-border [&>tr:last-child]:border-0">{children}</tbody>
+        <tbody className="[&>tr]:border-b [&>tr]:border-border [&>tr:last-child]:border-0">{withLabels(children, head)}</tbody>
       </table>
     </div>
   );
