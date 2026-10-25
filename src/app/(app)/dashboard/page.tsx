@@ -7,6 +7,8 @@ import { fmtAge, fmtDateTime, todayWib } from "@/lib/format";
 import { DOC_TYPE, INCIDENT_STATUS, INCIDENT_TYPE, WO_TYPE, label } from "@/lib/labels";
 import { Badge, PageHeader, StatusBadge } from "@/components/ui";
 import { LiveRefresh } from "@/components/live-refresh";
+import { OfflineSnapshot } from "@/components/offline-snapshot";
+import { loadOfflineData } from "@/lib/offline-data";
 
 export const metadata = { title: "Dashboard" };
 
@@ -83,6 +85,9 @@ export default async function DashboardPage() {
       : null,
   ]);
 
+  // salinan data kerja untuk mode offline (WO yang ditugaskan, sesi opname aktif)
+  const offline = can(user, "wo.execute") || can(user, "count.enter") ? await loadOfflineData(supabase, user) : null;
+
   // W2: hanya yang menunggu role saya
   type Step = { role: string; sla_hours: number };
   const mineApprovals = (myPending?.data ?? []).filter((r) => {
@@ -122,6 +127,7 @@ export default async function DashboardPage() {
   return (
     <>
       {(w1 || w2) && <LiveRefresh seconds={60} />}
+      {offline && <OfflineSnapshot userId={user.id} wos={offline.wos} counts={offline.counts} />}
       <PageHeader title={`Halo, ${user.name}`} subtitle={`${user.branchName} · ${user.roles.join(", ") || "tanpa role"}`} />
 
       {w12 && (

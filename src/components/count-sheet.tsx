@@ -3,6 +3,7 @@
 import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { enterCountAction, type CountLineInput } from "@/app/(app)/inventory/actions";
+import { enqueue } from "@/lib/outbox";
 import { fmtQty } from "@/lib/format";
 
 export interface CountLineView {
@@ -22,7 +23,7 @@ interface RowState {
   notCounted: boolean;
   reason: string;
   note: string;
-  saved: "idle" | "saving" | "ok" | "error";
+  saved: "idle" | "saving" | "ok" | "queued" | "error";
   error?: string;
 }
 
@@ -34,11 +35,14 @@ export function CountSheet({
   lines,
   reasons,
   editable,
+  userId,
 }: {
   countId: string;
   lines: CountLineView[];
   reasons: { id: string; name: string; require_note: boolean }[];
   editable: boolean;
+  /** untuk menyimpan ke antrean offline bila koneksi putus */
+  userId?: string;
 }) {
   const router = useRouter();
   const [, start] = useTransition();
@@ -96,9 +100,18 @@ export function CountSheet({
     };
     patch(l.sparepart_id, { ...override, saved: "saving" });
     start(async () => {
-      const res = await enterCountAction(countId, [payload]);
-      patch(l.sparepart_id, res.ok ? { saved: "ok", error: undefined } : { saved: "error", error: res.error });
-      if (res.ok) router.refresh();
+      try {
+        if (!navigator.onLine) throw new Error("offline");
+        const res = await enterCountAction(countId, [payload]);
+        patch(l.sparepart_id, res.ok ? { saved: "ok", error: undefined } : { saved: "error", error: res.error });
+        if (res.ok) router.refresh();
+      } catch {
+        // tanpa sinyal: simpan di perangkat, dikirim otomatis saat online
+        if (userId) {
+          await enqueue("COUNT_LINE", userId, countId, { ...payload }, { extra: l.sparepart_id });
+          patch(l.sparepart_id, { saved: "queued", error: undefined });
+        } else patch(l.sparepart_id, { saved: "error", error: "Tidak ada koneksi" });
+      }
     });
   };
 
@@ -165,6 +178,7 @@ export function CountSheet({
                     )}
                     {r.saved === "saving" && <span className="ml-1 text-xs text-muted">menyimpan…</span>}
                     {r.saved === "ok" && <span className="ml-1 text-xs text-muted">✓</span>}
+                    {r.saved === "queued" && <span className="ml-1 text-xs text-muted">tersimpan di perangkat, menunggu sinkron</span>}
                     {r.saved === "error" && <span className="block text-xs text-danger">{r.error}</span>}
                   </td>
                   <td className={`px-3 py-2 align-top tabular-nums ${d ? (d < 0 ? "text-danger" : "font-medium") : "text-muted"}`}>

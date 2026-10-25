@@ -30,9 +30,11 @@ export async function uploadAttachmentAction(entity: AttachmentEntity, entityId:
   if (!process.env.SUPABASE_SERVICE_ROLE_KEY) return { ok: false, error: "Penyimpanan berkas belum dikonfigurasi" };
   const admin = createAdminClient();
 
+  // `key` dari klien (antrean offline) membuat unggahan ulang idempoten: jalur yang sama ditolak unik, dianggap sudah tersimpan
+  const clientKey = typeof fd.get("key") === "string" ? safeName(String(fd.get("key"))).slice(0, 60) : "";
   let done = 0;
   for (const file of files) {
-    const path = `${entity}/${entityId}/${crypto.randomUUID()}-${safeName(file.name)}`;
+    const path = `${entity}/${entityId}/${clientKey || crypto.randomUUID()}-${safeName(file.name)}`;
     const { data: row, error } = await supabase
       .from("attachments")
       .insert({
@@ -47,7 +49,10 @@ export async function uploadAttachmentAction(entity: AttachmentEntity, entityId:
       })
       .select("id")
       .single();
-    if (error) return { ok: false, error: `${file.name}: ${friendlyDbError(error)}` };
+    if (error) {
+      if (clientKey && error.code === "23505") return { ok: true, message: "Lampiran sudah tersimpan" };
+      return { ok: false, error: `${file.name}: ${friendlyDbError(error)}` };
+    }
     const up = await admin.storage.from(BUCKET).upload(path, file, { contentType: file.type, upsert: false });
     if (up.error) {
       await admin.from("attachments").delete().eq("id", row.id);

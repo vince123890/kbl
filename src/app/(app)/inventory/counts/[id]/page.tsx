@@ -124,6 +124,7 @@ export default async function CountDetailPage({ params }: PageProps<"/inventory/
             lines={sheetLines}
             reasons={(reasonData ?? []).map((r) => ({ id: r.id, name: r.name, require_note: r.require_note }))}
             editable={editable}
+            userId={user.id}
           />
         </Card>
 

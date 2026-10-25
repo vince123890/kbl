@@ -73,7 +73,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
   const quick: QuickItem[] = [{ href: "/dashboard", label: "Beranda" }, ...candidates.filter((x): x is QuickItem => !!x).slice(0, 3)];
 
   return (
-    <AppShell nav={nav} quick={quick} user={{ name: user.name, branchName: user.branchName, roles: user.roles }} unread={unread.count ?? 0} alertCount={unacked?.count ?? 0}>
+    <AppShell nav={nav} quick={quick} userId={user.id} user={{ name: user.name, branchName: user.branchName, roles: user.roles }} unread={unread.count ?? 0} alertCount={unacked?.count ?? 0}>
       <TableLabels />
       {children}
     </AppShell>

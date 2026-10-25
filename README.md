@@ -90,6 +90,11 @@ Membuat 13 user (semua role) dan data master contoh: 3 cabang tambahan, 5 lokasi
 - Service worker hanya aktif pada build produksi (`npm run build && npm run start`) dan harus lewat **HTTPS** (localhost dikecualikan).
 - Pasang: Chrome/Edge Android & desktop → tombol **Pasang Aplikasi** (atau menu browser › Install). iPhone/iPad → Safari › Bagikan › **Tambah ke Layar Utama**.
 - Hanya aset statis dan halaman `/offline` yang disimpan; halaman dan data pengguna tidak pernah di-cache.
+- **Mode offline (hub `/offline`)**: saat aplikasi dibuka tanpa sinyal, hub menampilkan salinan data kerja di perangkat. Salinan diperbarui otomatis tiap Dashboard dibuka online dan **dihapus saat Keluar**.
+  - **Tugas Saya (mekanik):** WO yang ditugaskan, tombol Mulai, Selesaikan (odometer + catatan), dan foto (dikecilkan ke ≤ 1600 px).
+  - **Stock Opname (gudang):** lembar hitung per baris, termasuk alasan selisih. Pengajuan review tetap dari halaman opname saat online.
+  - **Antrean sinkron:** semua aksi di atas masuk antrean lokal, ditandai "menunggu sinkron" (juga di header aplikasi), dan dikirim otomatis saat sinyal kembali. Aturan: aksi hanya dikirim oleh akun yang membuatnya; hitung ulang baris yang sama menimpa; aksi yang ditolak aturan bisnis (mis. WO sudah dibatalkan) ditandai **perlu dicek**, tidak diulang otomatis.
+  - **Tetap butuh online:** keputusan approval dan posting stok (perlu status terbaru dan aturan pengaju tidak boleh menyetujui sendiri).
 - **Lapor Darurat offline**: setiap kali halaman `/emergency/report` dibuka online, langkah cepat dan kontak disimpan di perangkat. Tanpa sinyal, halaman `/offline` menampilkannya, menerima laporan ke antrean lokal (IndexedDB), dan mengirim ulang otomatis dengan kunci idempoten yang sama (tidak ada insiden ganda). Antrean hanya dikirim oleh user pemiliknya.
 
 ## Keamanan singkat

@@ -5,6 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { logoutAction } from "@/lib/auth/actions";
 import { InstallButton } from "@/components/install-button";
+import { OutboxChip } from "@/components/outbox-sync";
+import { clearSnapshots } from "@/lib/outbox";
 
 export interface NavGroup {
   title: string;
@@ -22,6 +24,7 @@ export interface QuickItem {
 export function AppShell({
   nav,
   quick = [],
+  userId,
   user,
   unread = 0,
   alertCount = 0,
@@ -30,6 +33,7 @@ export function AppShell({
   nav: NavGroup[];
   /** pintasan di bar bawah ponsel (maks 4); tombol Menu selalu ada */
   quick?: QuickItem[];
+  userId: string;
   user: { name: string; branchName: string; roles: string[] };
   unread?: number;
   /** insiden yang belum dikonfirmasi pusat (hanya untuk penangan insiden) */
@@ -105,7 +109,7 @@ export function AppShell({
                 Profil
               </Link>
               <InstallButton />
-              <form action={logoutAction} className="flex-1">
+              <form action={logoutAction} onSubmit={() => void clearSnapshots()} className="flex-1">
                 <button className="tap w-full rounded-lg border border-danger/40 px-3 text-sm text-danger">Keluar</button>
               </form>
             </div>
@@ -121,6 +125,7 @@ export function AppShell({
               {user.branchName} · {user.roles.join(", ") || "tanpa role"}
             </p>
           </div>
+          <OutboxChip userId={userId} />
           <div className="hidden md:block">
             <InstallButton />
           </div>
@@ -137,7 +142,7 @@ export function AppShell({
           <Link href="/profile" className="tap hidden items-center rounded-lg px-3 text-sm hover:bg-background md:flex">
             Profil
           </Link>
-          <form action={logoutAction} className="hidden md:block">
+          <form action={logoutAction} onSubmit={() => void clearSnapshots()} className="hidden md:block">
             <button className="tap rounded-lg border border-border px-3 text-sm hover:bg-background">Keluar</button>
           </form>
         </header>
