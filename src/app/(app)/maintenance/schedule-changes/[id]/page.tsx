@@ -61,7 +61,7 @@ export default async function ScheduleChangeDetailPage({ params }: PageProps<"/m
               />
             )}
             {mine && ["REQUESTED", "REVISION"].includes(c.status) && (
-              <ActionButton tone="danger" label="Tarik kembali" confirm="Tarik pengajuan ini? Jadwal WO tetap seperti semula." action={() => withdrawScheduleChangeAction(id)} />
+              <ActionButton tone="danger" label="Tarik kembali" confirm="Tarik pengajuan ini? Jadwal WO tetap seperti semula." action={withdrawScheduleChangeAction.bind(null, id)} />
             )}
           </>
         }

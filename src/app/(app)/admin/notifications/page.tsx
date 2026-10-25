@@ -37,7 +37,7 @@ export default async function NotificationLogPage({ searchParams }: PageProps<"/
       <PageHeader
         title="Log Notifikasi"
         subtitle={`${count ?? 0} notifikasi`}
-        actions={failed ? <ActionButton label={`Kirim ulang yang gagal (${failed})`} action={() => resendNotificationsAction(null)} /> : undefined}
+        actions={failed ? <ActionButton label={`Kirim ulang yang gagal (${failed})`} action={resendNotificationsAction.bind(null, null)} /> : undefined}
       />
       {!!failed && (
         <Notice tone="bad">

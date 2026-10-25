@@ -67,7 +67,7 @@ export default async function MovementDetailPage({ params, searchParams }: PageP
           <>
             <PrintButton label="Cetak form" />
             {isDraft && canOperate && d.type !== "ADJUSTMENT" && <ButtonLink href={`/inventory/movements/${id}/edit`}>Ubah</ButtonLink>}
-            {isDraft && canOperate && <ActionButton tone="primary" label="Ajukan untuk approval" action={() => submitMovementAction(id)} />}
+            {isDraft && canOperate && <ActionButton tone="primary" label="Ajukan untuk approval" action={submitMovementAction.bind(null, id)} />}
             {(isDraft || d.status === "SUBMITTED") && canCancel && (
               <ActionButton tone="danger" label="Batalkan" noteLabel="Alasan pembatalan" action={cancelMovementAction.bind(null, id)} />
             )}

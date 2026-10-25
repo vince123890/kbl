@@ -77,7 +77,7 @@ export default async function CountDetailPage({ params }: PageProps<"/inventory/
         actions={
           <>
             <PrintButton label="Cetak lembar" />
-            {(c.status === "COUNTING") && canManage && <ActionButton tone="primary" label="Ajukan review" confirm="Ajukan hasil hitung untuk approval? Sesi akan terkunci." action={() => submitCountAction(id)} />}
+            {(c.status === "COUNTING") && canManage && <ActionButton tone="primary" label="Ajukan review" confirm="Ajukan hasil hitung untuk approval? Sesi akan terkunci." action={submitCountAction.bind(null, id)} />}
             {["OPEN", "COUNTING", "REVIEW"].includes(c.status) && canManage && (
               <ActionButton tone="danger" label="Batalkan sesi" noteLabel="Alasan pembatalan" action={cancelCountAction.bind(null, id)} />
             )}

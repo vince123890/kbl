@@ -27,7 +27,7 @@ export default async function NotificationsPage() {
       <PageHeader
         title="Notifikasi"
         subtitle={unread ? `${unread} belum dibaca` : "Semua sudah dibaca"}
-        actions={unread ? <ActionButton label="Tandai semua dibaca" action={() => markReadAction()} /> : undefined}
+        actions={unread ? <ActionButton label="Tandai semua dibaca" action={markReadAction} /> : undefined}
       />
       <div className="mb-4">
         <Card title="Notifikasi di perangkat ini">

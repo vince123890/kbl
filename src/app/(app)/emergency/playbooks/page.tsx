@@ -52,7 +52,7 @@ export default async function PlaybooksPage() {
                     <ActionButton
                       label={p.is_active ? "Nonaktifkan" : "Aktifkan"}
                       tone={p.is_active ? "danger" : "ghost"}
-                      action={() => togglePlaybookAction(p.id, !p.is_active)}
+                      action={togglePlaybookAction.bind(null, p.id, !p.is_active)}
                     />
                   )}
                 </div>

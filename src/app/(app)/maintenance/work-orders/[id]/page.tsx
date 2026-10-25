@@ -68,7 +68,7 @@ export default async function WoDetailPage({ params, searchParams }: PageProps<"
           <>
             <PrintButton label="Cetak" />
             {editable && canWrite && <ButtonLink href={`/maintenance/work-orders/${id}/edit`}>Ubah</ButtonLink>}
-            {w.status === "SCHEDULED" && canExec && <ActionButton tone="primary" label="Mulai" action={() => startWoAction(id)} />}
+            {w.status === "SCHEDULED" && canExec && <ActionButton tone="primary" label="Mulai" action={startWoAction.bind(null, id)} />}
             {w.status === "IN_PROGRESS" && canExec && <CompleteWoDialog woId={id} currentOdometer={Number(w.vehicles.odometer)} />}
             {w.status === "IN_PROGRESS" && can(user, "stock.create") && <ButtonLink href={`/inventory/movements/new?wo=${id}`}>Pakai sparepart</ButtonLink>}
             {editable && hasSchedule && can(user, "schedule.request") && (
@@ -80,7 +80,7 @@ export default async function WoDetailPage({ params, searchParams }: PageProps<"
                 triggerClassName="tap rounded-lg border border-border px-4 text-sm hover:bg-brand-soft"
               />
             )}
-            {w.type === "EMERGENCY" && w.emergency_validation === "REVISION" && canWrite && <ActionButton label="Ajukan ulang validasi" action={() => resubmitEmergencyAction(id)} />}
+            {w.type === "EMERGENCY" && w.emergency_validation === "REVISION" && canWrite && <ActionButton label="Ajukan ulang validasi" action={resubmitEmergencyAction.bind(null, id)} />}
             {!["COMPLETED", "CANCELLED"].includes(w.status) && canWrite && (
               <ActionButton tone="danger" label="Batalkan" noteLabel="Alasan pembatalan" action={cancelWoAction.bind(null, id)} />
             )}

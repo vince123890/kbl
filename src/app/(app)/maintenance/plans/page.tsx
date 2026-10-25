@@ -116,7 +116,7 @@ export default async function PlansPage({ searchParams }: PageProps<"/maintenanc
                       label={r.is_active ? "Nonaktifkan" : "Aktifkan"}
                       tone={r.is_active ? "danger" : "ghost"}
                       confirm={r.is_active ? "Nonaktifkan rencana ini? WO aktif tidak ikut terhapus dan harus dibatalkan terpisah." : undefined}
-                      action={() => togglePlanAction(r.id, !r.is_active)}
+                      action={togglePlanAction.bind(null, r.id, !r.is_active)}
                     />
                   </div>
                 )}

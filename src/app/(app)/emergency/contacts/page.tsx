@@ -80,7 +80,7 @@ export default async function ContactsPage({ searchParams }: PageProps<"/emergen
                       label={c.is_active ? "Nonaktifkan" : "Aktifkan"}
                       tone={c.is_active ? "danger" : "ghost"}
                       confirm={c.is_active ? "Nonaktifkan kontak ini? Kontak Global terakhir tidak dapat dinonaktifkan." : undefined}
-                      action={() => toggleContactAction(c.id, !c.is_active)}
+                      action={toggleContactAction.bind(null, c.id, !c.is_active)}
                     />
                   </div>
                 )}
