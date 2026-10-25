@@ -38,7 +38,7 @@ export default async function WoDetailPage({ params, searchParams }: PageProps<"
     .eq("id", id)
     .maybeSingle<Record<string, unknown> & {
       id: string; wo_no: string; type: string; priority: string; status: string; branch_id: string; vehicle_id: string; assignee_id: string | null; scheduled_start: string | null; scheduled_end: string | null; original_start: string | null; due_at: string | null; actual_start: string | null; actual_end: string | null; end_odometer: string | null; is_overdue: boolean; schedule_changed: boolean; needs_reschedule: boolean; auto_generated: boolean; emergency_validation: string; validation_due: string | null; description: string | null; source_note: string | null; completion_note: string | null; cancel_reason: string | null; created_by: string | null; created_at: string;
-      vehicles: { plate_no: string; odometer: string; type: string; model: string | null }; vendors: { name: string } | null; branches: { name: string }; wo_parts: Part[]; maintenance_plans: { id: string; task_name: string } | null; incidents: { id: string; incident_no: string } | null;
+      vehicles: { plate_no: string; odometer: string; type: string; model: string | null } | null; vendors: { name: string } | null; branches: { name: string } | null; wo_parts: Part[] | null; maintenance_plans: { id: string; task_name: string } | null; incidents: { id: string; incident_no: string } | null;
     }>();
   if (!w) notFound();
 
@@ -55,7 +55,7 @@ export default async function WoDetailPage({ params, searchParams }: PageProps<"
   const canExec = can(user, "wo.execute") && (canWrite || w.assignee_id === user.id);
   const editable = ["PLANNED", "SCHEDULED"].includes(w.status);
   const hasSchedule = !!w.scheduled_start;
-  const parts = w.wo_parts;
+  const parts = w.wo_parts ?? [];
   const warn = one(sp, "warn");
   const vReq = (validationReq.data ?? [])[0];
 
@@ -63,13 +63,13 @@ export default async function WoDetailPage({ params, searchParams }: PageProps<"
     <>
       <PageHeader
         title={w.wo_no}
-        subtitle={`${w.vehicles.plate_no} · ${w.branches.name}`}
+        subtitle={`${w.vehicles?.plate_no ?? "-"} · ${w.branches?.name ?? "-"}`}
         actions={
           <>
             <PrintButton label="Cetak" />
             {editable && canWrite && <ButtonLink href={`/maintenance/work-orders/${id}/edit`}>Ubah</ButtonLink>}
             {w.status === "SCHEDULED" && canExec && <ActionButton tone="primary" label="Mulai" action={startWoAction.bind(null, id)} />}
-            {w.status === "IN_PROGRESS" && canExec && <CompleteWoDialog woId={id} currentOdometer={Number(w.vehicles.odometer)} />}
+            {w.status === "IN_PROGRESS" && canExec && <CompleteWoDialog woId={id} currentOdometer={Number(w.vehicles?.odometer ?? 0)} />}
             {w.status === "IN_PROGRESS" && can(user, "stock.create") && <ButtonLink href={`/inventory/movements/new?wo=${id}`}>Pakai sparepart</ButtonLink>}
             {editable && hasSchedule && can(user, "schedule.request") && (
               <ScheduleChangeDialog
@@ -112,7 +112,7 @@ export default async function WoDetailPage({ params, searchParams }: PageProps<"
               ["Status", <StatusBadge key="s" map={WO_STATUS} value={w.status} />],
               ["Jenis", <StatusBadge key="t" map={WO_TYPE} value={w.type} />],
               ["Prioritas", <StatusBadge key="p" map={PRIORITY} value={w.priority} />],
-              ["Kendaraan", `${w.vehicles.plate_no} · ${w.vehicles.type}${w.vehicles.model ? ` ${w.vehicles.model}` : ""}`],
+              ["Kendaraan", w.vehicles ? `${w.vehicles.plate_no} · ${w.vehicles.type}${w.vehicles.model ? ` ${w.vehicles.model}` : ""}` : null],
               ["Jadwal", w.scheduled_start ? `${fmtDateTime(w.scheduled_start)} – ${fmtDateTime(w.scheduled_end)}` : "Belum dijadwalkan"],
               ["Jadwal awal", w.schedule_changed ? fmtDateTime(w.original_start) : null],
               ["Jatuh tempo", w.due_at ? <span key="d">{fmtDateTime(w.due_at)} {w.is_overdue && <Badge tone="bad">⏰ Overdue</Badge>}</span> : null],
