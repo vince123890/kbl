@@ -49,9 +49,9 @@ Prinsip yang bisa Anda buktikan saat mencoba:
 | `sysadmin@example.com` | Admin Sistem | Pusat | Master data, user, role, alur approval, audit |
 | `hqadmin@example.com` | Admin Pusat | Pusat | Melihat lintas cabang, mencatat insiden dari telepon, laporan |
 | `depthead.jkt@example.com` | Kepala Departemen | Jakarta | Approval level lanjut |
-| `supervisor.jkt@example.com` | Supervisor | Jakarta | Approval level 1, rencana, WO, jadwal |
+| `supervisor.jkt@example.com` | Supervisor | Jakarta | Approval level 1, rencana, WO (tidak mengajukan perubahan jadwal) |
 | `warehouse.jkt@example.com` | Gudang | Jakarta | Mutasi sparepart, stock opname |
-| `mechanic.jkt@example.com` | Mekanik | Jakarta | Menjalankan Work Order |
+| `mechanic.jkt@example.com` | Mekanik | Jakarta | Menjalankan Work Order, mengajukan perubahan jadwal |
 | `driver.jkt@example.com` | Pengemudi | Jakarta | Lapor darurat (kendaraan **B 9001 KBL**) |
 | `supervisor.sby@example.com` | Supervisor | Surabaya | Uji pemisahan antar cabang |
 | `gudang.supervisor.jkt@example.com` | Gudang + Supervisor | Jakarta | Uji larangan menyetujui dokumen sendiri |
@@ -129,10 +129,14 @@ Tiap skenario: **Tujuan → Login sebagai → Langkah → Hasil yang diharapkan*
 
 | # | Login sebagai | Langkah | Hasil yang diharapkan | OK |
 |---|---|---|---|---|
-| 5.1 | `depthead.jkt@example.com` | Perawatan › **Perubahan Jadwal** | Ada 1 permintaan (alasan: "Kampas rem belakang menunggu pengiriman"). Setujui; jadwal WO berpindah | [ ] |
-| 5.2 | `supervisor.jkt@example.com` | Inventori › **Stock Opname** | Ada 1 sesi opname kategori Filter dengan selisih. Buka dan setujui | [ ] |
-| 5.3 | `warehouse.jkt@example.com` | **Kartu Stok** item yang selisih | Muncul baris **Penyesuaian** hasil opname | [ ] |
-| 5.4 | sama | Buka sesi opname baru, isi hitungan fisik berbeda dari sistem | Selisih dihitung otomatis dan wajib diberi alasan | [ ] |
+| 5.1 | `supervisor.jkt@example.com` | Buka WO B 5201 KBL dari skenario 4.4 | **Tidak ada tombol "Ajukan perubahan jadwal"** (Supervisor hanya memutuskan, tidak mengajukan) | [ ] |
+| 5.2 | `mechanic.jkt@example.com` | Buka WO yang sama (ditugaskan kepadanya), klik **Ajukan perubahan jadwal**, pilih alasan, geser 2 hari, kirim | Pengajuan terbentuk, menunggu Supervisor | [ ] |
+| 5.3 | `supervisor.jkt@example.com` | Approval › **Kotak Masuk**, buka pengajuan tadi atau pengajuan demo (WO B 9002 KBL, "Kampas rem belakang menunggu pengiriman"), **Setujui** | Naik ke level berikutnya (Kepala Dept) karena penundaan lebih dari 1 hari | [ ] |
+| 5.4 | `depthead.jkt@example.com` | Setujui pengajuan yang sama | Jadwal WO berpindah | [ ] |
+| 5.5 | `mechanic.sby@example.com` | Buka WO Jakarta yang sama (atau WO milik mekanik lain) | WO tidak terlihat / tidak bisa diajukan: hanya teknisi yang ditugaskan pada WO itu | [ ] |
+| 5.6 | `supervisor.jkt@example.com` | Inventori › **Stock Opname** | Ada 1 sesi opname kategori Filter dengan selisih. Buka dan setujui | [ ] |
+| 5.7 | `warehouse.jkt@example.com` | **Kartu Stok** item yang selisih | Muncul baris **Penyesuaian** hasil opname | [ ] |
+| 5.8 | sama | Buka sesi opname baru, isi hitungan fisik berbeda dari sistem | Selisih dihitung otomatis dan wajib diberi alasan | [ ] |
 
 ### Skenario 6 — Darurat di lapangan (pengemudi, ponsel)
 
@@ -225,7 +229,8 @@ Catat setiap hal yang tidak sesuai. Satu baris per temuan.
 
 ## Lampiran — Untuk tim teknis (penyiapan sebelum uji)
 
-1. Pastikan seluruh migrasi `supabase/migrations/` sudah dijalankan berurutan.
+1. Pastikan seluruh migrasi `supabase/migrations/` sudah dijalankan berurutan, **termasuk `20261026000001_schedule_request_by_technician.sql`** (mengalihkan hak mengajukan perubahan jadwal dari Supervisor ke Mekanik).
+   - **Jika data demo sudah terisi sebelum migrasi itu:** pengajuan demo lama (PJ-JKT-…-0001) diajukan oleh Supervisor dan macet. Masuk sebagai `supervisor.jkt@example.com`, buka pengajuan itu di **Perubahan Jadwal**, klik **Tarik kembali**. Lalu masuk sebagai `mechanic.jkt@example.com` dan ajukan ulang untuk WO B 9002 KBL (seeder tidak membuat ulang karena sudah ada data).
 2. Isi `.env.local` (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`), lalu jalankan `npm run seed:demo -- --yes`. Aman diulang. **Jangan di database produksi.**
 3. Setelah deploy, uji skenario 6 dan 7 di ponsel sungguhan, karena perilaku PWA dan offline paling mudah berbeda antar perangkat.
 4. Jika semua halaman terasa lambat, samakan region fungsi Vercel dengan region Supabase.

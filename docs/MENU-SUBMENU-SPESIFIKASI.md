@@ -167,9 +167,9 @@ C = Create · R = Read · U = Update · D = Nonaktif/Batal · A = Approve · —
 | Role | Wewenang inti | Yang TIDAK boleh |
 |---|---|---|
 | DRIVER | Lapor darurat, melihat langkah cepat dan kontak, melihat WO kendaraannya | Melihat stok, menyetujui apa pun, mengubah jadwal |
-| MECHANIC | Menjalankan WO, membuat mutasi OUT untuk WO miliknya, melapor temuan | Menyetujui, mengubah master, mengubah jadwal |
+| MECHANIC | Menjalankan WO, membuat mutasi OUT untuk WO miliknya, melapor temuan, mengajukan perubahan jadwal untuk WO miliknya | Menyetujui, mengubah master, mengubah jadwal langsung |
 | WAREHOUSE | Mutasi masuk/keluar/retur/transfer, stock opname | Menyetujui dokumen yang ia buat, mengubah jadwal |
-| SUPERVISOR | Approval level 1, menyusun jadwal dan rencana, mengajukan perubahan jadwal | Menyetujui dokumen yang ia ajukan sendiri |
+| SUPERVISOR | Approval level 1 (termasuk perubahan jadwal), menyusun jadwal dan rencana | Mengajukan perubahan jadwal, menyetujui dokumen yang ia ajukan sendiri |
 | DEPT_HEAD | Approval level lanjut (sesuai departemen) | Mengubah master, mengatur alur approval |
 | HQ_ADMIN | Pengawasan lintas cabang, approval akhir, override, menangani insiden, mengelola kontak dan playbook | Mengatur user/role, mengubah alur approval |
 | SYS_ADMIN | Master data, user, role, alur approval, parameter | Menyetujui transaksi, membuat transaksi operasional |
@@ -190,7 +190,7 @@ Role hanyalah pengelompokan. Backend memeriksa **permission**. ✔ = diberikan s
 | `wo.read` | ✔** | ✔ | ✔ | ✔ | ✔ | ✔ |  |
 | `wo.write` |  |  |  | ✔ |  | ✔ |  |
 | `wo.execute` |  | ✔ |  | ✔ |  |  |  |
-| `schedule.request` |  |  |  | ✔ |  | ✔ |  |
+| `schedule.request` |  | ✔*** |  |  |  | ✔ |  |
 | `incident.report` | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ |  |
 | `incident.handle` |  |  |  | ✔ |  | ✔ |  |
 | `contact.manage` |  |  |  |  |  | ✔ |  |
@@ -759,6 +759,8 @@ Layar ini tampilan. Pembuatan lewat Work Order; perubahan lewat Perubahan Jadwal
 ## 4.4 Perubahan Jadwal (Anomali) ✅ TERKONFIRMASI (R4)
 
 **Rute**: `/maintenance/schedule-changes` · **Permission**: `schedule.request` untuk ajukan, `approval.act` untuk memutuskan
+
+> **Siapa yang mengajukan:** teknisi (Mekanik) yang ditugaskan pada WO tersebut, atau Admin Pusat. **Supervisor tidak mengajukan, hanya memutuskan** (level 1), sehingga pengajuan tidak pernah macet karena pengaju tidak boleh memutuskan dokumennya sendiri. Tombol "Ajukan perubahan jadwal" dan seret-jadwal di kalender hanya tampil untuk WO milik teknisi itu. (`***` pada matriks: hanya untuk WO yang ditugaskan kepadanya.)
 
 > ⚠️ Aturan inti: setiap percepatan maupun penundaan **wajib** punya kategori alasan. Layar ini adalah daftar sekaligus laporan anomali. Jangan membuat jalan pintas yang mengubah jadwal WO tanpa melewati layar ini.
 

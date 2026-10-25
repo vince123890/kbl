@@ -72,7 +72,7 @@ export default async function WoDetailPage({ params, searchParams }: PageProps<"
             {w.status === "SCHEDULED" && canExec && <ActionButton tone="primary" label="Mulai" action={startWoAction.bind(null, id)} />}
             {w.status === "IN_PROGRESS" && canExec && <CompleteWoDialog woId={id} currentOdometer={Number(w.vehicles?.odometer ?? 0)} />}
             {w.status === "IN_PROGRESS" && can(user, "stock.create") && <ButtonLink href={`/inventory/movements/new?wo=${id}`}>Pakai sparepart</ButtonLink>}
-            {editable && hasSchedule && can(user, "schedule.request") && (
+            {editable && hasSchedule && can(user, "schedule.request") && (canWrite || w.assignee_id === user.id) && (
               <ScheduleChangeDialog
                 woId={id}
                 currentStart={fmtDateTime(w.scheduled_start)}

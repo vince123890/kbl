@@ -426,24 +426,27 @@ describe("work order, jadwal, dan reservasi", () => {
     });
 
     it("tanpa alasan atau jadwal sama ditolak; alasan 'Lainnya' wajib keterangan", async () => {
-      await expectError(one(U.spv, `select public.schedule_change_request($1,$2,null,null,null)`, [wo, iso(11, 1)]), "Kategori alasan wajib");
-      await expectError(one(U.spv, `select public.schedule_change_request($1,$2,null,$3,null)`, [wo, iso(10, 1), reason]), "harus berbeda");
+      await expectError(one(U.mech2, `select public.schedule_change_request($1,$2,null,null,null)`, [wo, iso(11, 1)]), "Kategori alasan wajib");
+      await expectError(one(U.mech2, `select public.schedule_change_request($1,$2,null,$3,null)`, [wo, iso(10, 1), reason]), "harus berbeda");
       const other = (await admin<{ id: string }>(`select id from reason_codes where code='OTHER'`))[0].id;
-      await expectError(one(U.spv, `select public.schedule_change_request($1,$2,null,$3,'')`, [wo, iso(11, 1), other]), "wajib disertai keterangan");
-      await expectError(one(U.mech2, `select public.schedule_change_request($1,$2,null,$3,null)`, [wo, iso(11, 1), reason]), "tidak berwenang");
+      await expectError(one(U.mech2, `select public.schedule_change_request($1,$2,null,$3,'')`, [wo, iso(11, 1), other]), "wajib disertai keterangan");
+    });
+
+    it("Supervisor tidak mengajukan (hanya memutuskan); teknisi lain dan pengemudi juga ditolak", async () => {
+      await expectError(one(U.spv, `select public.schedule_change_request($1,$2,null,$3,null)`, [wo, iso(11, 1), reason]), "tidak berwenang");
+      await expectError(one(U.driver, `select public.schedule_change_request($1,$2,null,$3,null)`, [wo, iso(11, 1), reason]), "tidak berwenang");
+      await expectError(one(U.mech, `select public.schedule_change_request($1,$2,null,$3,null)`, [wo, iso(11, 1), reason]), /teknisi yang ditugaskan|cabang lain/);
     });
 
     it("penundaan > 7 hari butuh tiga level dan baru berlaku setelah disetujui", async () => {
-      const r = (await one<{ r: { id: string; request_id: string; notice: string } }>(U.spv,
+      const r = (await one<{ r: { id: string; request_id: string; notice: string } }>(U.mech2,
         `select public.schedule_change_request($1,$2,null,$3,'Part indent') as r`, [wo, iso(20, 1), reason])).r;
       expect(r.notice).toMatch(/melebihi 7 hari; akan dieskalasi ke Admin Pusat/);
       expect((await admin<{ scheduled_start: string }>(`select scheduled_start from work_orders where id=$1`, [wo]))[0].scheduled_start).toBeTruthy();
       const steps = (await admin<{ steps: { role: string }[] }>(`select steps from approval_requests where id=$1`, [r.request_id]))[0].steps;
       expect(steps.map((s) => s.role)).toEqual(["SUPERVISOR", "DEPT_HEAD", "HQ_ADMIN"]);
-      await expectError(one(U.spv, `select public.schedule_change_request($1,$2,null,$3,null)`, [wo, iso(21, 1), reason]), /masih memiliki pengajuan/);
-      await expectError(act(U.spv, r.request_id, "APPROVE"), "tidak dapat memutuskan dokumen yang Anda ajukan sendiri");
-      const spv2 = await makeUser(db, { email: "spv2@x.com", name: "SPV2", branchCode: "JKT", roles: ["SUPERVISOR"] });
-      await act(spv2, r.request_id, "APPROVE");
+      await expectError(one(U.mech2, `select public.schedule_change_request($1,$2,null,$3,null)`, [wo, iso(21, 1), reason]), /masih memiliki pengajuan/);
+      await act(U.spv, r.request_id, "APPROVE"); // pengajuan tidak lagi macet di Supervisor
       await act(U.dept, r.request_id, "APPROVE");
       expect(await act(U.hq, r.request_id, "APPROVE")).toMatchObject({ status: "APPROVED" });
       const w = (await admin<{ scheduled_start: string; schedule_changed: boolean; original_start: string }>(`select scheduled_start, original_start, schedule_changed from work_orders where id=$1`, [wo]))[0];
@@ -455,9 +458,9 @@ describe("work order, jadwal, dan reservasi", () => {
     });
 
     it("pengaju dapat menarik kembali; WO yang berubah jadwal langsung diblokir lewat edit biasa", async () => {
-      const r = (await one<{ r: { id: string } }>(U.spv, `select public.schedule_change_request($1,$2,null,$3,null) as r`, [wo, iso(19, 1), reason])).r;
+      const r = (await one<{ r: { id: string } }>(U.mech2, `select public.schedule_change_request($1,$2,null,$3,null) as r`, [wo, iso(19, 1), reason])).r;
       await expectError(one(U.hq, `select public.schedule_change_withdraw($1)`, [r.id]), "Hanya pengaju");
-      await one(U.spv, `select public.schedule_change_withdraw($1)`, [r.id]);
+      await one(U.mech2, `select public.schedule_change_withdraw($1)`, [r.id]);
       expect((await admin<{ status: string }>(`select status from schedule_changes where id=$1`, [r.id]))[0].status).toBe("WITHDRAWN");
       await expectError(one(U.spv, `select public.wo_save($1,null,'NORMAL',null,$2,$3,null,$4,'x','[]'::jsonb)`, [wo, iso(1, 1), iso(1, 4), U.mech2]), "Ajukan Perubahan Jadwal");
       await expectError(db.query(`delete from schedule_changes where id=$1`, [r.id]), "tidak boleh dihapus");

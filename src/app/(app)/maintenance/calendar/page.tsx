@@ -24,6 +24,7 @@ interface Row {
   vehicles: { plate_no: string } | null;
   vendors: { name: string } | null;
   profiles: { name: string } | null;
+  assignee_id: string | null;
 }
 
 const VIEWS: { v: CalView; label: string }[] = [
@@ -46,7 +47,7 @@ export default async function CalendarPage({ searchParams }: PageProps<"/mainten
   const base = () => {
     let q = supabase
       .from("work_orders")
-      .select("id,wo_no,type,status,scheduled_start,scheduled_end,due_at,is_overdue,vehicles(plate_no),vendors(name),profiles!work_orders_assignee_id_fkey(name)")
+      .select("id,wo_no,type,status,scheduled_start,scheduled_end,due_at,is_overdue,assignee_id,vehicles(plate_no),vendors(name),profiles!work_orders_assignee_id_fkey(name)")
       .neq("status", "CANCELLED");
     if (one(sp, "branch")) q = q.eq("branch_id", one(sp, "branch"));
     if (one(sp, "vehicle")) q = q.eq("vehicle_id", one(sp, "vehicle"));
@@ -65,6 +66,7 @@ export default async function CalendarPage({ searchParams }: PageProps<"/mainten
   ]);
 
   const canMove = can(user, "schedule.request");
+  const canWrite = can(user, "wo.write"); // teknisi hanya boleh memindahkan WO miliknya
   const toEvent = (r: Row, isUnscheduled: boolean): CalEvent => {
     const local = toLocalInput(isUnscheduled ? r.due_at : r.scheduled_start);
     return {
@@ -80,7 +82,7 @@ export default async function CalendarPage({ searchParams }: PageProps<"/mainten
       startLocal: isUnscheduled ? "" : local,
       overdue: r.is_overdue,
       unscheduled: isUnscheduled,
-      movable: canMove && !isUnscheduled && ["PLANNED", "SCHEDULED"].includes(r.status),
+      movable: canMove && (canWrite || r.assignee_id === user.id) && !isUnscheduled && ["PLANNED", "SCHEDULED"].includes(r.status),
     };
   };
   const events = [
@@ -107,7 +109,7 @@ export default async function CalendarPage({ searchParams }: PageProps<"/mainten
     <>
       <PageHeader
         title="Kalender Jadwal"
-        subtitle={canMove ? "Seret WO ke hari lain untuk mengajukan perubahan jadwal (alasan wajib; tidak langsung berpindah)." : "Klik WO untuk melihat detail."}
+        subtitle={canMove ? "Seret WO Anda ke hari lain untuk mengajukan perubahan jadwal (alasan wajib; tidak langsung berpindah, menunggu persetujuan Supervisor)." : "Klik WO untuk melihat detail."}
         actions={<PrintButton label="Cetak jadwal" />}
       />
       <div className="mb-3 flex flex-wrap items-center gap-2 print:hidden">

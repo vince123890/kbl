@@ -174,7 +174,7 @@ describe("transaksi demo berjalan lewat fungsi resmi (parameter bernama seperti 
     );
     const reason = ((await db.query(`select id from reason_codes where code='PART_UNAVAILABLE'`)).rows[0] as { id: string }).id;
     const sc = await call<{ r: { request_id: string } }>(
-      "supervisor.jkt@example.com",
+      "mechanic.jkt@example.com",
       `select public.schedule_change_request(p_wo => $1, p_new_start => $2, p_new_end => null, p_reason => $3, p_note => 'menunggu part') as r`,
       [sched.r.id, tomorrow(50), reason],
     );

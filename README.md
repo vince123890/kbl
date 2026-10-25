@@ -17,7 +17,7 @@ Aplikasi web + PWA (Next.js 16, Supabase). Dokumen kebutuhan ada di [docs/](docs
 ## Menjalankan
 
 1. Buat project di [Supabase](https://supabase.com) (atau pakai instance yang sudah ada).
-2. Jalankan migrasi di `supabase/migrations/` berurutan (SQL Editor, atau `npx supabase link` lalu `npx supabase db push`). Ada 7 berkas; yang `20261025…` adalah modul transaksi dan **wajib setelah** dua berkas awal. Migrasi membuat bucket Storage privat `attachments` untuk lampiran dan, bila ekstensi `pg_cron` tersedia, menjadwalkan job tiap menit.
+2. Jalankan migrasi di `supabase/migrations/` berurutan (SQL Editor, atau `npx supabase link` lalu `npx supabase db push`). Ada 8 berkas; yang `20261025…` adalah modul transaksi dan **wajib setelah** dua berkas awal, lalu `20261026…` (perubahan jadwal diajukan teknisi, diputuskan Supervisor). Migrasi membuat bucket Storage privat `attachments` untuk lampiran dan, bila ekstensi `pg_cron` tersedia, menjadwalkan job tiap menit.
 3. Di Supabase Dashboard › **Authentication**:
    - Providers › Email: **matikan "Allow new users to sign up"** (user hanya dibuat admin).
    - URL Configuration › Site URL = URL aplikasi; tambahkan `<URL>/auth/callback` ke Redirect URLs.
@@ -46,17 +46,17 @@ Aplikasi web + PWA (Next.js 16, Supabase). Dokumen kebutuhan ada di [docs/](docs
 npm run seed:demo -- --yes
 ```
 
-Membuat 13 user (semua role) dan data master contoh: 3 cabang tambahan, 5 lokasi, 8 kendaraan, 16 sparepart, 7 vendor. Bila `NEXT_PUBLIC_SUPABASE_ANON_KEY` terisi, ikut dibuat **transaksi** lewat jalur resmi (login sebagai user demo): stok awal (sebagian di bawah minimum), 5 rencana perawatan + WO preventif, WO terjadwal dan berjalan, satu perubahan jadwal dan satu opname yang menunggu approval, serta dua insiden (satu belum dikonfirmasi). Aman diulang (bagian yang sudah ada dilewati). **Jangan dijalankan di produksi.** Password semua user demo: `Demo12345` (tidak diminta ganti saat login).
+Membuat 13 user (semua role) dan data master contoh: 3 cabang tambahan, 5 lokasi, 8 kendaraan, 16 sparepart, 7 vendor. Bila `NEXT_PUBLIC_SUPABASE_ANON_KEY` terisi, ikut dibuat **transaksi** lewat jalur resmi (login sebagai user demo): stok awal (sebagian di bawah minimum), 5 rencana perawatan + WO preventif, WO terjadwal dan berjalan, satu perubahan jadwal (diajukan Mekanik, menunggu Supervisor lalu Kepala Dept) dan satu opname yang menunggu approval, serta dua insiden (satu belum dikonfirmasi). Aman diulang (bagian yang sudah ada dilewati). **Jangan dijalankan di produksi.** Password semua user demo: `Demo12345` (tidak diminta ganti saat login).
 
 | Email | Role | Cabang |
 |---|---|---|
 | sysadmin@example.com | SYS_ADMIN | Pusat |
 | hqadmin@example.com | HQ_ADMIN | Pusat |
 | depthead.jkt@example.com | DEPT_HEAD | Jakarta |
-| supervisor.jkt@example.com | SUPERVISOR | Jakarta |
+| supervisor.jkt@example.com | SUPERVISOR (memutuskan, tidak mengajukan perubahan jadwal) | Jakarta |
 | warehouse.jkt@example.com | WAREHOUSE | Jakarta |
 | warehouse.sby@example.com | WAREHOUSE | Surabaya |
-| mechanic.jkt@example.com | MECHANIC | Jakarta |
+| mechanic.jkt@example.com | MECHANIC (mengajukan perubahan jadwal WO miliknya) | Jakarta |
 | driver.jkt@example.com | DRIVER | Jakarta |
 | gudang.supervisor.jkt@example.com | WAREHOUSE + SUPERVISOR | Jakarta |
 | supervisor.sby@example.com | SUPERVISOR | Surabaya |

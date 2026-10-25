@@ -137,9 +137,9 @@ export async function seedOperations(ctx: Ctx): Promise<void> {
     ) as { id: string };
     const m = await login(ctx, "mechanic.jkt@example.com");
     must(await m.rpc("wo_start", { p_id: running.id }), "mulai WO");
-    // perubahan jadwal menunggu keputusan Kepala Dept
+    // perubahan jadwal diajukan teknisi yang ditugaskan, lalu menunggu Supervisor (dan Kepala Dept karena tunda > 1 hari)
     const reason = one(await service.from("reason_codes").select("id").eq("code", "PART_UNAVAILABLE").single(), "alasan").id;
-    must(await spv.rpc("schedule_change_request", { p_wo: sched.id, p_new_start: tomorrow(50), p_new_end: null, p_reason: reason, p_note: "Kampas rem belakang menunggu pengiriman" }), "perubahan jadwal");
+    must(await m.rpc("schedule_change_request", { p_wo: sched.id, p_new_start: tomorrow(50), p_new_end: null, p_reason: reason, p_note: "Kampas rem belakang menunggu pengiriman" }), "perubahan jadwal");
     console.log("Work Order   : 1 terjadwal, 1 berjalan, 1 perubahan jadwal menunggu approval");
   }
 
