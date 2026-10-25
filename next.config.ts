@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    // Kunjungan ulang ke halaman yang sama dalam 30 detik memakai salinan di peramban (kembali ke daftar terasa instan).
+    // Setelah ada perubahan lewat server action, cache otomatis dibuang; LiveRefresh selalu mengambil data baru.
+    staleTimes: { dynamic: 30 },
+  },
   turbopack: {
     rules: {
       "*.css": {

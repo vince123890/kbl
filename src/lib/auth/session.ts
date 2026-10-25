@@ -32,15 +32,18 @@ interface ProfileRow {
 /** Pengguna login + role + permission (satu kali per permintaan). null bila tidak login atau nonaktif. */
 export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
   const supabase = await createClient();
-  const { data: auth } = await supabase.auth.getUser();
-  if (!auth.user) return null;
+  // Identitas dari klaim JWT yang sudah diverifikasi (tanpa perjalanan jaringan ke Auth pada kunci asimetris).
+  // Akun nonaktif tetap langsung terblokir: profil dibaca dan is_active diperiksa di bawah, dan RLS memeriksanya lagi.
+  const { data: auth } = await supabase.auth.getClaims();
+  const uid = auth?.claims?.sub;
+  if (!uid) return null;
 
   const { data } = await supabase
     .from("profiles")
     .select(
       "id,email,name,phone,branch_id,is_active,must_change_password,branches(name,is_hq),user_roles(roles(name,role_permissions(permission_code)))",
     )
-    .eq("id", auth.user.id)
+    .eq("id", uid)
     .maybeSingle<ProfileRow>();
 
   if (!data || !data.is_active) return null;

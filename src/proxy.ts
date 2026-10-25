@@ -24,8 +24,10 @@ export async function proxy(request: NextRequest) {
     },
   });
 
-  const { data } = await supabase.auth.getUser();
-  const user = data.user;
+  // getClaims memverifikasi tanda tangan JWT secara lokal (kunci publik di-cache) sehingga tidak perlu satu perjalanan ke server Auth
+  // di setiap permintaan; bila proyek masih memakai rahasia JWT lama (HS256), otomatis kembali ke pengecekan lewat server.
+  const { data } = await supabase.auth.getClaims();
+  const user = data?.claims?.sub ? { id: data.claims.sub } : null;
   const { pathname } = request.nextUrl;
 
   const redirectToLogin = (reason?: string) => {
