@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { FormDialog } from "@/components/master-form-dialog";
 import { TextField } from "@/components/form";
+import { SearchSelect } from "@/components/search-select";
 import { savePlanAction } from "@/app/(app)/maintenance/actions";
 
 export interface PlanFormPlan {
@@ -34,19 +35,16 @@ function Parts({ spareparts, initial }: { spareparts: Opt[]; initial: { sparepar
       <input type="hidden" name="parts" value={JSON.stringify(rows)} />
       {rows.map((r, i) => (
         <div key={i} className="flex gap-2">
-          <select
-            aria-label="Sparepart"
-            value={r.sparepart_id}
-            onChange={(e) => setRows((x) => x.map((y, j) => (j === i ? { ...y, sparepart_id: e.target.value } : y)))}
-            className={sel}
-          >
-            <option value="">— pilih —</option>
-            {spareparts.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.label}
-              </option>
-            ))}
-          </select>
+          <div className="min-w-0 flex-1">
+            <SearchSelect
+              ariaLabel="Sparepart"
+              placeholder="Cari sparepart (mis. rem)…"
+              value={r.sparepart_id}
+              onChange={(id) => setRows((x) => x.map((y, j) => (j === i ? { ...y, sparepart_id: id } : y)))}
+              options={spareparts}
+              className={sel}
+            />
+          </div>
           <input
             aria-label="Qty"
             inputMode="decimal"

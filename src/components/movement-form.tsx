@@ -3,6 +3,7 @@
 import { useActionState, useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { Alert } from "@/components/form";
+import { SearchSelect } from "@/components/search-select";
 import { saveMovementAction } from "@/app/(app)/inventory/actions";
 import { fmtQty } from "@/lib/format";
 
@@ -149,6 +150,7 @@ export function MovementForm({
   }, [state, router, draftKey]);
 
   const spMap = useMemo(() => new Map(spareparts.map((s) => [s.id, s])), [spareparts]);
+  const spOpts = useMemo(() => spareparts.map((s) => ({ id: s.id, label: `${s.code} · ${s.name}` })), [spareparts]);
   const needsFrom = form.type === "OUT" || form.type === "TRANSFER";
   const needsTo = form.type === "IN" || form.type === "RETURN" || form.type === "TRANSFER";
   const wo = workOrders.find((w) => w.id === form.work_order_id);
@@ -282,17 +284,17 @@ export function MovementForm({
             const over = avail !== undefined && Number(l.qty.replace(",", ".")) > avail;
             return (
               <div key={i} className="grid grid-cols-2 items-end gap-2 sm:grid-cols-[minmax(0,2fr)_6rem_5rem_6rem_minmax(0,1.2fr)_2.5rem]">
-                <label className="col-span-2 text-sm sm:col-span-1">
+                <div className="col-span-2 text-sm sm:col-span-1">
                   <span className="mb-1 block text-xs text-muted">Sparepart</span>
-                  <select value={l.sparepart_id} onChange={(e) => setLine(i, { sparepart_id: e.target.value })} className={field}>
-                    <option value="">— pilih sparepart —</option>
-                    {spareparts.map((s) => (
-                      <option key={s.id} value={s.id}>
-                        {s.code} · {s.name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
+                  <SearchSelect
+                    ariaLabel="Sparepart"
+                    placeholder="Cari sparepart (mis. rem)…"
+                    value={l.sparepart_id}
+                    onChange={(id) => setLine(i, { sparepart_id: id })}
+                    options={spOpts}
+                    className={field}
+                  />
+                </div>
                 <label className="text-sm">
                   <span className="mb-1 block text-xs text-muted">Qty</span>
                   <input

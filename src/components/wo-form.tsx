@@ -3,6 +3,7 @@
 import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Alert } from "@/components/form";
+import { SearchSelect } from "@/components/search-select";
 import { saveWoAction } from "@/app/(app)/maintenance/actions";
 
 interface Opt {
@@ -153,19 +154,14 @@ export function WoForm({
         <div className="space-y-2 p-4">
           {parts.map((p, i) => (
             <div key={i} className="grid grid-cols-[minmax(0,2fr)_5rem_minmax(0,1.3fr)_2.5rem] items-end gap-2">
-              <select
-                aria-label="Sparepart"
+              <SearchSelect
+                ariaLabel="Sparepart"
+                placeholder="Cari sparepart (mis. rem)…"
                 value={p.sparepart_id}
-                onChange={(e) => setParts((x) => x.map((y, j) => (j === i ? { ...y, sparepart_id: e.target.value } : y)))}
+                onChange={(id) => setParts((x) => x.map((y, j) => (j === i ? { ...y, sparepart_id: id } : y)))}
+                options={spareparts}
                 className={field}
-              >
-                <option value="">— sparepart —</option>
-                {spareparts.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.label}
-                  </option>
-                ))}
-              </select>
+              />
               <input
                 aria-label="Qty rencana"
                 inputMode="decimal"
