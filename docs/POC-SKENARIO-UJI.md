@@ -1,33 +1,25 @@
-# Panduan Uji Mandiri POC — Aplikasi Perawatan & Sparepart Kendaraan
+# Panduan Uji Mandiri POC: Aplikasi Perawatan & Sparepart Kendaraan
 
-Dokumen ini untuk **pengguna yang akan mencoba POC sendiri**. Tidak perlu latar belakang teknis. Ikuti skenario berurutan, centang hasilnya, dan catat temuan di bagian akhir.
+Panduan untuk **pengguna yang akan mencoba POC sendiri**, tanpa perlu latar belakang teknis. Versi bergambar ada di berkas PDF dengan nama yang sama. Kerjakan skenario berurutan dan centang hasilnya.
 
-- Alamat aplikasi: https://kbl-fawn.vercel.app (halaman aplikasi ada di `/login`)
+- Alamat aplikasi: https://kbl-fawn.vercel.app (masuk di `/login`)
 - Password semua akun demo: `Demo12345`
-- Estimasi waktu: ±45 menit untuk semua skenario, atau ±10 menit per skenario.
+- Estimasi waktu: ±45 menit untuk semuanya, atau ±10 menit per skenario.
 
 ---
 
 ## 1. Gambaran singkat
 
-Aplikasi ini mencatat empat hal yang saling berkaitan:
-
 ```
  Rencana Perawatan ──(jatuh tempo)──► Work Order ──(butuh sparepart)──► Mutasi / Stok
         │                                  │                                  │
         │                                  └─ Perubahan Jadwal                └─ Stock Opname
-        │                                       │                                  │
         └──────────────────── semuanya lewat ► Approval (berjenjang) ◄─────────────┘
 
- Pengemudi di lapangan ──► Lapor Darurat ──► Insiden ──► Derek / Teknisi / WO Emergensi
+ Pengemudi ──► Lapor Darurat ──► Insiden ──► Derek / Teknisi / WO Emergensi
 ```
 
-Prinsip yang bisa Anda buktikan saat mencoba:
-
-1. **Setiap orang hanya melihat dan melakukan yang menjadi tugasnya** (peran/role).
-2. **Perubahan stok tidak langsung terjadi**; harus disetujui atasan, dan tercatat di Kartu Stok.
-3. **Orang yang mengajukan tidak boleh menyetujui dokumennya sendiri.**
-4. **Laporan darurat harus cepat**, bahkan di ponsel dengan sinyal buruk atau tanpa sinyal.
+Yang akan Anda buktikan: (1) setiap orang hanya melihat dan melakukan yang menjadi tugasnya; (2) stok berubah hanya setelah disetujui dan tercatat di Kartu Stok; (3) yang mengajukan tidak boleh memutuskan dokumennya sendiri; (4) laporan darurat cepat, bahkan tanpa sinyal.
 
 ---
 
@@ -36,201 +28,196 @@ Prinsip yang bisa Anda buktikan saat mencoba:
 | Kebutuhan | Keterangan |
 |---|---|
 | Peramban | Chrome atau Edge terbaru (komputer), Chrome (Android), Safari (iPhone) |
-| Dua jendela | Pakai **jendela biasa + jendela incognito/private**, atau dua peramban, agar bisa login sebagai dua orang sekaligus |
-| Ponsel (opsional) | Dibutuhkan untuk skenario 6 (instal PWA) dan 7 (offline) |
-| Data demo | Harus sudah diisi oleh tim teknis dengan `npm run seed:demo -- --yes`. Jika setelah login semua daftar kosong, minta tim teknis menjalankannya |
+| Dua jendela | Satu jendela biasa dan satu incognito/private, agar bisa masuk sebagai dua orang sekaligus |
+| Ponsel | Disarankan untuk skenario 6 dan 7 |
+| Data demo | Sudah diisi tim teknis. Bila semua daftar kosong setelah masuk, minta tim teknis mengisinya |
 
-> **Catatan kecepatan:** membuka halaman pertama setelah lama tidak dipakai bisa lebih lambat (server "bangun" dulu). Buka ulang halaman yang sama untuk melihat kecepatan normal.
-
-### Daftar akun demo
+### Akun demo
 
 | Email | Peran | Cabang | Dipakai untuk |
 |---|---|---|---|
 | `sysadmin@example.com` | Admin Sistem | Pusat | Master data, user, role, alur approval, audit |
-| `hqadmin@example.com` | Admin Pusat | Pusat | Melihat lintas cabang, mencatat insiden dari telepon, laporan |
+| `hqadmin@example.com` | Admin Pusat | Pusat | Lintas cabang, mencatat insiden dari telepon, laporan |
 | `depthead.jkt@example.com` | Kepala Departemen | Jakarta | Approval level lanjut |
-| `supervisor.jkt@example.com` | Supervisor | Jakarta | Approval level 1, rencana, WO (tidak mengajukan perubahan jadwal) |
+| `supervisor.jkt@example.com` | Supervisor | Jakarta | Approval level 1, rencana, membuat WO. Tidak mengajukan perubahan jadwal |
 | `warehouse.jkt@example.com` | Gudang | Jakarta | Mutasi sparepart, stock opname |
-| `mechanic.jkt@example.com` | Mekanik | Jakarta | Menjalankan Work Order, mengajukan perubahan jadwal |
-| `driver.jkt@example.com` | Pengemudi | Jakarta | Lapor darurat (kendaraan **B 9001 KBL**) |
+| `mechanic.jkt@example.com` | Mekanik | Jakarta | Menjalankan WO, mengajukan perubahan jadwal WO miliknya |
+| `driver.jkt@example.com` | Pengemudi | Jakarta | Lapor darurat (kendaraan B 9001 KBL) |
 | `supervisor.sby@example.com` | Supervisor | Surabaya | Uji pemisahan antar cabang |
+| `mechanic.sby@example.com` | Mekanik | Surabaya | Uji pemisahan antar cabang |
 | `gudang.supervisor.jkt@example.com` | Gudang + Supervisor | Jakarta | Uji larangan menyetujui dokumen sendiri |
-| `nonaktif.jkt@example.com` | Mekanik (nonaktif) | Jakarta | Uji akun dinonaktifkan: **harus ditolak** |
+| `nonaktif.jkt@example.com` | Mekanik (nonaktif) | Jakarta | Uji akun dinonaktifkan: harus ditolak |
 
-Akun lain (Gudang, Mekanik, Pengemudi Surabaya) tersedia untuk uji pemisahan cabang.
-
-### Data contoh yang sudah ada
+### Data contoh
 
 - Kendaraan Jakarta: B 9001 KBL (Hino 500), B 9002 KBL, B 7101 KBL (Bus), B 5201 KBL (Pick-up). Surabaya: L 8001 KBL, L 8002 KBL. Bandung: D 6001 KBL.
-- 16 sparepart (oli, filter, kampas rem, aki, ban, dll.). Beberapa **sengaja di bawah stok minimum** (contoh: Filter Udara Hino 500 tinggal 3, minimum 6; Kampas Rem Depan tinggal 2, minimum 4).
-- 5 rencana perawatan, beberapa **sudah dekat jatuh tempo**, sehingga Work Order preventif terbentuk otomatis.
-- Menunggu keputusan: 1 perubahan jadwal, 1 stock opname dengan selisih, 1 insiden belum dikonfirmasi.
+- 16 sparepart (oli, filter, kampas rem, aki, ban, lampu). Beberapa sengaja di bawah stok minimum: Filter Udara Hino 500 tinggal 3 (minimum 6), Kampas Rem Depan tinggal 2 (minimum 4), Filter Oli Hino 500 di Workshop Jakarta tinggal 4 (minimum 10).
+- 5 rencana perawatan; 2 di antaranya sudah membentuk Work Order preventif otomatis.
+- Sudah menunggu keputusan: 1 perubahan jadwal (diajukan Mekanik), 1 stock opname dengan selisih di Gudang Utama Jakarta, 1 insiden belum dikonfirmasi.
 
 ---
 
 ## 3. Skenario uji
 
-Tiap skenario: **Tujuan → Login sebagai → Langkah → Hasil yang diharapkan**. Centang `[ ]` bila hasilnya sesuai.
+### Skenario 1: Login, peran, dan batas akses
 
-### Skenario 1 — Login, peran, dan batas akses
+**Tujuan:** Setiap orang hanya melihat dan melakukan yang menjadi tugasnya.
 
-**Tujuan:** setiap orang hanya melihat menu sesuai perannya.
-
-| # | Langkah | Hasil yang diharapkan | OK |
-|---|---|---|---|
-| 1.1 | Buka `/login`, masuk sebagai `sysadmin@example.com` | Masuk ke Dashboard. Menu lengkap termasuk **Administrasi** | [ ] |
-| 1.2 | Keluar, masuk sebagai `driver.jkt@example.com` | Menu jauh lebih sedikit; tidak ada Master Data, Administrasi, atau Laporan | [ ] |
-| 1.3 | Sebagai pengemudi, ketik manual alamat `/admin/users` | Muncul halaman "tidak berhak", bukan data | [ ] |
-| 1.4 | Coba masuk sebagai `nonaktif.jkt@example.com` | **Ditolak** | [ ] |
-| 1.5 | Masuk sebagai `mechanic.sby@example.com`, buka Work Order | Hanya WO cabang Surabaya; WO Jakarta tidak tampil | [ ] |
-
-### Skenario 2 — Mutasi sparepart masuk ke stok (dengan approval)
-
-**Tujuan:** membuktikan stok baru berubah **hanya setelah disetujui**.
-
-| # | Login sebagai | Langkah | Hasil yang diharapkan | OK |
+| No | Login sebagai | Langkah | Hasil yang diharapkan | OK |
 |---|---|---|---|---|
-| 2.1 | `warehouse.jkt@example.com` | Inventori Sparepart › **Saldo Stok**. Catat saldo "Filter Udara Hino 500" di Gudang Utama Jakarta (**3**) | Saldo terlihat | [ ] |
-| 2.2 | sama | **Mutasi Sparepart** › buat baru, jenis **Masuk**, tujuan Gudang Utama Jakarta, tambah Filter Udara Hino 500 × **10**, simpan lalu **ajukan** | Status **Diajukan** | [ ] |
-| 2.3 | sama | Buka lagi **Saldo Stok** | Saldo **masih 3** (belum berubah) | [ ] |
-| 2.4 | `supervisor.jkt@example.com` | Approval › **Kotak Masuk**, buka permintaan tadi, klik **Setujui** | Status menjadi **Diposting** | [ ] |
-| 2.5 | `warehouse.jkt@example.com` | **Saldo Stok** dan **Kartu Stok** untuk Filter Udara | Saldo jadi **13**; Kartu Stok mencatat baris masuk +10 | [ ] |
-| 2.6 | sama | Ulangi 2.2 dengan jumlah **60** lalu minta Supervisor menyetujui | Setelah Supervisor, permintaan **masih menunggu Kepala Dept** (jumlah di atas 50 butuh dua level). Setujui dengan `depthead.jkt@example.com` baru diposting | [ ] |
+| 1.1 | `sysadmin@example.com` | Buka /login lalu masuk. | Masuk ke Dashboard. Menu lengkap, termasuk grup Administrasi. | [ ] |
+| 1.2 | `driver.jkt@example.com` | Keluar, lalu masuk sebagai pengemudi. | Menu jauh lebih sedikit: Dashboard, Work Order, Kalender Jadwal, Lapor Darurat, Kontak Darurat, Langkah Cepat. Tidak ada Master Data, Administrasi, atau Laporan. | [ ] |
+| 1.3 | `driver.jkt@example.com` | Ketik manual alamat /admin/users. | Halaman Akses ditolak, bukan data. | [ ] |
+| 1.4 | `nonaktif.jkt@example.com` | Coba masuk (password sama). | Ditolak: Email atau password salah. | [ ] |
+| 1.5 | `mechanic.sby@example.com` | Buka Perawatan › Work Order. | 0 WO. WO milik cabang Jakarta tidak terlihat. | [ ] |
 
-**Uji tambahan — tolak & revisi:** buat mutasi baru, lalu Supervisor memilih **Tolak** (wajib isi alasan) atau **Minta revisi**. Dokumen kembali ke Gudang dan stok tidak berubah.
+### Skenario 2: Mutasi sparepart masuk, dengan approval
 
-### Skenario 3 — Larangan menyetujui dokumen sendiri
+**Tujuan:** Stok baru berubah hanya setelah disetujui, dan tercatat di Kartu Stok.
 
-**Tujuan:** membuktikan pemisahan tugas.
+> Contoh memakai Filter Oli Hino 500 di Workshop Jakarta (saldo awal 4). Bila penguji lain sudah mencoba lebih dulu, gunakan selisihnya (+10) sebagai patokan, bukan angka mutlak.
 
-| # | Login sebagai | Langkah | Hasil yang diharapkan | OK |
+| No | Login sebagai | Langkah | Hasil yang diharapkan | OK |
 |---|---|---|---|---|
-| 3.1 | `gudang.supervisor.jkt@example.com` | Buat mutasi Masuk kecil lalu ajukan | Status Diajukan | [ ] |
-| 3.2 | sama | Buka **Kotak Masuk** / halaman permintaan itu | Tidak bisa menyetujui permintaan miliknya sendiri | [ ] |
-| 3.3 | `supervisor.jkt@example.com` | Setujui | Berhasil | [ ] |
+| 2.1 | `warehouse.jkt@example.com` | Inventori Sparepart › Saldo Stok. Catat saldo FLT-OLI-01 Filter Oli Hino 500 di Workshop Jakarta. | On hand 4. | [ ] |
+| 2.2 | `warehouse.jkt@example.com` | Mutasi Sparepart › + Mutasi Baru. Tipe Masuk, Ke lokasi Workshop Jakarta. Di kolom Sparepart ketik “filter oli”, pilih Filter Oli Hino 500. Qty 10. Klik Ajukan untuk approval. | Dokumen MSK-… berstatus Diajukan. | [ ] |
+| 2.3 | `warehouse.jkt@example.com` | Buka lagi Saldo Stok. | Saldo masih 4. Belum berubah. | [ ] |
+| 2.4 | `supervisor.jkt@example.com` | Approval › Kotak Masuk, buka dokumen tadi, klik Setujui, isi catatan (opsional), klik Setujui lagi. | Status Disetujui. Log approval mencatat siapa, kapan, dan catatannya. | [ ] |
+| 2.5 | `warehouse.jkt@example.com` | Cek Saldo Stok dan Kartu Stok Filter Oli Hino 500. | Saldo Workshop jadi 14. Kartu Stok memuat baris Masuk +10 dengan nomor dokumen. | [ ] |
+| 2.6 | `warehouse.jkt / supervisor.jkt / depthead.jkt` | Ulangi 2.2 dengan Qty 60. Supervisor menyetujui, lalu Kepala Dept. | Setelah Supervisor, status masih Menunggu (“Level 2 dari 2 · menunggu DEPT_HEAD”). Baru Diposting setelah Kepala Dept menyetujui (jumlah di atas 50 butuh dua level). | [ ] |
+| 2.7 | `warehouse.jkt / supervisor.jkt` | Buat mutasi kecil. Supervisor memilih Tolak (alasan wajib), lalu pada mutasi lain memilih Minta revisi. | Tolak: status Ditolak. Revisi: dokumen kembali ke Gudang sebagai Draft. Stok tidak berubah pada keduanya. | [ ] |
+| 2.8 | `warehouse.jkt@example.com` | Buat mutasi Masuk ke Gudang Utama Jakarta lalu klik Ajukan untuk approval (selama opname Skenario 5 belum disetujui). | Ditahan: “Lokasi Gudang Utama Jakarta sedang diopname (OPN-…); mutasi ditahan sampai opname selesai”. | [ ] |
 
-### Skenario 4 — Perawatan: dari rencana ke Work Order selesai
+### Skenario 3: Larangan menyetujui dokumen sendiri
 
-**Tujuan:** melihat siklus perawatan penuh, termasuk pemakaian sparepart.
+**Tujuan:** Orang yang mengajukan tidak boleh memutuskan dokumennya, walau perannya mengizinkan.
 
-| # | Login sebagai | Langkah | Hasil yang diharapkan | OK |
+| No | Login sebagai | Langkah | Hasil yang diharapkan | OK |
 |---|---|---|---|---|
-| 4.1 | `supervisor.jkt@example.com` | Perawatan › **Rencana Perawatan** | Ada 5 rencana; sebagian berstatus mendekati/lewat jatuh tempo (mis. "Ganti oli mesin dan filter oli" B 9001 KBL) | [ ] |
-| 4.2 | sama | Perawatan › **Work Order** | WO preventif sudah terbentuk otomatis untuk rencana yang jatuh tempo | [ ] |
-| 4.3 | sama | **Kalender Jadwal** | WO tampil pada tanggal jadwalnya | [ ] |
-| 4.4 | sama | Buat WO **Korektif** baru: kendaraan B 5201 KBL, keluhan "Lampu depan mati", sparepart Lampu Depan H4 × 2 dari Workshop Jakarta, tugaskan ke Maman Mekanik | WO tersimpan berstatus **Scheduled** | [ ] |
-| 4.5 | `mechanic.jkt@example.com` | Buka WO tadi, klik **Mulai** | Status **In Progress** | [ ] |
-| 4.6 | sama | Selesaikan WO (isi catatan, jumlah sparepart yang terpakai, lampirkan foto bila ada) | Status **Completed**; stok Lampu Depan di Workshop **berkurang 2**; terlihat di **Kartu Stok** | [ ] |
-| 4.7 | `supervisor.jkt@example.com` | Buka kendaraan di Master Data | Riwayat perawatan kendaraan bertambah | [ ] |
+| 3.1 | `gudang.supervisor.jkt@example.com` | Buat mutasi Masuk kecil ke Workshop Jakarta, lalu Ajukan untuk approval. | Status Diajukan. | [ ] |
+| 3.2 | `gudang.supervisor.jkt@example.com` | Dokumen itu tidak muncul di Kotak Masuk Anda. Buka detail dokumen, klik Lihat approval. | Muncul pesan “Anda yang mengajukan dokumen ini, sehingga tidak dapat memutuskannya sendiri”. Tidak ada tombol Setujui. | [ ] |
+| 3.3 | `supervisor.jkt@example.com` | Buka Kotak Masuk, setujui dokumen yang sama. | Berhasil. Status Disetujui. | [ ] |
 
-### Skenario 5 — Perubahan jadwal & Stock Opname
+### Skenario 4: Perawatan: dari rencana sampai Work Order selesai
 
-**Tujuan:** menguji approval untuk dua jenis dokumen lain.
+**Tujuan:** Satu siklus penuh, termasuk pemakaian sparepart dan odometer.
 
-| # | Login sebagai | Langkah | Hasil yang diharapkan | OK |
+| No | Login sebagai | Langkah | Hasil yang diharapkan | OK |
 |---|---|---|---|---|
-| 5.1 | `supervisor.jkt@example.com` | Buka WO B 5201 KBL dari skenario 4.4 | **Tidak ada tombol "Ajukan perubahan jadwal"** (Supervisor hanya memutuskan, tidak mengajukan) | [ ] |
-| 5.2 | `mechanic.jkt@example.com` | Buka WO yang sama (ditugaskan kepadanya), klik **Ajukan perubahan jadwal**, pilih alasan, geser 2 hari, kirim | Pengajuan terbentuk, menunggu Supervisor | [ ] |
-| 5.3 | `supervisor.jkt@example.com` | Approval › **Kotak Masuk**, buka pengajuan tadi atau pengajuan demo (WO B 9002 KBL, "Kampas rem belakang menunggu pengiriman"), **Setujui** | Naik ke level berikutnya (Kepala Dept) karena penundaan lebih dari 1 hari | [ ] |
-| 5.4 | `depthead.jkt@example.com` | Setujui pengajuan yang sama | Jadwal WO berpindah | [ ] |
-| 5.5 | `mechanic.sby@example.com` | Buka WO Jakarta yang sama (atau WO milik mekanik lain) | WO tidak terlihat / tidak bisa diajukan: hanya teknisi yang ditugaskan pada WO itu | [ ] |
-| 5.6 | `supervisor.jkt@example.com` | Inventori › **Stock Opname** | Ada 1 sesi opname kategori Filter dengan selisih. Buka dan setujui | [ ] |
-| 5.7 | `warehouse.jkt@example.com` | **Kartu Stok** item yang selisih | Muncul baris **Penyesuaian** hasil opname | [ ] |
-| 5.8 | sama | Buka sesi opname baru, isi hitungan fisik berbeda dari sistem | Selisih dihitung otomatis dan wajib diberi alasan | [ ] |
+| 4.1 | `supervisor.jkt@example.com` | Perawatan › Rencana Perawatan. | Ada 5 rencana (oli, servis rem, servis berkala, dll.). | [ ] |
+| 4.2 | `supervisor.jkt@example.com` | Perawatan › Work Order. | WO Preventif bertanda “Dibuat otomatis” sudah ada, di samping 2 WO Korektif dari data demo. | [ ] |
+| 4.3 | `supervisor.jkt@example.com` | Perawatan › Kalender Jadwal. | WO tampil pada tanggal jadwalnya. | [ ] |
+| 4.4 | `supervisor.jkt@example.com` | Work Order › + WO Baru: Korektif, kendaraan B 5201 KBL, mulai dan selesai besok lusa, teknisi Maman Mekanik, deskripsi “Lampu depan mati”. Klik + Tambah part, cari “lampu”, pilih Lampu Depan H4 24V, Qty 2, Ambil dari Workshop Jakarta. Buat Work Order. | WO tersimpan berstatus Scheduled; part 2 tercatat sebagai reservasi dari Workshop Jakarta. | [ ] |
+| 4.5 | `mechanic.jkt@example.com` | Buka WO tadi, klik Mulai. | Status In Progress. | [ ] |
+| 4.6 | `mechanic.jkt@example.com` | Klik Pakai sparepart (form Keluar terisi otomatis). Pilih Dari lokasi Workshop Jakarta, cari Lampu Depan H4 24V, Qty 2, Ajukan untuk approval. Lalu supervisor.jkt menyetujuinya. | Mutasi Keluar Diposting. Di WO, kolom Terpakai menjadi 2. Saldo lampu di Workshop berkurang 2. | [ ] |
+| 4.7 | `mechanic.jkt@example.com` | Di WO klik Selesai, isi Odometer akhir (mis. 38150) dan catatan, klik Selesaikan WO. | Status Completed; odometer akhir tersimpan. | [ ] |
+| 4.8 | `supervisor.jkt@example.com` | Master Data › Kendaraan › Detail B 5201 KBL. | Odometer baru, riwayat perubahan odometer, dan WO terbaru terlihat. | [ ] |
 
-### Skenario 6 — Darurat di lapangan (pengemudi, ponsel)
+### Skenario 5: Perubahan jadwal dan stock opname
 
-**Tujuan:** membuktikan laporan darurat cepat dan ditangani pusat.
+**Tujuan:** Yang mengajukan perubahan jadwal adalah teknisi pemilik WO; Supervisor hanya memutuskan.
 
-| # | Login sebagai | Langkah | Hasil yang diharapkan | OK |
+| No | Login sebagai | Langkah | Hasil yang diharapkan | OK |
 |---|---|---|---|---|
-| 6.1 | `driver.jkt@example.com` (ponsel) | Ketuk tombol merah **Darurat** (bar bawah) | Halaman lapor darurat, hanya sedikit isian | [ ] |
-| 6.2 | sama | Pilih jenis (mis. Mogok / Ban), izinkan lokasi, kirim | Muncul nomor insiden dan **kontak darurat** serta **langkah cepat** yang bisa langsung diikuti | [ ] |
-| 6.3 | `hqadmin@example.com` | Emergensi › **Insiden** | Insiden baru tampil di atas; lencana merah pada menu menunjukkan insiden **belum dikonfirmasi** | [ ] |
-| 6.4 | sama | Buka insiden, klik **Acknowledge** | Status berubah; pengemudi bisa melihatnya | [ ] |
-| 6.5 | sama | **Tugaskan derek** (isi catatan), lalu **Selesaikan**, lalu **Tutup insiden** | Setiap langkah tercatat di **Log insiden** lengkap dengan waktu dan nama | [ ] |
-| 6.6 | `hqadmin@example.com` | **Catat insiden** dari telepon untuk pengemudi tertentu | Insiden tercatat bertanda "dicatat pusat" | [ ] |
-| 6.7 | pengemudi | Kirim laporan yang sama dua kali (ketuk dua kali / kirim ulang) | Tidak terbentuk dua insiden | [ ] |
+| 5.1 | `supervisor.jkt@example.com` | Buat WO Korektif untuk B 5201 KBL, jadwal 29 Okt, teknisi Maman Mekanik. Buka detailnya. | Tombol yang ada hanya Cetak, Ubah, Mulai, Batalkan. Tidak ada Ajukan perubahan jadwal. | [ ] |
+| 5.2 | `mechanic.jkt@example.com` | Buka WO yang sama, klik Ajukan perubahan jadwal. Jadwal baru +2 hari, alasan “Sparepart belum tersedia”, keterangan, Ajukan untuk approval. | Pengajuan PJ-… berstatus Diajukan, tampil di bagian Jadwal & anomali WO. | [ ] |
+| 5.3 | `supervisor.jkt@example.com` | Approval › Kotak Masuk, buka PJ-… tadi, Setujui. | Belum selesai: “Level 2 dari 2 · menunggu DEPT_HEAD” (penundaan lebih dari 1 hari). | [ ] |
+| 5.4 | `depthead.jkt@example.com` | Kotak Masuk, setujui PJ-… yang sama. | Disetujui. Jadwal WO berpindah, Jadwal awal tetap tersimpan, dan pengajuan tercatat di laporan anomali. | [ ] |
+| 5.5 | `mechanic.sby@example.com` | Coba cari WO Jakarta tadi. | Tidak terlihat; teknisi hanya dapat mengajukan untuk WO yang ditugaskan kepadanya. | [ ] |
+| 5.6 | `supervisor.jkt@example.com` | Inventori › Stock Opname, buka OPN-… (Gudang Utama Jakarta, kategori Filter), lalu setujui lewat Kotak Masuk. | Terlihat 1 item selisih −1 (Filter Oli Hino 500) dengan alasan. Setelah disetujui, status opname selesai dan penahanan mutasi di Gudang Utama Jakarta dicabut. | [ ] |
+| 5.7 | `warehouse.jkt@example.com` | Kartu Stok Filter Oli Hino 500. | Ada baris Penyesuaian −1 (ADJ-…). | [ ] |
+| 5.8 | `warehouse.jkt@example.com` | Stock Opname › + Buka Sesi Opname (Workshop Jakarta, kategori Filter). Isi Qty fisik berbeda dari sistem. | Selisih terhitung otomatis; alasan wajib dipilih, dan alasan “Lainnya” wajib diberi keterangan. | [ ] |
 
-### Skenario 7 — Bekerja tanpa sinyal (offline) dan sinkron
+### Skenario 6: Darurat di lapangan
 
-**Tujuan:** membuktikan lapangan tetap bisa bekerja saat sinyal hilang.
+**Tujuan:** Pengemudi cukup mengetuk jenis kejadian, dan pusat bisa menanganinya sampai tuntas.
 
-> Lakukan di ponsel/komputer. Buka aplikasi **dengan sinyal** dulu agar data tersimpan.
+> Langkah 6.1–6.2 dicoba di ponsel (atau jendela browser yang dipersempit). Izinkan akses lokasi saat diminta.
 
-| # | Langkah | Hasil yang diharapkan | OK |
-|---|---|---|---|
-| 7.1 | Login sebagai `mechanic.jkt@example.com`, buka halaman **Work Order** sekali (data tersimpan di perangkat) | Daftar tampil | [ ] |
-| 7.2 | Aktifkan **mode pesawat** (atau matikan Wi-Fi), lalu buka ulang aplikasi | Halaman **Offline** muncul berisi **Tugas Saya** dan lencana "Offline" | [ ] |
-| 7.3 | Saat offline, lakukan satu aksi (mis. mulai/selesaikan WO atau tambah foto) | Aksi diterima dan masuk **antrean sinkron** (ada penghitung antrean) | [ ] |
-| 7.4 | Matikan mode pesawat | Antrean terkirim otomatis; penghitung kembali 0 | [ ] |
-| 7.5 | Login ulang sebagai supervisor, cek WO tadi | Perubahan sudah tercatat di server | [ ] |
-| 7.6 | Sebagai `driver.jkt@example.com` saat offline, buka **Darurat** | Kontak darurat dan langkah cepat **tetap tampil**; laporan tersimpan dan terkirim saat sinyal kembali | [ ] |
-
-**Instal sebagai aplikasi (PWA):** di Chrome Android pilih menu ⋮ › *Instal aplikasi*; di iPhone Safari pilih Bagikan › *Tambah ke Layar Utama*. Ikon aplikasi akan muncul di layar utama.
-
-### Skenario 8 — Dashboard, laporan, dan pencarian
-
-| # | Login sebagai | Langkah | Hasil yang diharapkan | OK |
+| No | Login sebagai | Langkah | Hasil yang diharapkan | OK |
 |---|---|---|---|---|
-| 8.1 | `hqadmin@example.com` | Buka **Dashboard** | Widget: stok kritis, WO overdue/hari ini, approval menunggu, insiden aktif; angkanya sesuai data | [ ] |
-| 8.2 | sama | Buka **Laporan**, pilih satu laporan, atur filter | Tabel terisi sesuai filter | [ ] |
-| 8.3 | sama | Unduh hasil laporan (CSV) / **Cetak** | File terunduh / tampilan cetak rapi | [ ] |
-| 8.4 | `supervisor.jkt@example.com` | Buka **Laporan** | Hanya data cabang Jakarta | [ ] |
+| 6.1 | `driver.jkt@example.com (ponsel)` | Ketuk tombol merah Darurat. Kendaraan B 9001 KBL sudah terpilih; lokasi terdeteksi otomatis. | Layar berisi 6 jenis kejadian besar dan kontak darurat. | [ ] |
+| 6.2 | `driver.jkt@example.com (ponsel)` | Ketuk Mogok. | “Laporan terkirim INC-…”, lengkap dengan Langkah cepat (nyalakan hazard, pasang segitiga, tunggu arahan) dan tombol telepon pusat, derek, atasan. | [ ] |
+| 6.3 | `hqadmin@example.com` | Emergensi › Insiden. | Insiden baru ada di atas dengan status Dilaporkan; lencana merah pada menu dan banner merah menunjukkan insiden belum dikonfirmasi. | [ ] |
+| 6.4 | `hqadmin@example.com` | Buka insiden, klik Acknowledge. | Status Dikonfirmasi pusat, dengan nama dan waktu. | [ ] |
+| 6.5 | `hqadmin@example.com` | Klik Tugaskan derek (isi catatan), lalu Selesaikan (catatan hasil), lalu Tutup insiden. | Status berturut-turut: Ditangani, Selesai, Ditutup. Log insiden mencatat tiap langkah dengan waktu dan nama. | [ ] |
+| 6.6 | `hqadmin@example.com` | Klik + Catat Insiden. Pilih kendaraan B 9001 KBL, pilih pengemudi Dedi Driver, jenis, alamat, keterangan. | Insiden tercatat atas nama pengemudi dan bertanda “(dicatat pusat)”. *(perlu pembaruan terbaru)* | [ ] |
+| 6.7 | `driver.jkt@example.com (ponsel)` | Ketuk jenis kejadian dua kali dengan sangat cepat. | Hanya satu insiden terbentuk. *(perlu pembaruan terbaru)* | [ ] |
 
-### Skenario 9 — Administrasi & jejak audit
+### Skenario 7: Bekerja tanpa sinyal, lalu sinkron
 
-| # | Login sebagai | Langkah | Hasil yang diharapkan | OK |
+**Tujuan:** Lapangan tetap bisa bekerja saat sinyal hilang; hasilnya terkirim sendiri saat sinyal kembali.
+
+> Buka aplikasi dengan sinyal lebih dulu agar data tersimpan di perangkat. Untuk pengemudi, buka halaman Lapor Darurat satu kali saat online supaya panduan dan kontak tersimpan. Di panduan ini jaringan dimatikan dengan mode pesawat (atau tab Network › Offline di browser).
+
+| No | Login sebagai | Langkah | Hasil yang diharapkan | OK |
 |---|---|---|---|---|
-| 9.1 | `sysadmin@example.com` | Administrasi › **Alur Approval** | Terlihat urutan approver per jenis dokumen (mis. Mutasi: Supervisor, lalu Kepala Dept bila jumlah > 50) | [ ] |
-| 9.2 | sama | Administrasi › **Role & Permission** | Daftar hak akses per peran | [ ] |
-| 9.3 | sama | Administrasi › **Audit Log** | Semua tindakan di skenario sebelumnya tercatat: siapa, kapan, apa | [ ] |
-| 9.4 | sama | Administrasi › **Log Notifikasi** | Notifikasi yang terkirim/tertunda terlihat. Pesan lewat WhatsApp/SMS/Email tampil **Gagal** selama penyedia kirimnya belum dihubungkan (**wajar pada POC**) | [ ] |
-| 9.5 | `hqadmin@example.com` | Klik ikon **lonceng** | Notifikasi dalam aplikasi muncul (mis. permintaan approval baru) | [ ] |
+| 7.1 | `mechanic.jkt@example.com (ponsel)` | Masuk dan buka Work Order sekali dengan sinyal. | Daftar tampil; data tugas tersimpan di perangkat. | [ ] |
+| 7.2 | `mechanic.jkt@example.com (ponsel)` | Aktifkan mode pesawat, lalu buka aplikasi (atau alamat /offline). | Halaman Mode offline muncul: “Tidak ada sinyal. Anda tetap dapat bekerja”, berisi Tugas Saya dan tombol darurat. | [ ] |
+| 7.3 | `mechanic.jkt@example.com (ponsel)` | Ketuk salah satu WO Scheduled, lalu Mulai. | Status “In Progress · menunggu sinkron”. Muncul di daftar Menunggu sinkron. | [ ] |
+| 7.4 | `mechanic.jkt@example.com (ponsel)` | Isi Odometer akhir dan catatan, ketuk Selesaikan WO. | Status “Completed · menunggu sinkron”. Antrean berisi 2 pekerjaan. | [ ] |
+| 7.5 | `mechanic.jkt@example.com (ponsel)` | Matikan mode pesawat; ketuk Kirim sekarang bila perlu. | Antrean terkirim otomatis: “Tidak ada pekerjaan yang menunggu”. | [ ] |
+| 7.6 | `supervisor.jkt@example.com` | Perawatan › Work Order. | WO tadi berstatus Completed di server, sama seperti yang dikerjakan offline. | [ ] |
+| 7.7 | `driver.jkt@example.com (ponsel)` | Saat offline, buka /offline lalu ketuk jenis kejadian (mis. Ban). | Tampil “Laporan disimpan di perangkat ini” beserta langkah cepat dan kontak. Saat sinyal kembali terkirim otomatis dan hanya membentuk satu insiden. | [ ] |
+
+### Skenario 8: Dashboard dan laporan
+
+**Tujuan:** Angka di dashboard dan laporan sesuai data, dan terbatas pada cabang pemakainya.
+
+| No | Login sebagai | Langkah | Hasil yang diharapkan | OK |
+|---|---|---|---|---|
+| 8.1 | `hqadmin@example.com` | Buka Dashboard. | Widget terisi: insiden aktif, antrean approval, WO hari ini, perawatan jatuh tempo, stok kritis, anomali jadwal. Angka sesuai data. | [ ] |
+| 8.2 | `hqadmin@example.com` | Laporan › RPT-03 Posisi Stok & Stok Minimum. Atur filter, klik Tampilkan. | Tabel terisi sesuai filter; ada pilihan cabang. | [ ] |
+| 8.3 | `hqadmin@example.com` | Klik Ekspor CSV dan Cetak / PDF. | File CSV terunduh; tampilan cetak rapi. | [ ] |
+| 8.4 | `supervisor.jkt@example.com` | Buka laporan yang sama. | Hanya lokasi cabang Jakarta; filter cabang tidak ada. | [ ] |
+
+### Skenario 9: Administrasi dan jejak audit
+
+**Tujuan:** Semua tindakan dapat ditelusuri, dan aturan approval dapat dilihat serta diatur.
+
+| No | Login sebagai | Langkah | Hasil yang diharapkan | OK |
+|---|---|---|---|---|
+| 9.1 | `sysadmin@example.com` | Administrasi › Alur Approval. | Terlihat tahap tiap jenis dokumen. Mutasi: Supervisor, lalu Kepala Dept bila jumlah > 50. Perubahan jadwal: Supervisor, Kepala Dept bila lebih dari 1 hari, Admin Pusat bila lebih dari 7 hari. | [ ] |
+| 9.2 | `sysadmin@example.com` | Administrasi › Role & Permission. | Daftar role dan jumlah izin masing-masing. | [ ] |
+| 9.3 | `sysadmin@example.com` | Administrasi › Audit Log. | Tindakan keamanan dan perubahan data tercatat: siapa, kapan, apa. Tidak dapat diubah atau dihapus. | [ ] |
+| 9.4 | `sysadmin@example.com` | Administrasi › Log Notifikasi. | Notifikasi dalam aplikasi berstatus Terkirim. Kanal WhatsApp/SMS/Email berstatus Gagal selama penyedia pengirim belum dihubungkan (wajar pada POC). | [ ] |
+| 9.5 | `hqadmin@example.com` | Klik ikon lonceng. | Notifikasi dalam aplikasi muncul, mis. insiden yang belum direspons atau permintaan approval. | [ ] |
 
 ---
 
 ## 4. Yang wajar belum ada di POC
 
-Agar tidak dianggap kekurangan saat uji:
-
-- Pengiriman **WhatsApp/SMS/Email** belum terhubung ke penyedia; yang aktif adalah notifikasi dalam aplikasi (lonceng) dan push (jika diaktifkan).
-- Data dan akun di atas adalah **data contoh**, bukan data perusahaan. Jangan memasukkan data rahasia.
-- Kecepatan di POC dipengaruhi lokasi server dan database; di produksi akan disamakan wilayahnya.
-
----
+- Pengiriman WhatsApp/SMS/Email belum terhubung ke penyedia; yang aktif adalah notifikasi dalam aplikasi (lonceng) dan push bila diaktifkan.
+- Data dan akun adalah data contoh, bukan data perusahaan. Jangan memasukkan data rahasia.
+- Kecepatan di POC dipengaruhi lokasi server dan database; di produksi wilayah keduanya akan disamakan.
 
 ## 5. Lembar temuan
 
-Catat setiap hal yang tidak sesuai. Satu baris per temuan.
-
-| No | Skenario / langkah | Login sebagai | Yang dilakukan | Yang terjadi | Seharusnya | Tingkat (Kritis / Penting / Saran) |
-|---|---|---|---|---|---|---|
-| 1 | | | | | | |
-| 2 | | | | | | |
-| 3 | | | | | | |
-
-**Tips melaporkan:** sertakan tangkapan layar, jam kejadian, dan jenis perangkat (mis. "Android Chrome"). Semakin jelas langkahnya, semakin cepat diperbaiki.
-
----
+| No | Langkah | Login | Yang terjadi | Seharusnya | Tingkat (Kritis / Penting / Saran) |
+|---|---|---|---|---|---|
+| 1 | | | | | |
+| 2 | | | | | |
+| 3 | | | | | |
 
 ## 6. Penilaian akhir
 
 | Pertanyaan | Jawaban |
 |---|---|
-| Apakah alur approval sesuai cara kerja yang diinginkan? | Ya / Sebagian / Tidak |
-| Apakah pengemudi bisa melapor darurat dengan mudah di ponsel? | Ya / Sebagian / Tidak |
-| Apakah mekanik bisa bekerja tanpa sinyal? | Ya / Sebagian / Tidak |
-| Apakah stok dan Kartu Stok bisa dipercaya? | Ya / Sebagian / Tidak |
+| Apakah alur approval sesuai cara kerja yang diinginkan? | |
+| Apakah pengemudi bisa melapor darurat dengan mudah di ponsel? | |
+| Apakah mekanik bisa bekerja tanpa sinyal? | |
+| Apakah stok dan Kartu Stok bisa dipercaya? | |
 | Fitur apa yang paling dibutuhkan namun belum ada? | |
-| Layak dilanjutkan ke tahap berikutnya? | Ya / Ya dengan catatan / Tidak |
+| Layak dilanjutkan ke tahap berikutnya? | |
 
 ---
 
-## Lampiran — Untuk tim teknis (penyiapan sebelum uji)
+## Lampiran: untuk tim teknis
 
-1. Pastikan seluruh migrasi `supabase/migrations/` sudah dijalankan berurutan, **termasuk `20261026000001_schedule_request_by_technician.sql`** (mengalihkan hak mengajukan perubahan jadwal dari Supervisor ke Mekanik).
-   - **Jika data demo sudah terisi sebelum migrasi itu:** pengajuan demo lama (PJ-JKT-…-0001) diajukan oleh Supervisor dan macet. Masuk sebagai `supervisor.jkt@example.com`, buka pengajuan itu di **Perubahan Jadwal**, klik **Tarik kembali**. Lalu masuk sebagai `mechanic.jkt@example.com` dan ajukan ulang untuk WO B 9002 KBL (seeder tidak membuat ulang karena sudah ada data).
-2. Isi `.env.local` (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`), lalu jalankan `npm run seed:demo -- --yes`. Aman diulang. **Jangan di database produksi.**
-3. Setelah deploy, uji skenario 6 dan 7 di ponsel sungguhan, karena perilaku PWA dan offline paling mudah berbeda antar perangkat.
-4. Jika semua halaman terasa lambat, samakan region fungsi Vercel dengan region Supabase.
+1. Jalankan 9 migrasi di supabase/migrations/ berurutan (SQL Editor, satu berkas per eksekusi, jangan diulang): 20261024000001 foundation, 20261024000002 seed_reference, 20261025000001 approval_core, …000002 inventory, …000003 maintenance, …000004 emergency, …000005 jobs_reports_attachments, 20261026000001 schedule_request_by_technician, 20261026000002 incident_drivers.
+2. Untuk mengulang dari nol: jalankan skrip reset (drop schema public lalu buat ulang dan grant), lalu migrasi di atas, lalu npm run seed:admin dan npm run seed:demo -- --yes. Aman diulang hanya setelah reset; seed:demo tidak menghapus data lama.
+3. Isi .env.local (NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY). Jangan jalankan seeder di database produksi.
+4. Setiap penguji sebaiknya mulai dari data demo yang bersih agar angka awal (mis. saldo 4) sama dengan panduan. Bila beberapa penguji bergantian, pakai selisih sebagai patokan.
+5. Langkah 6.6 dan 6.7 memerlukan commit terbaru dan migrasi …000002 (daftar pengemudi untuk Catat Insiden, penjaga ketuk ganda).
+6. Uji skenario 6 dan 7 di ponsel sungguhan sebelum diserahkan; gambar di panduan ini memakai tampilan ponsel yang ditiru di browser.
+7. Jika halaman terasa lambat, samakan region fungsi Vercel dengan region Supabase.

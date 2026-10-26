@@ -145,8 +145,11 @@ export function EmergencyKit({
 
   const plate = guide?.vehicles.find((v) => v.id === vehicleId)?.plate ?? "";
 
+  const sending = useRef(false); // penjaga sinkron: state `busy` baru memblokir tombol setelah render berikutnya
   const report = async (type: string) => {
+    if (sending.current) return;
     if (!vehicleId) return setError("Pilih kendaraan terlebih dahulu");
+    sending.current = true;
     setError(null);
     setBusy(true);
     const idem = newKey();
@@ -165,6 +168,7 @@ export function EmergencyKit({
       setJustQueued({ type, plate });
       refreshQueue();
     } finally {
+      sending.current = false;
       setBusy(false);
     }
   };

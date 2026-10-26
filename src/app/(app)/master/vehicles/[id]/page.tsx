@@ -3,12 +3,12 @@ import { notFound } from "next/navigation";
 import { requirePermission } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
 import { Badge, EmptyState, PageHeader } from "@/components/ui";
+import { fmtDateTime } from "@/lib/format";
 
 export const metadata = { title: "Detail Kendaraan" };
 
 const STATUS: Record<string, string> = { ACTIVE: "Aktif", IN_MAINTENANCE: "Dalam Perawatan", OUT_OF_SERVICE: "Tidak Beroperasi" };
 const fmt = (n: number | string) => Number(n).toLocaleString("id-ID");
-const fmtDate = (s: string) => new Date(s).toLocaleString("id-ID", { dateStyle: "medium", timeStyle: "short" });
 
 export default async function VehicleDetailPage({ params }: PageProps<"/master/vehicles/[id]">) {
   const { id } = await params;
@@ -75,7 +75,7 @@ export default async function VehicleDetailPage({ params }: PageProps<"/master/v
             <tbody>
               {logs.map((l) => (
                 <tr key={l.id} className="border-b border-border last:border-0">
-                  <td className="px-3 py-2">{fmtDate(l.changed_at)}</td>
+                  <td className="px-3 py-2">{fmtDateTime(l.changed_at)}</td>
                   <td className="px-3 py-2">{fmt(l.old_value)}</td>
                   <td className="px-3 py-2">{fmt(l.new_value)}</td>
                   <td className="px-3 py-2">{l.changed_by ? (who.get(l.changed_by) ?? "-") : "Sistem"}</td>
@@ -115,7 +115,7 @@ export default async function VehicleDetailPage({ params }: PageProps<"/master/v
               <Link href={`/emergency/incidents/${i.id}`} className="flex items-center justify-between gap-3 px-3 py-2.5 hover:bg-background">
                 <span>
                   <b>{i.incident_no}</b>
-                  <span className="block text-xs text-muted">{fmtDate(i.reported_at)}</span>
+                  <span className="block text-xs text-muted">{fmtDateTime(i.reported_at)}</span>
                 </span>
                 <Badge tone={i.status === "REPORTED" ? "bad" : "neutral"}>{i.status}</Badge>
               </Link>

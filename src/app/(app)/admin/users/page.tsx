@@ -5,6 +5,7 @@ import { FilterSelect, SearchBox } from "@/components/list-controls";
 import { UserAdminToolbar, UserRowActions, type UserRow } from "@/components/user-admin";
 import { CsvImport } from "@/components/csv-import";
 import { importUsersAction } from "./actions";
+import { fmtDateTime } from "@/lib/format";
 
 export const metadata = { title: "User" };
 const PAGE_SIZE = 50;
@@ -127,7 +128,7 @@ export default async function UsersPage({ searchParams }: PageProps<"/admin/user
                       {!u.is_active ? <Badge>Nonaktif</Badge> : u.locked ? <Badge tone="bad">Terkunci</Badge> : <Badge tone="good">Aktif</Badge>}
                     </td>
                     <td className="px-3 py-2 align-top text-xs text-muted">
-                      {u.last_login_at ? new Date(u.last_login_at).toLocaleString("id-ID", { dateStyle: "medium", timeStyle: "short" }) : "Belum pernah"}
+                      {u.last_login_at ? fmtDateTime(u.last_login_at) : "Belum pernah"}
                     </td>
                     <td className="px-3 py-2">
                       <UserRowActions user={userRow} branches={branches ?? []} roles={roles ?? []} selfId={me.id} />

@@ -550,6 +550,13 @@ describe("emergensi", () => {
     expect(row).toMatchObject({ is_false_report: true, status: "CLOSED" });
   });
 
+  it("daftar pengemudi untuk catat insiden: terbaca oleh pusat (tanpa izin admin), kosong bagi role lain", async () => {
+    const ids = (await q(U.hq, `select id from public.incident_drivers()`)).rows.map((x) => (x as { id: string }).id);
+    expect(ids).toContain(U.driver);
+    expect((await q(U.mech, `select id from public.incident_drivers()`)).rows).toHaveLength(0);
+    expect((await q(U.driver, `select id from public.incident_drivers()`)).rows).toHaveLength(0);
+  });
+
   it("kontak Global terakhir tidak dapat dinonaktifkan; format telepon divalidasi; langkah cepat minimal satu", async () => {
     const globals = await admin<{ id: string }>(`select id from emergency_contacts where scope='GLOBAL' and is_active`);
     expect(globals.length).toBe(2);

@@ -45,7 +45,7 @@ export default async function IncidentsPage({ searchParams }: PageProps<"/emerge
     nameMap(supabase, "branches", rows.map((r) => r.branch_id)),
     supabase.from("system_parameters").select("value").eq("key", "incident.ack_minutes").maybeSingle(),
     supabase.from("vehicles").select("id,plate_no").eq("is_active", true).order("plate_no"),
-    supabase.from("profiles").select("id,name,user_roles!inner(roles!inner(name))").eq("is_active", true).eq("user_roles.roles.name", "DRIVER").order("name"),
+    supabase.rpc("incident_drivers"), // lewat fungsi: user_roles hanya terbaca oleh pemegang izin admin
     supabase.from("branches").select("id,name").order("name"),
   ]);
   const ackMin = Number(ack?.value ?? 5);
@@ -63,7 +63,7 @@ export default async function IncidentsPage({ searchParams }: PageProps<"/emerge
           <>
             <ButtonLink href={`/emergency/incidents/export?${exportQs}`}>Ekspor CSV</ButtonLink>
             {can(user, "incident.handle") && (
-              <RecordIncidentDialog vehicles={(vehicles ?? []).map((v) => ({ id: v.id, plate: v.plate_no }))} drivers={(driverRows ?? []).map((d) => ({ id: d.id, name: d.name }))} />
+              <RecordIncidentDialog vehicles={(vehicles ?? []).map((v) => ({ id: v.id, plate: v.plate_no }))} drivers={((driverRows ?? []) as { id: string; name: string }[]).map((d) => ({ id: d.id, name: d.name }))} />
             )}
           </>
         }

@@ -17,7 +17,7 @@ Aplikasi web + PWA (Next.js 16, Supabase). Dokumen kebutuhan ada di [docs/](docs
 ## Menjalankan
 
 1. Buat project di [Supabase](https://supabase.com) (atau pakai instance yang sudah ada).
-2. Jalankan migrasi di `supabase/migrations/` berurutan (SQL Editor, atau `npx supabase link` lalu `npx supabase db push`). Ada 8 berkas; yang `20261025…` adalah modul transaksi dan **wajib setelah** dua berkas awal, lalu `20261026…` (perubahan jadwal diajukan teknisi, diputuskan Supervisor). Migrasi membuat bucket Storage privat `attachments` untuk lampiran dan, bila ekstensi `pg_cron` tersedia, menjadwalkan job tiap menit.
+2. Jalankan migrasi di `supabase/migrations/` berurutan (SQL Editor, atau `npx supabase link` lalu `npx supabase db push`). Ada 9 berkas; yang `20261025…` adalah modul transaksi dan **wajib setelah** dua berkas awal, lalu `20261026…` (perubahan jadwal diajukan teknisi, diputuskan Supervisor; daftar pengemudi untuk Catat Insiden). Migrasi membuat bucket Storage privat `attachments` untuk lampiran dan, bila ekstensi `pg_cron` tersedia, menjadwalkan job tiap menit.
 3. Di Supabase Dashboard › **Authentication**:
    - Providers › Email: **matikan "Allow new users to sign up"** (user hanya dibuat admin).
    - URL Configuration › Site URL = URL aplikasi; tambahkan `<URL>/auth/callback` ke Redirect URLs.
