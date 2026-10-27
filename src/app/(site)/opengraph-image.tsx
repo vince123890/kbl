@@ -7,11 +7,11 @@ export const contentType = "image/png";
 export default function OpengraphImage() {
   return new ImageResponse(
     (
-      <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between", background: "#141010", color: "#fff", padding: 72 }}>
-        <div style={{ display: "flex", fontSize: 40, fontWeight: 700, borderBottom: "8px solid #ffb400", paddingBottom: 12, alignSelf: "flex-start" }}>PT Karunia Beton Lestari</div>
+      <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between", background: "#0f172a", color: "#fff", padding: 72 }}>
+        <div style={{ display: "flex", fontSize: 40, fontWeight: 700, borderBottom: "8px solid #34d399", paddingBottom: 12, alignSelf: "flex-start" }}>PT Karunia Beton Lestari</div>
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
           <div style={{ display: "flex", fontSize: 92, fontWeight: 800, lineHeight: 1.02, maxWidth: 980 }}>Dari batu sampai beton siap cor.</div>
-          <div style={{ display: "flex", fontSize: 30, color: "#ffb400", letterSpacing: 4, textTransform: "uppercase" }}>Quality Stone and Readymix Concrete</div>
+          <div style={{ display: "flex", fontSize: 30, color: "#34d399", letterSpacing: 4, textTransform: "uppercase" }}>Quality Stone and Readymix Concrete</div>
         </div>
       </div>
     ),
